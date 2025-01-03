@@ -104,7 +104,160 @@
 
     <!-- start portfolio section -->
     <section class="wow animate__fadeIn no-padding-bottom">
-        <?php echo isset($home[2]) ? $home[2]->Content : '' ?>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center">
+                    <div class="alt-font text-medium-gray margin-15px-bottom text-uppercase text-small">Book an Artist</div>
+                    <h5 class="alt-font text-extra-dark-gray font-weight-600 mb-0">Discover and Book the Perfect Artist for an Event</h5>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 filter-content overflow-hidden">
+                    <ul class="hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium">
+                        <li class="grid-sizer"></li>
+                        <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item181.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Naked Soap</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.2s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item182.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Berlin Design</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Brochure</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.4s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item183.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Abstract Comics</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.6s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item184.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Teabag Collection</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio-item item -->
+                        <li class="grid-item wow animate__fadeInUp">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item185.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Herbal Beauty Salon</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.2s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item186.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Tailoring Interior</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Brochure</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.4s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item187.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Pixflow Studio</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item --> <!-- start portfolio item -->
+                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.6s">
+                            <a href="artist-details.html">
+                                <figure>
+                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item188.jpg" alt="" /></div>
+                                    <figcaption>
+                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                            <div class="portfolio-hover-box align-middle">
+                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Designblast Inc</span>
+                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </a>
+                        </li>
+                        <!-- end portfolio item -->
+                    </ul>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- end portfolio section -->
 
@@ -128,7 +281,7 @@
                                     <li class="grid-item last-paragraph-no-margin text-center text-sm-start wow animate__fadeInUp">
                                         <div class="blog-post bg-light-gray">
                                             <div class="blog-post-images overflow-hidden position-relative">
-                                                <a href="">
+                                                <a href="<?php echo base_url('/blog/' . strtolower(str_replace(' ', '-', $values->BlogTitle))) ?>">
                                                     <img src="<?php echo $this->config->item('front_assets'); ?>images/blog-img74.jpg" alt="">
                                                     <div class="blog-hover-icon"><span class="text-extra-large font-weight-300">+</span></div>
                                                 </a>
@@ -148,7 +301,7 @@
                                     <li class="grid-item last-paragraph-no-margin text-center text-sm-start wow animate__fadeInUp" data-wow-delay="0.2s">
                                         <div class="blog-post bg-light-gray">
                                             <div class="blog-post-images overflow-hidden position-relative">
-                                                <a href="">
+                                                <a href="<?php echo base_url('/blog/' . strtolower(str_replace(' ', '-', $values->BlogTitle))) ?>">
                                                     <img src="<?php echo $this->config->item('front_assets'); ?>images/blog-img79.jpg" alt="">
                                                     <div class="blog-hover-icon"><span class="text-extra-large font-weight-300">+</span></div>
                                                 </a>
@@ -168,7 +321,7 @@
                                     <li class="grid-item last-paragraph-no-margin text-center text-sm-start wow animate__fadeInUp" data-wow-delay="0.4s">
                                         <div class="blog-post bg-light-gray">
                                             <div class="blog-post-images overflow-hidden position-relative">
-                                                <a href="">
+                                                <a href="<?php echo base_url('/blog/' . strtolower(str_replace(' ', '-', $values->BlogTitle))) ?>">
                                                     <img src="<?php echo $this->config->item('front_assets'); ?>images/blog-img74.jpg" alt="">
                                                     <div class="blog-hover-icon"><span class="text-extra-large font-weight-300">+</span></div>
                                                 </a>
@@ -250,7 +403,7 @@
                     </div>
                 </div>
                 <div class="col wow animate__fadeIn">
-                    <form id="contact-form-3" action="email-templates/contact-form.php" method="post">
+                    <form id="contact-form-3" action="<?php echo base_url('home/sendEmail') ?>" method="post">
                         <div class="row justify-content-center">
                             <div class="col-12">
                                 <div class="padding-fifteen-all bg-white border-radius-6 lg-padding-seven-all">
@@ -288,19 +441,19 @@
                                 <li class="grid-item last-paragraph-no-margin wow animate__fadeInUp">
                                     <div class="blog-post">
                                         <div class="blog-post-images overflow-hidden">
-                                            <a href="<?php echo base_url('blogs/detail/' . $value->BlogID) ?>">
+                                            <a href="<?php echo base_url('/blog/' . strtolower(str_replace(' ', '-', $value->BlogTitle))) ?>">
                                                 <img src="<?php echo $this->config->item('front_assets') . $image; ?>" alt="">
                                             </a>
                                             <div class="blog-categories bg-white text-uppercase text-extra-small alt-font"><a href="#">Technology</a></div>
                                         </div>
                                         <div class="post-details padding-35px-all bg-white md-padding-20px-all">
                                             <div class="blog-hover-color"></div>
-                                            <a href="<?php echo base_url('blogs/detail/' . $value->BlogID) ?>" class="alt-font post-title text-medium text-extra-dark-gray w-90 d-block lg-w-100 margin-5px-bottom"><?php echo substr($value->BlogTitle, 0, 100) ?></a>
+                                            <a href="<?php echo base_url('/blog/' . strtolower(str_replace(' ', '-', $value->BlogTitle))) ?>" class="alt-font post-title text-medium text-extra-dark-gray w-90 d-block lg-w-100 margin-5px-bottom"><?php echo substr($value->BlogTitle, 0, 100) ?></a>
                                             <div class="author">
                                                 <span class="text-medium-gray text-uppercase text-extra-small d-inline-block">by <a href="#" class="text-medium-gray"><?php echo $value->AuthorName ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<?php echo date('d M Y', strtotime($value->PublishedDate)) ?></span>
                                             </div>
                                             <div class="separator-line-horrizontal-full bg-medium-gray margin-seven-tb lg-margin-four-tb"></div>
-                                            <p><?php echo substr($value->Content, 0, 100) ?></p>
+                                            <p><?php echo substr($value->ShortContent, 0, 100) ?></p>
                                         </div>
                                     </div>
                                 </li>

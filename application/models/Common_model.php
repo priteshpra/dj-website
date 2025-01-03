@@ -365,7 +365,7 @@ class Common_model extends CI_Model
 
     public function getBlogsData()
     {
-        $query = $this->db->query("SELECT C.BlogID, C.BlogTitle, C.AuthorName, C.PublishedDate, C.Content, C.Status
+        $query = $this->db->query("SELECT C.BlogID, C.BlogTitle, C.AuthorName, C.PublishedDate, C.Content, C.Status,C.ShortContent
                                 FROM sssm_blogs C
                                 WHERE C.Status = 1");
         $cms = $query->result();
@@ -393,7 +393,7 @@ class Common_model extends CI_Model
 
     public function getBlogsDetail($name)
     {
-        $query = $this->db->query("SELECT C.BlogID, C.BlogTitle, C.AuthorName, C.PublishedDate, C.Content, C.Status
+        $query = $this->db->query("SELECT C.BlogID, C.BlogTitle, C.AuthorName, C.PublishedDate, C.Content,C.ShortContent, C.Status
                                 FROM sssm_blogs C
                                 WHERE C.Status = 1 AND LOWER(REPLACE(C.BlogTitle,' ', '-')) = '$name'");
         $cms = $query->result();

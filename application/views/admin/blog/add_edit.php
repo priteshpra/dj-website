@@ -25,6 +25,12 @@
           <div class="input-field col s12">
             <a class="tooltipped a-tooltipped" data-position="left" data-delay="50" data-tooltip="<?php echo label('msg_lbl_please_enter_content'); ?>"><i class="<?php echo INFO_ICON_CLASS; ?>"></i></a>
             <div style="padding-top:40px;"></div>
+            <label for="Content">Short Content</label>
+            <textarea name="ShortContent" maxlength="100" id="ShortContent" class="materialize-textarea"><?php echo @$cms->ShortContent; ?></textarea>
+          </div>
+          <div class="input-field col s12">
+            <a class="tooltipped a-tooltipped" data-position="left" data-delay="50" data-tooltip="<?php echo label('msg_lbl_please_enter_content'); ?>"><i class="<?php echo INFO_ICON_CLASS; ?>"></i></a>
+            <div style="padding-top:40px;"></div>
             <label for="Content"><?php echo label('msg_lbl_content') ?></label>
             <textarea name="Content" id="Content" class="materialize-textarea"><?php echo @$cms->Content; ?></textarea>
           </div>

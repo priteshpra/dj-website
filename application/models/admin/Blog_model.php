@@ -42,7 +42,8 @@ class Blog_model extends CI_Model
             $array['BlogTitle'] . "','" .
             $array['AuthorName'] . "','" .
             date('Y-m-d', strtotime($array['PublishedDate'])) . "','" .
-            addslashes(utf8_encode($array['Content'])) . "','" .
+            addslashes($array['Content']) . "','" .
+            addslashes($array['ShortContent']) . "','" .
             $array['created_by'] . "','" .
             $array['Status'] . "','" .
             $array['usertype'] . "','" .
@@ -66,7 +67,8 @@ class Blog_model extends CI_Model
             $array['BlogTitle'] . "','" .
             $array['AuthorName'] . "','" .
             date('Y-m-d', strtotime($array['PublishedDate'])) . "','" .
-            addslashes(utf8_encode($array['Content'])) . "','" .
+            addslashes($array['Content']) . "','" .
+            addslashes($array['ShortContent']) . "','" .
             $array['modified_by'] . "','" .
             $array['Status'] . "','" .
             $array['ID'] . "','" .
