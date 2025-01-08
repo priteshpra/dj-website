@@ -60,19 +60,15 @@ class Home extends CI_Controller
             $to = HR_MAIL;
             $from = $mailData['con_email'];
             $fromName = $mailData['con_name'];
-            $mailSubject = 'Become a Growth Partner Submitted by ' . $mailData['con_person'];
+            $mailSubject = 'Looking for an excellent DJ - ' . $mailData['con_person'];
 
             // Mail content
             $mailContent = '
             <h2>Become a Growth Partner Form Submitted</h2>
-            <p><b>Salary: </b>' . $mailData['con_salary'] . '</p>
-            <p><b>Company Name: </b>' . $mailData['con_name'] . '</p>
-            <p><b>Contact Name: </b>' . $mailData['con_person'] . '</p>
-            <p><b>Contact Number: </b>' . $mailData['con_phone'] . '</p>
+            <p><b>Customer Name: </b>' . $mailData['con_name'] . '</p>
             <p><b>Email: </b>' . $mailData['con_email'] . '</p>
             <p><b>Subject: </b>' . $mailData['con_subject'] . '</p>
-            <p><b>Requirement: </b>' . $mailData['con_requirement'] . '</p>
-            <p><b>Information: </b>' . $mailData['con_info'] . '</p>
+            <p><b>Message: </b>' . $mailData['con_info'] . '</p>
         ';
 
             // $config['mailtype'] = 'html';
@@ -81,12 +77,12 @@ class Home extends CI_Controller
                 'smtp_host' => 'smtpout.secureserver.net',
                 'smtp_port' => 465, // or 465 for SSL
                 'smtp_crypto' => 'ssl',
-                'smtp_user' => 'info@unique-hr.com',
-                'smtp_pass' => 'Guniquehr123',
+                'smtp_user' => '',
+                'smtp_pass' => '',
                 'mailtype'  => 'html', // or 'text'
                 'charset'   => 'utf-8', // or
                 'wordwrap'  => TRUE,
-                'newline'   => "\r\n",                      // Ensure correct line endings
+                'newline'   => "\r\n", // Ensure correct line endings
                 'crlf'      => "\r\n"
             );
 

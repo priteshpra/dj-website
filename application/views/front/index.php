@@ -410,10 +410,10 @@
                                     <div class="text-extra-dark-gray alt-font text-large font-weight-600 margin-30px-bottom">Looking for an excellent DJ Services?</div>
                                     <div>
                                         <div class="form-results d-none"></div>
-                                        <input type="text" name="name" id="name" placeholder="Name*" class="input-bg required">
-                                        <input type="email" name="email" id="email" placeholder="E-mail*" class="input-bg required">
-                                        <input type="text" name="subject" id="subject" placeholder="Subject" class="input-bg">
-                                        <textarea name="comment" id="comment" placeholder="Your Message" class="input-bg"></textarea>
+                                        <input type="text" name="con_name" id="name" placeholder="Name*" class="input-bg required">
+                                        <input type="email" name="con_email" id="email" placeholder="E-mail*" class="input-bg required">
+                                        <input type="text" name="con_subject" id="subject" placeholder="Subject" class="input-bg">
+                                        <textarea name="con_info" id="comment" placeholder="Your Message" class="input-bg"></textarea>
                                         <button id="contact-us-button-3" type="submit" class="btn btn-small border-radius-4 btn-black submit">send message</button>
                                     </div>
                                 </div>

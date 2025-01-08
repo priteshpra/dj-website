@@ -106,11 +106,22 @@
                          </div>
                          <div class="col-md-6">
                              <div class="select-style medium-select border-color-medium-dark-gray">
+                                 <?php
+                                    // Define the number of months to display (e.g., next 12 months)
+                                    $monthsToShow = 12;
+
+                                    // Get the current month and year
+                                    $currentMonth = date('m');
+                                    $currentYear = date('Y');
+                                    ?>
                                  <select name="eventdate" id="eventdate" class="bg-transparent mb-0 required">
                                      <option value="">Select your Event Month</option>
-                                     <option value="Oct 2024">Oct 2024</option>
-                                     <option value="Nov 2024">Nov 2024</option>
-                                     <option value="Dec2024">Dec 2024</option>
+                                     <?php for ($i = 0; $i < $monthsToShow; $i++) {
+                                            $monthYear = strtotime("+$i month", strtotime("$currentYear-$currentMonth-01"));
+                                            $displayValue = date('M Y', $monthYear);
+                                        ?>
+                                         <option value="<?php echo $displayValue  ?>"><?php echo $displayValue  ?></option>
+                                     <?php } ?>
                                  </select>
                              </div>
                          </div>
