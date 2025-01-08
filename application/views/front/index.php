@@ -73,13 +73,13 @@
                 <div class="swiper z-index-minus2 position-absolute top-0 h-100" data-slider-options='{ "loop": true, "effect":"fade", "slidesPerView": "1", "allowTouchMove":true, "autoplay": { "delay": 5000, "disableOnInteraction": false }, "keyboard": { "enabled": true, "onlyInViewport": true }, "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" }, "pagination": { "el": ".swiper-pagination-01", "clickable": true } }'>
                     <div class="swiper-wrapper">
                         <!-- start slider item -->
-                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>images/03 <?php echo base_url() . $value->Image; ?>');"></div>
+                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>');"></div>
                         <!-- end slider item -->
                         <!-- start slider item -->
-                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>images/04 <?php echo base_url() . $value->Image; ?>');"></div>
+                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>');"></div>
                         <!-- end slider item -->
                         <!-- start slider item -->
-                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>images/05 <?php echo base_url() . $value->Image; ?>');"></div>
+                        <div class="swiper-slide cover-background" style="background-image:url('<?php echo base_url() . $value->Image; ?>');"></div>
                         <!-- end slider item -->
                     </div>
                     <!-- <div class="swiper-pagination swiper-pagination-01 swiper-pagination-white"></div> -->

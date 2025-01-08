@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 03:11 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jan 08, 2025 at 05:53 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`` PROCEDURE `aa_test` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `aa_test` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50))  NO SQL BEGIN
     IF (_Name = '') THEN SET _Name=NULL;END IF;
     IF (_MobileNo = '') THEN SET _MobileNo=NULL;END IF;
     IF (_Project = '') THEN SET _Project=NULL;END IF;
@@ -105,7 +105,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -135,7 +135,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddCategory` (IN `_CategoryName` VARCHAR(100), IN `_CreatedBy` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddCategory` (IN `_CategoryName` VARCHAR(100), IN `_CreatedBy` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -168,7 +168,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddFeedback` (IN `_Feedback` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddFeedback` (IN `_Feedback` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -196,7 +196,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddGoods` (IN `_GoodsName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddGoods` (IN `_GoodsName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -226,7 +226,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddSkill` (IN `_SkillName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddSkill` (IN `_SkillName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -255,7 +255,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -288,7 +288,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddUOM` (IN `_UOMName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddUOM` (IN `_UOMName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -316,7 +316,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_AddUserFeedback` (IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_FeedbackID` INT, IN `_CallStartDateTime` VARCHAR(100), IN `_CallEndDateTime` VARCHAR(100), IN `_Remarks` TEXT, IN `_SitesID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_FeedbackDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_AddUserFeedback` (IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_FeedbackID` INT, IN `_CallStartDateTime` VARCHAR(100), IN `_CallEndDateTime` VARCHAR(100), IN `_Remarks` TEXT, IN `_SitesID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_FeedbackDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -354,7 +354,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -422,7 +422,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddBanner` (IN `_BannerTitle` VARCHAR(200), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150), IN `_SequenceNo` VARCHAR(100))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddBanner` (IN `_BannerTitle` VARCHAR(200), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150), IN `_SequenceNo` VARCHAR(100))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -457,7 +457,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -490,7 +490,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddBulkMessages` (IN `_Type` VARCHAR(20), IN `_Subject` VARCHAR(250), IN `_Message` TEXT, IN `_Receiver` VARCHAR(20), IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddBulkMessages` (IN `_Type` VARCHAR(20), IN `_Subject` VARCHAR(250), IN `_Message` TEXT, IN `_Receiver` VARCHAR(20), IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -518,7 +518,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_EmailID` VARCHAR(50), IN `_Password` VARCHAR(30), IN `_MobileNo` VARCHAR(15), IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(50), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_BankName` VARCHAR(250), IN `_IFSCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_EmailID` VARCHAR(50), IN `_Password` VARCHAR(30), IN `_MobileNo` VARCHAR(15), IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(50), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_BankName` VARCHAR(250), IN `_IFSCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -545,7 +545,7 @@ SELECT @LAST_CT_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCity` (IN `_CityName` VARCHAR(200) CHARSET utf8, IN `_StateID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCity` (IN `_CityName` VARCHAR(200) CHARSET utf8, IN `_StateID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -574,7 +574,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -605,7 +605,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCountry` (IN `_CountryName` VARCHAR(100), IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCountry` (IN `_CountryName` VARCHAR(100), IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
 	BEGIN
 		ROLLBACK;
@@ -631,7 +631,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomer` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomer` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT DEFAULT 0;
   DECLARE EXIT handler for sqlexception
   BEGIN
@@ -698,7 +698,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerMileStone` (IN `_ProjectMileStoneID` INT, IN `_CustomerPropertyID` INT, IN `_CreatedBy` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerMileStone` (IN `_ProjectMileStoneID` INT, IN `_CustomerPropertyID` INT, IN `_CreatedBy` INT)  NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -714,7 +714,7 @@ INSERT INTO sssm_customermilestone(ProjectMileStoneID,CustomerPropertyID, Create
 SELECT LAST_INSERT_ID() AS ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPayment` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_MileStone` TEXT, IN `_Path` VARCHAR(250), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerPayment` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_MileStone` TEXT, IN `_Path` VARCHAR(250), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -863,7 +863,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
 DECLARE flag INT DEFAULT 0;
   DECLARE EXIT handler for sqlexception
     BEGIN
@@ -981,7 +981,7 @@ DECLARE flag INT DEFAULT 0;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyDocument` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerPropertyDocument` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1086,7 +1086,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyImage` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250), IN `_Title` VARCHAR(250), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerPropertyImage` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250), IN `_Title` VARCHAR(250), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1191,7 +1191,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyVideo` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyVideoID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerPropertyVideo` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyVideoID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1297,7 +1297,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Message` TEXT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Message` TEXT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1333,7 +1333,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(@customerID,'Customer', CONCAT(@a
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1362,7 +1362,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddDesignationByCSV` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddDesignationByCSV` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
@@ -1390,7 +1390,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEmail` VARCHAR(70), IN `_SupportEmail` VARCHAR(70), IN `_TimeZone` VARCHAR(50), IN `_AppVersionAndroid` DOUBLE, IN `_AppVersionIOS` DOUBLE, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16), IN `_CreatedBy` INT, IN `_ConfigID` INT, IN `_ModifiedBy` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEmail` VARCHAR(70), IN `_SupportEmail` VARCHAR(70), IN `_TimeZone` VARCHAR(50), IN `_AppVersionAndroid` DOUBLE, IN `_AppVersionIOS` DOUBLE, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16), IN `_CreatedBy` INT, IN `_ConfigID` INT, IN `_ModifiedBy` INT)  NO SQL BEGIN
   IF(_CrashEmail    ='')   THEN SET _CrashEmail =NULL; END IF;
   IF(_SupportEmail    ='') THEN SET _SupportEmail =NULL; END IF;
   IF(_TimeZone    ='') THEN SET _TimeZone =NULL; END IF;
@@ -1442,7 +1442,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEmail` VARCHAR(70),
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddEditFollowup` (IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_FollowupDate` DATETIME, IN `_FollowBy` INT, IN `_ID` INT, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_AddEditFollowup` (IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_FollowupDate` DATETIME, IN `_FollowBy` INT, IN `_ID` INT, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN 
 SET @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
 IF(_FollowupDate = "1000-01-01") THEN SET _FollowupDate = NULL; END IF;
@@ -1484,7 +1484,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `_ProjectID` INT, IN `_Rule` TEXT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `_ProjectID` INT, IN `_Rule` TEXT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
   SET @TimeZone = (SELECT TimeZone FROM sssm_config Limit 1);
   IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
   SET @projectName = (SELECT Title FROM sssm_project WHERE  ProjectID = _ProjectID);
@@ -1522,7 +1522,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `_ProjectID` INT,
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1551,7 +1551,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(250), IN `_Password` VARCHAR(100), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_PassCode` VARCHAR(10), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(250), IN `_Password` VARCHAR(100), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_PassCode` VARCHAR(10), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1618,7 +1618,7 @@ SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm
 COMMIT;   
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddGallery` (IN `_Title` VARCHAR(200), IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddGallery` (IN `_Title` VARCHAR(200), IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1649,7 +1649,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1678,7 +1678,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddInward` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(200), IN `_ChallanDate` DATE, IN `_TotalPrice` VARCHAR(10), IN `_CategoryID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddInward` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(200), IN `_ChallanDate` DATE, IN `_TotalPrice` VARCHAR(10), IN `_CategoryID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -1713,7 +1713,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddInwardItem` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_GoodsReceivedNoteID` INT, IN `_GoodsID` INT, IN `_Qty` FLOAT, IN `_UOMID` INT, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddInwardItem` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_GoodsReceivedNoteID` INT, IN `_GoodsID` INT, IN `_Qty` FLOAT, IN `_UOMID` INT, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -1747,7 +1747,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddJobPost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddJobPost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1782,7 +1782,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddMisscallAPI` (IN `_MsgId` VARCHAR(50) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_LongCode` VARCHAR(30), IN `_RcvFrom` VARCHAR(30), IN `_RcvTime` VARCHAR(100), IN `_MsgText` VARCHAR(100))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddMisscallAPI` (IN `_MsgId` VARCHAR(50) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_LongCode` VARCHAR(30), IN `_RcvFrom` VARCHAR(30), IN `_RcvTime` VARCHAR(100), IN `_MsgText` VARCHAR(100))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1815,7 +1815,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddMotivationalQuote` (IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddMotivationalQuote` (IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1847,7 +1847,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunity` (IN `_Type` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Dt` DATE, IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(100), IN `_Message` TEXT, IN `_Name` VARCHAR(100), IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddOpportunity` (IN `_Type` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Dt` DATE, IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(100), IN `_Message` TEXT, IN `_Name` VARCHAR(100), IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -1888,7 +1888,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunityAPI` (IN `_Type` VARCHAR(30) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_city` VARCHAR(150), IN `_dt` VARCHAR(20), IN `_email` VARCHAR(150), IN `_isd` VARCHAR(10), IN `_locality` VARCHAR(150), IN `_loginid` VARCHAR(150), IN `_mobile` VARCHAR(30), IN `_msg` TEXT, IN `_name` VARCHAR(150), IN `_pid` VARCHAR(150), IN `_project` VARCHAR(150), IN `_subject` VARCHAR(150), IN `_time` VARCHAR(30), IN `_tranType` VARCHAR(150), IN `_VTime` VARCHAR(30), IN `_vdate` VARCHAR(30))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddOpportunityAPI` (IN `_Type` VARCHAR(30) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_city` VARCHAR(150), IN `_dt` VARCHAR(20), IN `_email` VARCHAR(150), IN `_isd` VARCHAR(10), IN `_locality` VARCHAR(150), IN `_loginid` VARCHAR(150), IN `_mobile` VARCHAR(30), IN `_msg` TEXT, IN `_name` VARCHAR(150), IN `_pid` VARCHAR(150), IN `_project` VARCHAR(150), IN `_subject` VARCHAR(150), IN `_time` VARCHAR(30), IN `_tranType` VARCHAR(150), IN `_VTime` VARCHAR(30), IN `_vdate` VARCHAR(30))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1931,7 +1931,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunityReminder` (IN `_OpportunityID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddOpportunityReminder` (IN `_OpportunityID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1966,7 +1966,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1997,7 +1997,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddProject` (IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddProject` (IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2030,7 +2030,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddProjectGallery` (IN `_ImagePath` VARCHAR(250), IN `_ProjectID` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddProjectGallery` (IN `_ImagePath` VARCHAR(250), IN `_ProjectID` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2058,7 +2058,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddProjectMileStone` (IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddProjectMileStone` (IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2086,7 +2086,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2117,7 +2117,7 @@ SELECT @LAST_ID AS ID, _ProjectID as ProjectID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddPropertyTitleImage` (IN `_ProjectID` INT, IN `_Title` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddPropertyTitleImage` (IN `_ProjectID` INT, IN `_Title` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2146,7 +2146,7 @@ SELECT @LAST_ID AS ID, _ProjectID as ProjectID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddRefund` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddRefund` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -2206,7 +2206,7 @@ SELECT _ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@adminn
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddReminderAction` (IN `_ID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_RemindedBy` INT, IN `_ActionUser` ENUM('Customer','CustomerProperty','CustomerReminder','Visitor','VisitorReminder'), IN `_Subject` VARCHAR(100), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Attachment` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddReminderAction` (IN `_ID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_RemindedBy` INT, IN `_ActionUser` ENUM('Customer','CustomerProperty','CustomerReminder','Visitor','VisitorReminder'), IN `_Subject` VARCHAR(100), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Attachment` VARCHAR(250))  NO SQL BEGIN
   DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2376,7 +2376,7 @@ SET @process = (SELECT Fn_A_AddCustomerProcess(@customerID,@Type, CONCAT(IFNULL(
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddRespose` (IN `_ReminderID` INT, IN `_ReminderType` ENUM('Customer','Visitor'), IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddRespose` (IN `_ReminderID` INT, IN `_ReminderType` ENUM('Customer','Visitor'), IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2411,7 +2411,7 @@ IF(_ReminderType = "Customer") THEN
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddRoleMapping` (IN `query` TEXT, IN `vCreatedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddRoleMapping` (IN `query` TEXT, IN `vCreatedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE row_count INT DEFAULT 0;    
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2434,7 +2434,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddRoles` (IN `vRoleName` VARCHAR(150), IN `vDescription` TEXT, IN `vCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddRoles` (IN `vRoleName` VARCHAR(150), IN `vDescription` TEXT, IN `vCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_roles (RoleName, Description, CreatedBy, CreatedDate)
@@ -2453,7 +2453,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddRoletoAdmin` (IN `pUserID` INT, IN `pRoleID` INT, IN `pCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddRoletoAdmin` (IN `pUserID` INT, IN `pRoleID` INT, IN `pCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
         ROLLBACK;
@@ -2477,7 +2477,7 @@ UPDATE  sssm_admindetails
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2508,7 +2508,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `__UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `__IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `__UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `__IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2539,7 +2539,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2568,7 +2568,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2600,7 +2600,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVendor` (IN `_EmailID` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_MobileNo` VARCHAR(13), IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(50), IN `_PANNo` VARCHAR(50), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVendor` (IN `_EmailID` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_MobileNo` VARCHAR(13), IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(50), IN `_PANNo` VARCHAR(50), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -2648,7 +2648,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_EmailID` VARCHAR(250), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_OpportunityID` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_EmailID` VARCHAR(250), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_OpportunityID` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100))  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2752,7 +2752,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID` INT, IN `_Creat
    COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorIdle` (IN `_ID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsIdle` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_AddVisitorIdle` (IN `_ID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsIdle` INT)  NO SQL BEGIN 
 SET @Count= (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE VisitorID = _ID);
 
 IF(@Count > 0) THEN
@@ -2775,7 +2775,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorReminder` (IN `_VisitorID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVisitorReminder` (IN `_VisitorID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2810,7 +2810,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(_VisitorID,'Visitor', CONCAT(@adm
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorReminderAction` (IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVisitorReminderAction` (IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2840,7 +2840,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorSites` (IN `_VisitorID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ProjectID` INT, IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_ChannelPartner` VARCHAR(200), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVisitorSites` (IN `_VisitorID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ProjectID` INT, IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_ChannelPartner` VARCHAR(200), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -2889,7 +2889,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor_27012020` (IN `_EmployeeID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddVisitor_27012020` (IN `_EmployeeID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -3032,7 +3032,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor_27012020` (IN `_EmployeeID` INT, I
    COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_AvailableProperty` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AvailableProperty` (IN `_ID` INT)  NO SQL BEGIN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
     SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
     
@@ -3056,7 +3056,7 @@ AND FIND_IN_SET(IF((ActionType='CustomerReminder' OR ActionType = 'EditCustomerR
     SELECT 1 AS ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CancelledProperty` (IN `_ID` INT, IN `_UserID` INT, IN `_IsCancelFee` INT, IN `_Reason` TEXT, IN `_CancelFeeAmount` INT, IN `_RefundAmount` INT, IN `_RefundGSTAmount` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CancelledProperty` (IN `_ID` INT, IN `_UserID` INT, IN `_IsCancelFee` INT, IN `_Reason` TEXT, IN `_CancelFeeAmount` INT, IN `_RefundAmount` INT, IN `_RefundGSTAmount` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 SET @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;    
     UPDATE
@@ -3112,7 +3112,7 @@ IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
         SELECT _ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@adminname , ' has cancelled property of ', @CustomerName,'.'), _UserID, _ID, 'CancelledProperty') as addProcess;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_ChangeRefundCloseStatus` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_ChangeRefundCloseStatus` (IN `_ID` INT)  NO SQL BEGIN
 UPDATE sssm_cancelproperty
   SET 
     IsDealClosed = 1
@@ -3121,7 +3121,7 @@ WHERE
 SELECT _ID AS ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11))  NO SQL BEGIN
 
 DECLARE OldStatus int(11);
 SET @table_name = TableName;
@@ -3137,7 +3137,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckCurrentPassword` (IN `ID` INT, IN `pPassword` VARCHAR(250))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_CheckCurrentPassword` (IN `ID` INT, IN `pPassword` VARCHAR(250))  NO SQL BEGIN 
 SET @cnt = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID = ID AND Status = 1);
 IF(@cnt > 0) THEN 
   SELECT COUNT(UserID) AS cnt FROM sssm_admindetails WHERE UserID = ID AND Password = pPassword;
@@ -3146,7 +3146,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckCustomerEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckCustomerEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_CustomerID` INT)  NO SQL BEGIN
 SET @CNTE = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE 
             EmailID = _EmailID AND CustomerID != _CustomerID);
 SET @CNTM = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE 
@@ -3165,7 +3165,7 @@ END IF;
             
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicate` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `DataValue` VARCHAR(200) CHARSET utf8, IN `UFieldName` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckDuplicate` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `DataValue` VARCHAR(200) CHARSET utf8, IN `UFieldName` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 
 SET @table_name = TableName;
@@ -3184,7 +3184,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicateDouble` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` VARCHAR(200) CHARSET utf8, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckDuplicateDouble` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` VARCHAR(200) CHARSET utf8, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -3205,7 +3205,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicateDouble_140519` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` INT, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckDuplicateDouble_140519` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` INT, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -3226,7 +3226,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckEmployeeEmailExist` (IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(20), IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckEmployeeEmailExist` (IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(20), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID <> 0) THEN
 	SET @MCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE MobileNo = _MobileNo AND UserID <> _ID);
 	IF(@MCount > 0) THEN 
@@ -3249,7 +3249,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckLogin` (IN `_EmailID` VARCHAR(250), IN `_Password` VARCHAR(100))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckLogin` (IN `_EmailID` VARCHAR(250), IN `_Password` VARCHAR(100))  NO SQL BEGIN
 SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND Status != 0);
   IF(@ResultCount > 0) THEN
     SET @VERFLAG = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND IsAllow = 1);
@@ -3282,7 +3282,7 @@ SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID =
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckMultipleProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckMultipleProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT ProjectID FROM sssm_property WHERE PropertyID = _PropertyID);
 SET @BlockMultiple = (SELECT BlockMultiple  FROM sssm_project WHERE ProjectID = @ProjectID);
 IF(@BlockMultiple = 1)THEN
@@ -3300,7 +3300,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID <> 0) THEN
 	SET @MCount = (SELECT COUNT(PropertyID) FROM sssm_property WHERE ProjectID = _ProjectID AND PropertyNo = _PropertyNo AND PropertyID <> _ID);
 	IF(@MCount > 0) THEN 
@@ -3318,7 +3318,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID` VARCHAR(250))  NO SQL BEGIN
     SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE EmailID = _EmailID AND Status != 0);
     IF (@ResultCount > 0) THEN
       SELECT 1 AS ID;
@@ -3327,7 +3327,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID` VARCHAR(250)) 
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckVendorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckVendorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     SET @ECount = (SELECT COUNT(UserID) FROM sssm_user WHERE EmailID = _EmailID AND UserID <> IFNULL(_ID,0));
     SET @MCount = (SELECT COUNT(UserID) FROM sssm_user WHERE MobileNo = _MobileNo AND UserID <> IFNULL(_ID,0));
@@ -3342,7 +3342,7 @@ IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CheckVisitorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_CheckVisitorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     SET @ECount = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE EmailID = _EmailID AND VisitorID <> IFNULL(_ID,0));
     SET @MCount = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE MobileNo = _MobileNo AND VisitorID <> IFNULL(_ID,0));
@@ -3357,7 +3357,7 @@ IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_CustomerPropertyReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_CustomerPropertyReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE)  NO SQL BEGIN 
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
@@ -4017,7 +4017,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT)  NO SQL BEGIN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
     SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
     
@@ -4055,7 +4055,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT)  NO SQL BEGIN
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_DuePayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_PurchaseFromDate` VARCHAR(20), IN `_PurchaseToDate` VARCHAR(20), IN `_RoleID` INT, IN `_DType` VARCHAR(50), IN `_Percentage` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_DuePayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_PurchaseFromDate` VARCHAR(20), IN `_PurchaseToDate` VARCHAR(20), IN `_RoleID` INT, IN `_DType` VARCHAR(50), IN `_Percentage` INT)  NO SQL BEGIN
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
   SET @TMPRoleID  = _RoleID;
   IF(_RoleID = -1 || _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -4223,7 +4223,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditAdminDetail` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_ModifiedBy` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin','Employee','Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditAdminDetail` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_ModifiedBy` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin','Employee','Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 SET @CNT = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID = _UserID);
 IF(@CNT > 0) THEN
@@ -4267,7 +4267,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_ModifiedBy` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_ModifiedBy` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4313,7 +4313,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditBanner` (IN `_BannerTitle` VARCHAR(150), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250), IN `_SequenceNo` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditBanner` (IN `_BannerTitle` VARCHAR(150), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250), IN `_SequenceNo` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4348,7 +4348,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditBasicEmployee` (IN `_ID` INT, IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_MobileNo` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditBasicEmployee` (IN `_ID` INT, IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_MobileNo` VARCHAR(16))  NO SQL BEGIN
 SET @Mobileexist = 0;
 IF(_FirstName = '') THEN SET _FirstName = NULL; END IF;
 IF(_LastName = '') THEN SET _LastName = NULL; END IF;
@@ -4390,7 +4390,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4424,7 +4424,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ModifiedBy` INT, IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(30), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_ID` INT, IN `_BankName` VARCHAR(250), IN `_IFCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ModifiedBy` INT, IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(30), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_ID` INT, IN `_BankName` VARCHAR(250), IN `_IFCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4468,7 +4468,7 @@ DECLARE EXIT handler for sqlexception
     COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCity` (IN `_CityName` VARCHAR(250) CHARSET utf8, IN `_StateID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCity` (IN `_CityName` VARCHAR(250) CHARSET utf8, IN `_StateID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4499,7 +4499,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4530,7 +4530,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCountry` (IN `_CountryName` VARCHAR(500), IN `_ModifiedBy` INT(11), IN `_Status` INT(11), IN `_ID` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCountry` (IN `_CountryName` VARCHAR(500), IN `_ModifiedBy` INT(11), IN `_Status` INT(11), IN `_ID` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
   
   DECLARE row_count INT DEFAULT 0;    
   DECLARE ReturnStatus VARCHAR(50) DEFAULT '0';    
@@ -4568,7 +4568,7 @@ IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
         COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomer` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(15), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCustomer` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(15), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4609,7 +4609,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerPayment` (IN `_ID` INT, IN `_MileStone` TEXT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCustomerPayment` (IN `_ID` INT, IN `_MileStone` TEXT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4749,7 +4749,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerProperty` (IN `_ID` INT, IN `_CustomerID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCustomerProperty` (IN `_ID` INT, IN `_CustomerID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4814,7 +4814,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerReminder` (IN `_ID` INT, IN `_Amount` DOUBLE, IN `_ReminderDate` DATETIME, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditCustomerReminder` (IN `_ID` INT, IN `_Amount` DOUBLE, IN `_ReminderDate` DATETIME, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4854,7 +4854,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -4884,7 +4884,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4916,7 +4916,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_ModifiedBy` INT, IN `_PassCode` VARCHAR(10), IN `_UserID` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_ModifiedBy` INT, IN `_PassCode` VARCHAR(10), IN `_UserID` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4960,7 +4960,7 @@ END IF;
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditGallery` (IN `_Title` VARCHAR(150), IN `_UserID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditGallery` (IN `_Title` VARCHAR(150), IN `_UserID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4991,7 +4991,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5021,7 +5021,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditInwardItem` (IN `_ModifiedBy` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(20), IN `_ID` INT, IN `_GoodsID` INT, IN `_UOMID` INT, IN `_Qty` DOUBLE, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE, IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditInwardItem` (IN `_ModifiedBy` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(20), IN `_ID` INT, IN `_GoodsID` INT, IN `_UOMID` INT, IN `_Qty` DOUBLE, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE, IN `_Status` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5054,7 +5054,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditInwardMaster` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(150), IN `_ChallanDate` DATE, IN `_TotalPrice` DOUBLE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditInwardMaster` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(150), IN `_ChallanDate` DATE, IN `_TotalPrice` DOUBLE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5089,7 +5089,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditJobpost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditJobpost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5124,7 +5124,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditMessage` (IN `iMessage` VARCHAR(100) CHARSET utf8, IN `iModifiedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditMessage` (IN `iMessage` VARCHAR(100) CHARSET utf8, IN `iModifiedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -5148,7 +5148,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditMotivationalQuote` (IN `_ID` INT, IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_ModifiedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditMotivationalQuote` (IN `_ID` INT, IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_ModifiedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5184,7 +5184,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditOpportunityReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditOpportunityReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5220,7 +5220,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5248,7 +5248,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditProject` (IN `_ID` INT, IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditProject` (IN `_ID` INT, IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5282,7 +5282,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditProjectMileStone` (IN `_ID` INT, IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditProjectMileStone` (IN `_ID` INT, IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5314,7 +5314,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditProperty` (IN `_ID` INT, IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditProperty` (IN `_ID` INT, IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5347,7 +5347,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditPropertyImageTitle` (IN `_ID` INT, IN `_ProjectID` INT, IN `_Title` VARCHAR(250), IN `_ModifiedBy` INT, IN `_Status` TINYINT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditPropertyImageTitle` (IN `_ID` INT, IN `_ProjectID` INT, IN `_Title` VARCHAR(250), IN `_ModifiedBy` INT, IN `_Status` TINYINT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5378,7 +5378,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditRefund` (IN `_ID` INT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditRefund` (IN `_ID` INT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5414,7 +5414,7 @@ SELECT _ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditReminderAction` (IN `_ID` INT, IN `_CustomerReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_RemindedBy` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditReminderAction` (IN `_ID` INT, IN `_CustomerReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_RemindedBy` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5452,7 +5452,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditRoles` (IN `_RoleName` VARCHAR(150), IN `_Description` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditRoles` (IN `_RoleName` VARCHAR(150), IN `_Description` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5475,7 +5475,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5506,7 +5506,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 
@@ -5541,7 +5541,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5572,7 +5572,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5605,7 +5605,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVendor` (IN `_FirstName` VARCHAR(150), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(100), IN `_PANNo` VARCHAR(100), IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVendor` (IN `_FirstName` VARCHAR(150), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(100), IN `_PANNo` VARCHAR(100), IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5648,7 +5648,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitor` (IN `_EmployeeID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_Address` TEXT, IN `_CompanyName` VARCHAR(2500), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100), IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVisitor` (IN `_EmployeeID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_Address` TEXT, IN `_CompanyName` VARCHAR(2500), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100), IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5689,7 +5689,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVisitorReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5725,7 +5725,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorReminderAction` (IN `_ID` INT, IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVisitorReminderAction` (IN `_ID` INT, IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5761,7 +5761,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorSites` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(250), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVisitorSites` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(250), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5808,7 +5808,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitor_27012020` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_EmployeeID` INT, IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(30), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditVisitor_27012020` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_EmployeeID` INT, IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(30), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -5868,7 +5868,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EmployeeChangePasscode` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EmployeeChangePasscode` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
 UPDATE sssm_admindetails 
  	SET PassCode = pPassword
     WHERE 
@@ -5876,7 +5876,7 @@ UPDATE sssm_admindetails
 SELECT pUserID AS ID; 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_EmployeeChangePassword` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EmployeeChangePassword` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
 UPDATE sssm_admindetails 
  	SET Password = pPassword
     WHERE 
@@ -5884,7 +5884,7 @@ UPDATE sssm_admindetails
 SELECT pUserID AS ID; 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GelAllModule` ()  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GelAllModule` ()  NO SQL BEGIN 
 SELECT 
 	IFNULL(M.ModuleID,0) AS ModuleID,
 	IFNULL(M.ModuleName,'') AS ModuleName,
@@ -5897,7 +5897,7 @@ WHERE
 	M.Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetActivityLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pActivitylogName` VARCHAR(200) CHARSET utf8, IN `pDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetActivityLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pActivitylogName` VARCHAR(200) CHARSET utf8, IN `pDate` DATE)  NO SQL BEGIN
 IF(pActivitylogName = '') THEN SET pActivitylogName =NULL; END IF;
 IF(pDate = '1000-01-01') THEN SET pDate =NULL; END IF;
 IF(PageSize = -1) THEN
@@ -5967,7 +5967,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetAdminByID` (IN `_UserID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetAdminByID` (IN `_UserID` INT)  NO SQL BEGIN
 SET @CNT = (SELECT count(UserID) FROM sssm_admindetails WHERE UserID = _UserID AND Status = 1);
 IF(@CNT > 0)THEN 
   SELECT 
@@ -5988,7 +5988,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetAllPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetAllPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
 SELECT 
  	IFNULL(P.PropertyID,0) AS PropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -5999,7 +5999,7 @@ WHERE
     P.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetArtist` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetArtist` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
 IF(_FirstName = '') THEN SET _FirstName =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -6071,20 +6071,20 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetArtistByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetArtistByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT u.*,s.SubCategoryID,s.SubCategoryName
 from sssm_user u
 LEFT JOIN ss_subcategory s ON s.SubCategoryID = u.ArtistCategoryID
 where UserID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetArtistCat_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetArtistCat_ComboBox` ()  NO SQL BEGIN
 
 SELECT SubCategoryID AS ArtistCategoryID, SubCategoryName FROM ss_subcategory WHERE Status=1;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBanner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BannerTitle` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBanner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BannerTitle` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
 IF(_BannerTitle = '') THEN SET _BannerTitle =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
 
@@ -6127,7 +6127,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBannerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBannerByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT
                 COUNT(R.BannerID)
               FROM
@@ -6153,13 +6153,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBlogByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBlogByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_blogs
 where BlogID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBlogs` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_BlogID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBlogs` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_BlogID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_BlogID = -1) THEN SET _BlogID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -6201,7 +6201,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBulkDetails` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBulkDetails` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_Type="AllCustomer") THEN
 	SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE Status = 1);
 	IF(@Count > 0) THEN
@@ -6265,7 +6265,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetBulkDetails_04062020` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetBulkDetails_04062020` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_Type="AllCustomer") THEN
 	SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE Status = 1);
 	IF(@Count > 0) THEN
@@ -6325,7 +6325,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCancelledProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_IsCancelled` INT, IN `_IsHold` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetCancelledProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_IsCancelled` INT, IN `_IsHold` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN 
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
   SET @TMPRoleID  = _RoleID;
   IF(_RoleID = -1 || _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -6523,7 +6523,7 @@ IF(@cnt > 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCancelPropertyByCPID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCancelPropertyByCPID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CP.CancelPropertyID) FROM sssm_cancelproperty CP
                 INNER JOIN sssm_customerproperty CSP ON (CSP.CustomerPropertyID = CP.CustomerPropertyID)
                 INNER JOIN sssm_customer C ON (C.CustomerID = CSP.CustomerID)
@@ -6566,7 +6566,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_ID` INT)  NO SQL BEGIN
 	 SELECT 
        	IFNULL(C.ChanelPartnerID,0) AS ChanelPartnerID,
         IFNULL(C.FirmName,'')  AS FirmName,
@@ -6590,7 +6590,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_ID` INT)  NO SQL 
         WHERE C.ChanelPartnerID=_ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPartnerList` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FirmName` VARCHAR(50), IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_FullName` VARCHAR(250), IN `_MobileNo` VARCHAR(10))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetChanelPartnerList` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FirmName` VARCHAR(50), IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_FullName` VARCHAR(250), IN `_MobileNo` VARCHAR(10))  NO SQL BEGIN
 IF(_Name ='') THEN SET _Name = NULL; END IF;
 IF(_FirmName = '') THEN SET _FirmName =NULL; END IF; 
 IF(_Status = -1) THEN SET _Status =NULL; END IF;
@@ -6647,7 +6647,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPartnerList_combobox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetChanelPartnerList_combobox` (IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = '0') THEN SET _ID =NULL; END IF; 
 
 SET @Count = (SELECT 
@@ -6675,7 +6675,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetChildModules` (IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetChildModules` (IN `ID` INT)  NO SQL BEGIN
 IF (ID = -1)
 THEN
 SELECT ModuleID, ParentID, ModuleName FROM sssm_module WHERE Status = 1 AND ParentID != 0;
@@ -6699,7 +6699,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCity` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_city` VARCHAR(250) CHARSET utf8, IN `_state` INT, IN `status_search` INT, IN `_country` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCity` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_city` VARCHAR(250) CHARSET utf8, IN `_state` INT, IN `status_search` INT, IN `_country` INT)  NO SQL BEGIN
 IF(_city = '') THEN SET _city =NULL; END IF; 
 IF(_state = -1) THEN SET _state =NULL; END IF;
 IF(_country = -1) THEN SET _country =NULL; END IF;
@@ -6752,17 +6752,17 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCityByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCityByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT CityID, CityName, StateID , Status 
 from sssm_cities
 where CityID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCity_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCity_ComboBox` ()  NO SQL BEGIN
  SELECT CityID , CityName from sssm_cities ORDER BY  CityName;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCms` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCms` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_PageID = -1) THEN SET _PageID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -6806,13 +6806,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCmsByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCmsByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT CMSID, PageID , Content, Title , Status 
 from sssm_cms
 where CMSID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN 
   DECLARE ConfigIDFlag INT DEFAULT 0;
   SET ConfigIDFlag = (SELECT COUNT(ConfigID) FROM sssm_config);
   IF(ConfigIDFlag > 0) THEN 
@@ -6832,7 +6832,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCountry` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_CountryName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCountry` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_CountryName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_CountryName = '') THEN SET _CountryName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -6876,20 +6876,20 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCountryByID` (IN `_ID` INT(11))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCountryByID` (IN `_ID` INT(11))  NO SQL BEGIN
 SELECT CountryName , CountryID , CreatedBy , CreatedDate, ModifiedBy, ModifiedDate, Status 
 from sssm_country 
 where CountryID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCountry_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCountry_ComboBox` ()  NO SQL BEGIN
         
  SELECT CountryID,CountryName FROM  
 sssm_country WHERE Status = 1 ORDER BY CountryName ASC;
  
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomer` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Status` INT, IN `_EmailID` VARCHAR(250), IN `_RoleID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_PropertyID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetCustomer` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Status` INT, IN `_EmailID` VARCHAR(250), IN `_RoleID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_PropertyID` INT)  NO SQL BEGIN 
   IF(_RoleID = -1) THEN SET _RoleID = NULL;    END IF;
   IF(_RoleID = -2) THEN SET _RoleID = NULL;    END IF;
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
@@ -7012,7 +7012,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE CustomerID  = _ID);
 IF(@Count > 0) THEN
 
@@ -7036,11 +7036,11 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerByRoleID` (IN `roleid` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerByRoleID` (IN `roleid` INT)  NO SQL BEGIN
 SELECT RoleID,UserID FROM sssm_admindetails WHERE RoleID = roleid;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerBySearch` (IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetCustomerBySearch` (IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN 
 IF(_MobileNo = '')THEN SET _MobileNo = -1; END IF;
 
 SET @cnt = (SELECT COUNT(CustomerID) FROM sssm_customer
@@ -7063,7 +7063,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerMileStone_Combobox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerMileStone_Combobox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(CM.CustomerMileStoneID,0) AS CustomerMileStoneID,
     IFNULL(CM.ProjectMileStoneID,0) AS ProjectMileStoneID,
@@ -7079,7 +7079,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerMileStone_Combobox` (IN `_ID` INT)
     ORDER BY PM.InstalmentNo;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -7163,7 +7163,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPaymentByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerPaymentByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CustomerPaymentID) FROM sssm_customerpayment AS CP
       INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
       INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -7204,7 +7204,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProcess` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor','CustomerProperty'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerProcess` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor','CustomerProperty'))  NO SQL BEGIN
 IF(_Type = "CustomerProperty") THEN
     
     SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
@@ -7289,7 +7289,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT, IN `_Status` INT, IN `_Path` VARCHAR(250), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT, IN `_Status` INT, IN `_Path` VARCHAR(250), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
   IF(_CustomerID = -1) THEN SET _CustomerID =NULL; END IF;
   IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
@@ -7482,7 +7482,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerPropertyID) FROM sssm_customerproperty WHERE CustomerPropertyID  = _ID);
 IF(@Count > 0) THEN
     SELECT 
@@ -7541,7 +7541,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPropertyDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerPropertyDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT)  NO SQL BEGIN
 IF(_CustomerID = -1) THEN SET _CustomerID =NULL; END IF;
 
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertydocument AS CP
@@ -7599,7 +7599,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProperty_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerProperty_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(CP.CustomerPropertyID,0) AS CustomerPropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -7607,7 +7607,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProperty_ComboBox` (IN `_ID` INT) 
     IFNULL(P.ProjectID,0) AS ProjectID from sssm_customerproperty AS CP LEFT JOIN sssm_property AS P ON P.PropertyID = CP.PropertyID	WHERE CP.CustomerID = _ID AND CP.Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','CustomerProperty'), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','CustomerProperty'), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
 IF(_ID = -1) THEN SET _ID = NULL; END IF;
 IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -7872,7 +7872,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetCustomerReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CustomerReminderID) FROM sssm_customerreminder WHERE CustomerReminderID = _ID);
 IF(@cnt > 0) THEN
 	SELECT 
@@ -7893,7 +7893,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignation` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_designation` VARCHAR(100) CHARSET utf8, IN `status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetDesignation` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_designation` VARCHAR(100) CHARSET utf8, IN `status_search` INT)  NO SQL BEGIN
 IF(_designation = '') THEN SET _designation =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -7930,19 +7930,19 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignationByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetDesignationByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT Designation , DesignationID , Status 
 from sssm_designation 
 where DesignationID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignation_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetDesignation_ComboBox` ()  NO SQL BEGIN
 
 SELECT DesignationID, Designation FROM sssm_designation;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetDeviceInfo` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_DeviceName` VARCHAR(100) CHARSET utf8, IN `_DeviceOS` VARCHAR(40) CHARSET utf8, IN `_OSVersion` VARCHAR(40) CHARSET utf8, IN `_UserID` INT, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetDeviceInfo` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_DeviceName` VARCHAR(100) CHARSET utf8, IN `_DeviceOS` VARCHAR(40) CHARSET utf8, IN `_OSVersion` VARCHAR(40) CHARSET utf8, IN `_UserID` INT, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_UserID = -1) THEN SET _UserID =NULL; END IF;
 IF(_DeviceName = '') THEN SET _DeviceName =NULL; END IF;
 IF(_DeviceOS = '') THEN SET _DeviceOS =NULL; END IF;
@@ -8017,7 +8017,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UserID` INT, IN `_FilterDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UserID` INT, IN `_FilterDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT 
                 COUNT(U.UserFeedbackID) 
               FROM 
@@ -8116,7 +8116,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmailTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_EmailTemplateTitle` VARCHAR(500), IN `status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmailTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_EmailTemplateTitle` VARCHAR(500), IN `status_search` INT)  NO SQL BEGIN
 IF(_EmailTemplateTitle = '') THEN SET _EmailTemplateTitle =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -8150,13 +8150,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmailTemplateByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmailTemplateByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT EmailTemplateID, EmailTemplateTitle , EmailSubject,Content , Status 
 from sssm_emailtemplate 
 where EmailTemplateID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmployeeByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID  = _ID);
 IF(@Count > 0) THEN
 	SELECT  
@@ -8180,7 +8180,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO SQL BEGIN
 	SET @Count=(SELECT COUNT(A.UserID) FROM sssm_admindetails A WHERE A.Status=1);
     IF(@Count>0) THEN
     	SELECT 
@@ -8192,7 +8192,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO SQL BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pName` VARCHAR(50), IN `pRoleName` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmployeeRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pName` VARCHAR(50), IN `pRoleName` VARCHAR(50))  NO SQL BEGIN
 IF(PageSize = -1) THEN
       SELECT
     a.UserID
@@ -8230,7 +8230,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployees` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(50), IN `_Email` VARCHAR(100), IN `_CellPhone` VARCHAR(13), IN `status_search` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetEmployees` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(50), IN `_Email` VARCHAR(100), IN `_CellPhone` VARCHAR(13), IN `status_search` INT)  NO SQL BEGIN 
     DECLARE iUserID INT DEFAULT 0;
     IF(_FirstName = '') THEN SET _FirstName =NULL; END IF;
     IF(_Email = '') THEN SET _Email =NULL; END IF;
@@ -8315,7 +8315,7 @@ IFNULL(DATE_FORMAT(A.CreatedDate,"%d-%m-%Y %H:%i:%s"),'') AS CreatedDate
 END IF;   
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployee_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetEmployee_ComboBox` ()  NO SQL BEGIN
 
 SELECT UserID, FirstName, LastName FROM sssm_admindetails
 WHERE Status=1
@@ -8323,7 +8323,7 @@ WHERE Status=1
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetErrorLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `method_name` VARCHAR(50) CHARSET utf8, IN `error_date` DATE, IN `status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetErrorLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `method_name` VARCHAR(50) CHARSET utf8, IN `error_date` DATE, IN `status_search` INT)  NO SQL BEGIN
 IF(method_name = '') THEN SET method_name =NULL; END IF;
 IF(error_date = '0000-00-00') THEN SET error_date =NULL; END IF;
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
@@ -8369,7 +8369,7 @@ END IF;
  
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetFeedbackFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_Type` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetFeedbackFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_Type` VARCHAR(50))  NO SQL BEGIN
       SET @Count=1;
             
 IF(_PageSize = -1 ) THEN 
@@ -8394,13 +8394,13 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetFollowupByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetFollowupByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT V.VisitorFollowupID,V.VisitorID,V.ActionType,V.Message,V.Response,A.Name,V.FollowupDate,A.EmailID AS VisitorEmail,AD.EmailID AS AdminEmail,CONCAT(IFNULL(AD.FirstName,''),' ',IFNULL(AD.LastName,'')) AS AdminName,V.FollowBy, V.Status 
 from sssm_visitorfollowup V LEFT JOIN sssm_visitor A ON A.VisitorID = V.VisitorID LEFT JOIN sssm_admindetails AD ON AD.UserID = V.FollowBy
 where V.VisitorFollowupID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
 IF(_Title = '') THEN SET _Title =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
 
@@ -8439,7 +8439,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGalleryByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetGalleryByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT
                 COUNT(R.ArtistGalleryID)
               FROM
@@ -8461,7 +8461,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetGroup` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetGroup` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_GroupName = '') THEN SET _GroupName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -8504,17 +8504,17 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetGroupByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetGroupByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT GroupID,GroupName,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,Status FROM sssm_group WHERE GroupID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetGroup_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetGroup_ComboBox` ()  NO SQL BEGIN
  SELECT GroupID, GroupName from sssm_group 
  WHERE Status = 1
  ORDER BY GroupName;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardItemByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetInwardItemByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G WHERE G.GoodsReceivedItemID = _ID);
 IF(@Count > 0) THEN
   SELECT
@@ -8539,7 +8539,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardItem_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetInwardItem_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G WHERE G.GoodsReceivedNoteID=_ID
             );
             
@@ -8577,7 +8577,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMasterByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetInwardMasterByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G WHERE G.GoodsReceivedNoteID = _ID);
 IF(@Count > 0) THEN
   SELECT
@@ -8604,7 +8604,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(150), IN `_ChallanDate` VARCHAR(30), IN `_ChallanNo` VARCHAR(150))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(150), IN `_ChallanDate` VARCHAR(30), IN `_ChallanNo` VARCHAR(150))  NO SQL BEGIN
 	IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_ChallanDate='0000-00-00') THEN SET _ChallanDate=NULL;END IF;
     IF(_ChallanNo=-1) THEN SET _ChallanNo=NULL;END IF;
@@ -8656,7 +8656,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMaster_ListByVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VendorID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetInwardMaster_ListByVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VendorID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G WHERE G.VendorID=_VendorID
             );
             
@@ -8694,7 +8694,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetJobPost` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetJobPost` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
 IF(_Title = '') THEN SET _Title =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -8740,13 +8740,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetJobpostByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetJobpostByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_jobpost
 where JobPostingID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMessage` (IN `PageSize` INT, IN `CurrentPage` INT, IN `ilanguage` VARCHAR(50) CHARSET utf8, IN `message_key` VARCHAR(150) CHARSET utf8, IN `imessage` VARCHAR(250) CHARSET utf8)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMessage` (IN `PageSize` INT, IN `CurrentPage` INT, IN `ilanguage` VARCHAR(50) CHARSET utf8, IN `message_key` VARCHAR(150) CHARSET utf8, IN `imessage` VARCHAR(250) CHARSET utf8)  NO SQL BEGIN
 IF(message_key = '') THEN SET message_key =NULL; END IF; 
 IF(imessage = '') THEN SET imessage =NULL; END IF; 
 IF(ilanguage = '') THEN SET ilanguage =NULL; END IF; 
@@ -8796,18 +8796,18 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMessageDetailsByID` (IN `message_id` INT(11))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMessageDetailsByID` (IN `message_id` INT(11))  NO SQL BEGIN
 SELECT MessageID , Language,MessageKey , Message  
 from sssm_messages
 where MessageID = message_id;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMileStone` (IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMileStone` (IN `_PropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT ProjectID FROM sssm_property WHERE PropertyID = _PropertyID);
 SELECT ProjectMileStoneID FROM sssm_projectmilestone WHERE Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMileStoneByProperty` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMileStoneByProperty` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT PT.ProjectID FROM sssm_customerproperty CP
 INNER JOIN sssm_property PT ON(CP.PropertyID = PT.PropertyID)
 WHERE CP.CustomerPropertyID = _CustomerPropertyID AND CP.Status = 1);
@@ -8837,7 +8837,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMilestonesByProjectID_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMilestonesByProjectID_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(PM.ProjectMileStoneID,0) AS ProjectMileStoneID,
     IFNULL(PM.InstalmentNo,0) AS InstalmentNo,
@@ -8845,7 +8845,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetMilestonesByProjectID_ComboBox` (IN `_ID` 
     IFNULL(PM.MileStone,'') AS MileStone from sssm_projectmilestone AS PM WHERE PM.ProjectID = _ID AND PM.Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMisscallAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetMisscallAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(M.MisscallID,0) AS MisscallID, 
@@ -8876,7 +8876,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetModuleByRoleProjectID` (IN `_RoleProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetModuleByRoleProjectID` (IN `_RoleProjectID` INT)  NO SQL BEGIN
 SELECT 
 	IFNULL(RM.RoleMapID,0) AS RoleMapID,
 	IFNULL(RM.RoleProjectID,0) AS RoleProjectID,
@@ -8903,7 +8903,7 @@ WHERE
 	RM.RoleProjectID = _RoleProjectID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMotivationalQuote` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMotivationalQuote` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote);
 IF(@cnt > 0) THEN 
   IF(_PageSize = -1) THEN
@@ -8937,7 +8937,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetMotivationalQuoteByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetMotivationalQuoteByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE MotivationalQuoteID = _ID);
 IF(@cnt > 0) THEN 
     SELECT 
@@ -8951,7 +8951,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetNotificationSetting` (IN `_UserID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetNotificationSetting` (IN `_UserID` INT)  NO SQL BEGIN 
 	SELECT 
 		IFNULL(UserSettingID,0) AS UserSettingID,
 		IFNULL(UserID,0) AS UserID,
@@ -8968,7 +8968,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetNotificationSetting` (IN `_UserID` INT)  N
 		UserID = _UserID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpportunityByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.OpportunityID) 
               FROM 
                 ss_opportunity U WHERE OpportunityID = _ID);
@@ -9001,7 +9001,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_OpportunityID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpportunityReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_OpportunityID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.OpportunityReminderID) FROM ss_opportunityreminder AS VR 
     INNER JOIN ss_opportunity AS V ON (V.OpportunityID = VR.OpportunityID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = VR.ReminderBy)
@@ -9072,7 +9072,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpportunityReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(OpportunityReminderID) FROM ss_opportunityreminder WHERE OpportunityReminderID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -9096,7 +9096,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpportunityReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.OpportunityReminderID) 
           FROM ss_opportunityreminder AS VR
           INNER JOIN ss_opportunity AS V ON (V.OpportunityID = VR.OpportunityID)
@@ -9148,7 +9148,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_UserId` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpprtunityAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_UserId` INT)  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9265,7 +9265,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityAPI_260220` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpprtunityAPI_260220` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9331,7 +9331,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpprtunityDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9392,7 +9392,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpprtunityFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9507,7 +9507,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetOpprtunityNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9574,7 +9574,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPagemaster` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageName` VARCHAR(250) CHARSET utf8, IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPagemaster` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageName` VARCHAR(250) CHARSET utf8, IN `Status_search` INT)  NO SQL BEGIN
 IF(_PageName = '') THEN SET _PageName =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -9612,13 +9612,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPagemasterByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPagemasterByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT   PageID,PageName,CategoryID,SubCategoryID,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate
 from sssm_pagemaster
   where PageID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetParentModules` (IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetParentModules` (IN `ID` INT)  NO SQL BEGIN
 IF(ID = -1)
 THEN
   SELECT 
@@ -9645,7 +9645,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(50), IN `_Location` VARCHAR(13), IN `_GroupID` INT, IN `_Status` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(50), IN `_Location` VARCHAR(13), IN `_GroupID` INT, IN `_Status` INT)  NO SQL BEGIN 
 IF(_Title = '') THEN SET _Title = NULL; END IF;
 IF(_Location = '') THEN SET _Location = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status = NULL; END IF; 
@@ -9718,7 +9718,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetProjectByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectID) FROM sssm_project WHERE ProjectID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9748,7 +9748,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectByRole` (IN `_UserID` INT, IN `_RoleID` INT, IN `_Type` VARCHAR(20))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetProjectByRole` (IN `_UserID` INT, IN `_RoleID` INT, IN `_Type` VARCHAR(20))  NO SQL BEGIN 
 IF(_UserID = -1 ) THEN SET _UserID = NULL; END IF; 
 IF(_RoleID = -1 OR _RoleID = -2 ) THEN SET _RoleID = NULL; END IF; 
 IF(_RoleID IS NULL) THEN 
@@ -9803,7 +9803,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetProjectGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(ProjectID,0) AS ProjectID, 
@@ -9834,7 +9834,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectMileStone` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetProjectMileStone` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(ProjectMileStoneID,0) AS ProjectMileStoneID, 
@@ -9875,7 +9875,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectMileStoneByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetProjectMileStoneByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectMileStoneID) FROM sssm_projectmilestone WHERE ProjectMileStoneID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9895,7 +9895,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectRule` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetProjectRule` (IN `_ProjectID` INT)  NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(ProjectWiseRuleID) FROM sssm_projectwiserule WHERE ProjectID = _ProjectID AND Status = 1);
 IF(@COUNT > 0) THEN 
 	SELECT Rule FROM sssm_projectwiserule WHERE ProjectID = _ProjectID AND Status = 1 ORDER BY ProjectWiseRuleID DESC LIMIT 1;
@@ -9904,7 +9904,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProject_ComboBox` (IN `_GroupID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetProject_ComboBox` (IN `_GroupID` INT)  NO SQL BEGIN
 IF(_GroupID = -1) THEN SET _GroupID = NULL; END IF;
 	SELECT 
 		IFNULL(P.ProjectID,'') AS ProjectID,
@@ -9914,7 +9914,7 @@ IF(_GroupID = -1) THEN SET _GroupID = NULL; END IF;
 		WHERE P.Status = 1 AND P.GroupID = IFNULL(_GroupID,P.GroupID);
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(PropertyID,0) AS PropertyID, 
@@ -9955,7 +9955,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PropertyID) FROM sssm_property WHERE PropertyID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9978,7 +9978,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
 
 SET @PropertyIDs = (SELECT GROUP_CONCAT(V.PropertyID) FROM (SELECT DISTINCT(P.PropertyID) as PropertyID FROM sssm_property AS P INNER JOIN sssm_customerproperty CP ON (CP.PropertyID = P.PropertyID) WHERE P.ProjectID = _ProjectID AND CP.IsCancelled = 0 AND CP.Status = 1) V );
 
@@ -10011,7 +10011,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByWings` (IN `_Prefix` VARCHAR(50), IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPropertyByWings` (IN `_Prefix` VARCHAR(50), IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 SET @PrgID=_ProjectID;
 	SELECT V.* FROM (SELECT 
     SUBSTR(PT.PropertyNo,_PrefixLen+1) AS PropertyNo,
@@ -10032,7 +10032,7 @@ SET @PrgID=_ProjectID;
         ORDER BY (V.PropertyNo+0);  
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyImageTitle` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetPropertyImageTitle` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(PropertyImageTitleID,0) AS PropertyImageTitleID, 
@@ -10069,7 +10069,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyImageTitleByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPropertyImageTitleByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PropertyImageTitleID) FROM sssm_propertyimagetitle WHERE PropertyImageTitleID  = _ID);
 IF(@Count > 0) THEN
 
@@ -10089,7 +10089,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetProperty_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetProperty_ComboBox` ()  NO SQL BEGIN
 SELECT 
  	IFNULL(P.PropertyID,0) AS PropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -10102,7 +10102,7 @@ LEFT JOIN sssm_customerproperty CP ON (CP.PropertyID = P.PropertyID)
     P.Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetPurchaseProperty` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetPurchaseProperty` (IN `_ProjectID` INT)  NO SQL BEGIN
 SET @_PrefixLen = (SELECT LENGTH(Prefix) FROM sssm_project WHERE ProjectID = _ProjectID);
     SELECT V.* FROM (SELECT 
         SUBSTR(PT.PropertyNo,@_PrefixLen+1) AS PropertyNoNos,
@@ -10123,7 +10123,7 @@ SET @_PrefixLen = (SELECT LENGTH(Prefix) FROM sssm_project WHERE ProjectID = _Pr
         ORDER BY V.PropertyNoWings,(V.PropertyNoNos+0);        
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRefund` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRefund` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
 SET @TMPRoleID = _RoleID;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 SET @cnt = (SELECT COUNT(R.RefundID) FROM sssm_refund AS R
@@ -10204,7 +10204,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRefundByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRefundByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(R.RefundID) FROM sssm_refund AS R
       INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = R.CustomerPropertyID)
       INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -10244,7 +10244,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_UserType` ENUM('Customer','Visitor'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_UserType` ENUM('Customer','Visitor'))  NO SQL BEGIN
 IF(_UserType = "Customer") THEN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
 	SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
@@ -10390,7 +10390,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(ReminderActionID) FROM sssm_reminderaction WHERE ReminderActionID = _ID);
 IF(@cnt > 0) THEN
 SELECT 
@@ -10412,7 +10412,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderID) FROM sssm_visitorreminder WHERE VisitorReminderID = _ID);
 IF(@cnt > 0) THEN
 	SELECT 
@@ -10430,7 +10430,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetReportDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetReportDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
 SET @Count = (SELECT COUNT(P.PropertyID) FROM 												
@@ -10489,7 +10489,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetReportPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_PropertyID` INT, IN `_PaymentFromDate` VARCHAR(20), IN `_PaymentToDate` VARCHAR(20), IN `_DType` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetReportPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_PropertyID` INT, IN `_PaymentFromDate` VARCHAR(20), IN `_PaymentToDate` VARCHAR(20), IN `_DType` VARCHAR(20))  NO SQL BEGIN
 
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
 IF(_PropertyID = -1) THEN SET _PropertyID =NULL; END IF;
@@ -10608,7 +10608,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRequirenmentvalue` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Requirenemnt` VARCHAR(50), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRequirenmentvalue` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Requirenemnt` VARCHAR(50), IN `_Status` INT)  NO SQL BEGIN
 IF(_Requirenemnt = '') THEN SET _Requirenemnt = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -10645,7 +10645,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetResponse` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetResponse` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor'))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 
 IF(@cnt > 0) THEN 
@@ -10695,7 +10695,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleByProject` (IN `_UserID` INT, IN `_RoleID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetRoleByProject` (IN `_UserID` INT, IN `_RoleID` INT)  NO SQL BEGIN 
 IF(_UserID = -1 ) THEN SET _UserID = NULL; END IF; 
 IF(_RoleID = -1 OR _RoleID = -2 ) THEN SET _RoleID = NULL; END IF; 
 IF(_RoleID IS NULL) THEN 
@@ -10729,7 +10729,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleListing` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pRoleID` INT, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRoleListing` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pRoleID` INT, IN `status_search` INT(1))  NO SQL BEGIN
 IF(pRoleID = -1) THEN SET pRoleID = NULL; END IF;
 IF(PageSize = -1) THEN
   SELECT 
@@ -10771,7 +10771,7 @@ IF(PageSize = -1) THEN
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleMappingByID` (IN `RID` INT, IN `MID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRoleMappingByID` (IN `RID` INT, IN `MID` INT)  NO SQL BEGIN
 IF RID = 0 OR RID = -1 OR RID = -2 THEN 
   SELECT RID AS RoleID,MID AS ModuleID,1 AS is_insert,1 AS  is_view,1 AS  is_edit, 1 AS is_status,1 AS is_export;
 ELSE
@@ -10779,7 +10779,7 @@ SELECT RoleID, ModuleID, is_insert, is_view, is_edit, is_status, is_export FROM 
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleModuleByID` (IN `_RoleID` INT, IN `_ModuleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRoleModuleByID` (IN `_RoleID` INT, IN `_ModuleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 IF _RoleID = -1 OR _RoleID = -2 THEN 
 	SELECT 
 		0 AS RoleMapID,
@@ -10833,7 +10833,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleProjectByRoleID` (IN `_RoleID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRoleProjectByRoleID` (IN `_RoleID` INT)  NO SQL BEGIN
 SET @Count = (SELECT Count(RoleProjectID) FROM sssm_roleproject WHERE RoleID = _RoleID);
 IF(@Count > 0) THEN 
 	SELECT 
@@ -10850,7 +10850,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `vRoleName` VARCHAR(150), IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `vRoleName` VARCHAR(150), IN `status_search` INT(1))  NO SQL BEGIN
 IF(vRoleName = '') THEN SET vRoleName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -10889,11 +10889,11 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRolesByID` (IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetRolesByID` (IN `ID` INT)  NO SQL BEGIN
 SELECT RoleID,RoleName,Description,Status FROM sssm_roles WHERE RoleID = ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID` INT, IN `pType` ENUM('Web','Mobile'))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID` INT, IN `pType` ENUM('Web','Mobile'))  NO SQL BEGIN 
   IF(ID = -2 OR ID = -1) THEN 
         SET @cnt = (SELECT COUNT(ModuleID) FROM sssm_module WHERE Type = pType);
         IF(@cnt > 0) THEN
@@ -10932,11 +10932,11 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID` INT, IN `pType`
    END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetRole_ComboBox` ()  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetRole_ComboBox` ()  NO SQL BEGIN 
   SELECT RoleID,RoleName FROM sssm_roles WHERE Status = 1; 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetSection` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_SectionID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetSection` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_SectionID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_SectionID = -1) THEN SET _SectionID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -10980,13 +10980,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetSectionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetSectionByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT SectionID, PageID , Content, SequenceNo , Status 
 from sssm_sections
 where SectionID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetSMSTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(250) CHARSET utf8, IN `status_search` INT(2))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetSMSTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(250) CHARSET utf8, IN `status_search` INT(2))  NO SQL BEGIN
 IF(_Title = '') THEN SET _Title =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -11029,13 +11029,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetSMSTemplateByID` (IN `_ID` INT(11))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetSMSTemplateByID` (IN `_ID` INT(11))  NO SQL BEGIN
 SELECT  SMSID , Title, Message, SMSKeys,Status 
 from sssm_smstemplate
 where SMSID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetState` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_StateName` VARCHAR(250) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetState` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_StateName` VARCHAR(250) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_StateName = '') THEN SET _StateName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -11086,11 +11086,11 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetStateByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetStateByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT StateID,StateName,CountryID,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,Status FROM sssm_state WHERE StateID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetStateOnly_ComboBox` (IN `_CID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetStateOnly_ComboBox` (IN `_CID` INT)  NO SQL BEGIN
 IF(_CID = -1) THEN SET _CID = NULL; END IF;
 SELECT s.StateID,s.StateName FROM sssm_state s 
 LEFT JOIN sssm_country c ON c.CountryID = s.CountryID
@@ -11099,7 +11099,7 @@ c.CountryID = IFNULL(_CID,c.CountryID) AND
 s.Status = 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetSubModules` (IN `iParentID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetSubModules` (IN `iParentID` INT)  NO SQL BEGIN
   SELECT
             ModuleID,
             ModuleName 
@@ -11112,7 +11112,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetSubModules` (IN `iParentID` INT)  NO SQL B
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetTemplate` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetTemplate` (IN `_ID` INT)  NO SQL BEGIN
 	SET @cnt = (SELECT COUNT(EmailTemplateID) FROM sssm_emailtemplate WHERE EmailTemplateID = _ID);
 IF(@cnt > 0) THEN 
 	SELECT IFNULL(EmailTemplateID,0) AS EmailTemplateID,
@@ -11126,7 +11126,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetTestimonial` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_TestimonialID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetTestimonial` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_TestimonialID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_TestimonialID = -1) THEN SET _TestimonialID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -11168,13 +11168,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetTestimonialByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetTestimonialByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_testimonial
 where TestimonialID = _ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetTotalPaymentReport` (IN `_ProjectID` INT, IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetTotalPaymentReport` (IN `_ProjectID` INT, IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
 IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
 SET @cnt = (SELECT COUNT(C.CustomerPropertyID) FROM sssm_customerproperty C
 INNER JOIN sssm_property P ON P.PropertyID=C.PropertyID
@@ -11205,7 +11205,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetUser_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetUser_ComboBox` ()  NO SQL BEGIN
 SELECT 
 	IFNULL(U.UserID,0) AS UserID,
 	IFNULL(U.FirstName,'') AS FirstName,
@@ -11218,7 +11218,7 @@ WHERE
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVendor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVendor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_Status` INT)  NO SQL BEGIN
 IF(_Name = '') THEN SET _Name = NULL; END IF; 
 IF(_EmailID = '') THEN SET _EmailID = NULL; END IF;
 IF(_Status = -1) THEN SET _Status = NULL; END IF;  
@@ -11281,7 +11281,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVendorByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVendorByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(V.UserID) FROM ss_vendor V WHERE V.UserID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -11310,7 +11310,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_CategoryID` INT)  NO SQL BEGIN
 	SELECT 
     	IFNULL(V.VendorID,0) AS VendorID,
         CONCAT(V.FirstName," ",V.LastName)AS VendorName 
@@ -11320,7 +11320,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_CategoryID` INT)  
     ;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT)  NO SQL BEGIN
       SET @Count=1;
             
 IF(_PageSize = -1 ) THEN 
@@ -11356,7 +11356,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitFromToDateDetails` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT, IN `_Source` TEXT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitFromToDateDetails` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT, IN `_Source` TEXT)  NO SQL BEGIN
 IF(_ProjectID=-1) THEN SET _ProjectID=NULL; END IF;
 IF(_Source='All') THEN SET _Source=NULL; END IF;
 
@@ -11400,7 +11400,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11490,7 +11490,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByChannelPartner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ChannelPartner` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorByChannelPartner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ChannelPartner` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
 IF(_ChannelPartner = '') THEN SET _ChannelPartner = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -11560,7 +11560,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11656,7 +11656,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByID` (IN `_VisitorID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_GetVisitorByID` (IN `_VisitorID` INT)  NO SQL BEGIN 
 SET @Count = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE VisitorID = _VisitorID);
 IF(@Count > 0) THEN
   SELECT 
@@ -11693,7 +11693,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorFollowup` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Status` INT, IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorFollowup` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Status` INT, IN `_ID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID =NULL; END IF;
 IF(_ActionType = 'All') THEN SET _ActionType =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
@@ -11767,7 +11767,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorLeadTypeByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorLeadTypeByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11861,7 +11861,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -11933,7 +11933,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID = NULL; END IF;
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminderaction VRA 
     INNER JOIN sssm_visitorreminder AS VR ON (VR.VisitorReminderID = VRA.VisitorReminderID)
@@ -12001,7 +12001,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderActionID) FROM sssm_visitorreminderaction WHERE VisitorReminderActionID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -12029,7 +12029,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderID) FROM sssm_visitorreminder WHERE VisitorReminderID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -12054,7 +12054,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -12134,7 +12134,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderReport_01062020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorReminderReport_01062020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -12206,7 +12206,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorSites` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorSites` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_Status` INT)  NO SQL BEGIN
 IF(_VisitorID = '') THEN SET _VisitorID = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -12269,7 +12269,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorSitesByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorSitesByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.VisitorSitesID) 
               FROM 
                 ss_visitorsites U 
@@ -12309,7 +12309,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorWithoutFilter` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT, IN `_EntryFromDate` VARCHAR(20), IN `_EntryToDate` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorWithoutFilter` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT, IN `_EntryFromDate` VARCHAR(20), IN `_EntryToDate` VARCHAR(20))  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -12388,7 +12388,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorWithoutFilterOLD` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitorWithoutFilterOLD` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -12464,7 +12464,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor_27102020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Profession` ENUM('Business','Job','All'), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_RoleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitor_27102020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Profession` ENUM('Business','Job','All'), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_RoleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
 IF(_EmailID = '') THEN SET _EmailID =NULL; END IF;
@@ -12699,7 +12699,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetVisitor_ComboBox` ()  NO SQL BEGIN
 
 SELECT IFNULL(V.VisitorID,0) AS VisitorID,
        IFNULL(V.FirstName,'') AS FirstName,
@@ -12708,7 +12708,7 @@ FROM sssm_visitor V;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_GetWingsByPrefix` (IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_GetWingsByPrefix` (IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 SET @Count  = (SELECT COUNT(DISTINCT SUBSTR(PropertyNo,1,_PrefixLen)) FROM sssm_property WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	IF (_PrefixLen=0) THEN
@@ -12723,13 +12723,13 @@ IF(@Count > 0)THEN
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_pagename_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_pagename_ComboBox` ()  NO SQL BEGIN
 
 SELECT PageID , PageName from sssm_pagemaster;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_ReportRole` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_A_ReportRole` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 SET @RoleProjectID = (SELECT RoleProjectID FROM sssm_roleproject WHERE RoleID = _RoleID AND ProjectID = 0);
@@ -12852,7 +12852,7 @@ SELECT
   IFNULL(@TotalRefund,0) AS TotalRefund;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_SetCurrentMotivationalQuote` (IN `_ID` INT, IN `_IsCurrent` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_SetCurrentMotivationalQuote` (IN `_ID` INT, IN `_IsCurrent` INT)  NO SQL BEGIN
 IF(_IsCurrent = 1) THEN
 	UPDATE sssm_motivationalquote 
 		SET 
@@ -12873,7 +12873,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_SetUserNotificationSetting` (IN `_UserID` INT, IN `_IsPush` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_VisitorReminder` INT, IN `_Customer` INT, IN `_CustomerReminder` INT, IN `_CustomerProperty` INT, IN `_Payment` INT, IN `_Document` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_SetUserNotificationSetting` (IN `_UserID` INT, IN `_IsPush` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_VisitorReminder` INT, IN `_Customer` INT, IN `_CustomerReminder` INT, IN `_CustomerProperty` INT, IN `_Payment` INT, IN `_Document` INT)  NO SQL BEGIN
   SET @TimeZone = (SELECT TimeZone FROM sssm_config Limit 1);
   IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -12928,7 +12928,7 @@ CREATE DEFINER=`` PROCEDURE `usp_A_SetUserNotificationSetting` (IN `_UserID` INT
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_UpdateAssignBy` (IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_UpdateAssignBy` (IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12957,21 +12957,21 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_UpdateChallanImage` (IN `_GoodsReceivedNoteID` INT, IN `_ChallanPhotoURL` VARCHAR(150))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_UpdateChallanImage` (IN `_GoodsReceivedNoteID` INT, IN `_ChallanPhotoURL` VARCHAR(150))  NO SQL BEGIN
 	UPDATE ss_goodsreceivednote SET 
     	ChallanPhotoURL = IFNULL(_ChallanPhotoURL,'')
     WHERE GoodsReceivedNoteID=_GoodsReceivedNoteID;
     SELECT _GoodsReceivedNoteID AS ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_UpdateInvoiceImage` (IN `_GoodsReceivedNoteID` INT, IN `_InvoiceImageURL` VARCHAR(150))  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_UpdateInvoiceImage` (IN `_GoodsReceivedNoteID` INT, IN `_InvoiceImageURL` VARCHAR(150))  NO SQL BEGIN
 	UPDATE ss_goodsreceivednote SET 
     	InvoiceImageURL = IFNULL(_InvoiceImageURL,'')
     WHERE GoodsReceivedNoteID=_GoodsReceivedNoteID;
     SELECT _GoodsReceivedNoteID AS ID;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_UpdateVisitorReminder` (IN `_VisitorID` INT, IN `_Date` DATETIME, IN `_Message` TEXT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_PastDate` DATETIME)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_UpdateVisitorReminder` (IN `_VisitorID` INT, IN `_Date` DATETIME, IN `_Message` TEXT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_PastDate` DATETIME)  NO SQL BEGIN
 DECLARE flag INT;
 
 DECLARE EXIT handler for sqlexception
@@ -13020,13 +13020,13 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_A_username_ComboBox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_username_ComboBox` ()  NO SQL BEGIN
 
 SELECT UserID , FirstName, LastName, DisplayName  from sssm_user where Status = 1;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13056,7 +13056,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditCategory` (IN `_CategoryName` VARCHAR(100), IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditCategory` (IN `_CategoryName` VARCHAR(100), IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13088,7 +13088,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditFeedback` (IN `_Feedback` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditFeedback` (IN `_Feedback` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13117,7 +13117,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditGoods` (IN `_GoodsName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditGoods` (IN `_GoodsName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13147,7 +13147,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditSkill` (IN `_SkillName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditSkill` (IN `_SkillName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13176,7 +13176,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13209,7 +13209,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_EditUOM` (IN `_UOMName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_EditUOM` (IN `_UOMName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -13238,7 +13238,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetAnniversaryUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetAnniversaryUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
 IF(_AnniversaryDate = -1) THEN SET _AnniversaryDate = NULL; END IF;
 IF(_AnniversaryMonth = -1) THEN SET _AnniversaryMonth = NULL; END IF;
 
@@ -13284,7 +13284,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetBirthdayUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BirthDate` INT, IN `_BirthMonth` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetBirthdayUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BirthDate` INT, IN `_BirthMonth` INT)  NO SQL BEGIN
 IF(_BirthDate = -1) THEN SET _BirthDate = NULL; END IF;
 IF(_BirthMonth = -1) THEN SET _BirthMonth = NULL; END IF;
 
@@ -13332,7 +13332,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetBrand` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BrandName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetBrand` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BrandName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_BrandName = '') THEN SET _BrandName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13369,7 +13369,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetBrandByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetBrandByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.BrandID) FROM brands C WHERE BrandID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13384,7 +13384,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_CategoryName = '') THEN SET _CategoryName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13424,7 +13424,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.CategoryID) FROM ss_category C WHERE CategoryID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13442,7 +13442,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetFeedback` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Feedback` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetFeedback` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Feedback` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_Feedback = '') THEN SET _Feedback = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13478,7 +13478,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetFeedbackByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetFeedbackByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.FeedbackID) 
               FROM 
                 ss_feedback U WHERE FeedbackID = _ID);
@@ -13494,7 +13494,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetGoods` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_GoodsName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetGoods` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_GoodsName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_GoodsName = '') THEN SET _GoodsName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13534,7 +13534,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetGoodsByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetGoodsByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(G.GoodsID) FROM ss_goods G WHERE GoodsID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13552,7 +13552,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSkill` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SkillName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetSkill` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SkillName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_SkillName = '') THEN SET _SkillName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13588,7 +13588,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSkillByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetSkillByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.SkillID) FROM ss_skill C WHERE SkillID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13602,7 +13602,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetSubCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SubCategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetSubCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SubCategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_SubCategoryName = '') THEN SET _SubCategoryName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13642,7 +13642,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetSubCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetSubCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.SubCategoryID) FROM ss_subcategory C WHERE SubCategoryID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13660,7 +13660,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetUOM` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UOMName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetUOM` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UOMName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_UOMName = '') THEN SET _UOMName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13696,7 +13696,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetUOMByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetUOMByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.UOMID) 
               FROM 
                 ss_uom U WHERE UOMID = _ID);
@@ -13712,7 +13712,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_GetUserFeedbackByID` (IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_UserID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_GetUserFeedbackByID` (IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_UserID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID = NULL; END IF;
 IF(_UserID = -1) THEN SET _UserID = NULL; END IF;
 IF(_OpportunityID = -1) THEN SET _OpportunityID = NULL; END IF;
@@ -13752,7 +13752,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_MA_Dashboard` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_EmployeeID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_MA_Dashboard` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_EmployeeID` INT)  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 IF(_EmployeeID = -1 OR _EmployeeID = -2) THEN SET _EmployeeID = NULL; END IF;
@@ -14103,7 +14103,7 @@ SELECT
   @TotalSubCat AS TotalSubCat;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_MA_DashboardReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE, IN `_EmployeeID` INT)  NO SQL BEGIN 
+CREATE PROCEDURE `usp_MA_DashboardReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE, IN `_EmployeeID` INT)  NO SQL BEGIN 
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
@@ -14710,7 +14710,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_MA_Dashboard_301018` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
+CREATE PROCEDURE `usp_MA_Dashboard_301018` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 IF(_FilterType = "Daily")THEN
@@ -14980,7 +14980,7 @@ SELECT
   @IsHold AS IsHold;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Message` TEXT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Message` TEXT)  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -15024,7 +15024,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@a
  COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_AddReminderResponse` (IN `_ID` INT, IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_AddReminderResponse` (IN `_ID` INT, IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -15088,7 +15088,7 @@ IF(@ActionUser = "Customer") THEN
 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_ChangePassword` (IN `_UserID` INT, IN `OldPassword` VARCHAR(250), IN `NewPassword` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_ChangePassword` (IN `_UserID` INT, IN `OldPassword` VARCHAR(250), IN `NewPassword` VARCHAR(250))  NO SQL BEGIN
   DECLARE row_count INT DEFAULT 0;
   SET @res = (SELECT  COUNT(A.UserID) FROM sssm_admindetails A WHERE A.UserID = _UserID);
   IF(@res > 0) THEN 
@@ -15129,7 +15129,7 @@ IF(@Resultdelete > 0) THEN
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_ChangePropertyStatus` (IN `_Type` VARCHAR(20), IN `_CustomerPropertyID` INT, IN `_UserID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_ChangePropertyStatus` (IN `_Type` VARCHAR(20), IN `_CustomerPropertyID` INT, IN `_UserID` INT)  NO SQL BEGIN
 
 SET @EmployeeName = (SELECT CONCAT(A.FirstName,' ',A.LastName) FROM sssm_admindetails A WHERE A.UserID=_UserID LIMIT 1);
 
@@ -15265,7 +15265,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11), IN `StatusFeild` VARCHAR(100))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11), IN `StatusFeild` VARCHAR(100))  NO SQL BEGIN
 
 DECLARE OldStatus int(11);
 SET @table_name = TableName;
@@ -15282,7 +15282,7 @@ SELECT '0' AS Status;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_CheckLogin` (IN `_EmailID` VARCHAR(100), IN `_Password` VARCHAR(100), IN `_Path` VARCHAR(255), IN `_NotificationToken` TEXT, IN `_DeviceID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSName` VARCHAR(20), IN `_DeviceType` ENUM('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_CheckLogin` (IN `_EmailID` VARCHAR(100), IN `_Password` VARCHAR(100), IN `_Path` VARCHAR(255), IN `_NotificationToken` TEXT, IN `_DeviceID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSName` VARCHAR(20), IN `_DeviceType` ENUM('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'))  NO SQL BEGIN
 
 SET @ResultCount = (SELECT COUNT(U.UserID) FROM sssm_admindetails U WHERE (U.EmailID = _EmailID OR U.MobileNo = _EmailID) AND U.Status != 0 );
 IF(@ResultCount > 0) THEN
@@ -15340,7 +15340,7 @@ IF(@PendingCount = 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_CheckPassCode` (IN `_UserID` INT, IN `_PassCode` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_CheckPassCode` (IN `_UserID` INT, IN `_PassCode` INT)  NO SQL BEGIN
 
 SET @ResultCount = (SELECT COUNT(U.UserID) FROM sssm_admindetails U WHERE U.UserID = _UserID AND U.Status != 0 );
 IF(@ResultCount > 0) THEN
@@ -15376,7 +15376,7 @@ IF(@PendingCount = 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN `_VisitorID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN `_VisitorID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -15474,7 +15474,7 @@ CREATE DEFINER=`` PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN `_VisitorID` IN
                 END IF;                 END IF;                 END IF;                 COMMIT;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_DeleteField` (IN `TableName` VARCHAR(50), IN `FieldName` VARCHAR(50), IN `ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_DeleteField` (IN `TableName` VARCHAR(50), IN `FieldName` VARCHAR(50), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -15487,7 +15487,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_ForgotPassword` (IN `_EmailID` VARCHAR(255))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_ForgotPassword` (IN `_EmailID` VARCHAR(255))  NO SQL BEGIN
 SET @CNT = (SELECT COUNT(EmailID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND Status = 1);
 IF(@CNT > 0) THEN 
 
@@ -15510,7 +15510,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetChanelPartners` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetChanelPartners` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(ChanelPartnerID) FROM sssm_chanelpartner WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -15525,7 +15525,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCity` (IN `_StateID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCity` (IN `_StateID` INT)  NO SQL BEGIN
 IF(_StateID = -1) THEN SET _StateID = NULL; END IF;
 SET @count = (SELECT COUNT(CT.CityID) FROM sssm_cities CT
                 INNER JOIN sssm_state S ON (S.StateID = CT.StateID)
@@ -15551,7 +15551,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCMSPage` (IN `CMS_ID` INT, IN `CMS_PAGE` VARCHAR(50))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCMSPage` (IN `CMS_ID` INT, IN `CMS_PAGE` VARCHAR(50))  NO SQL BEGIN
 
 DECLARE Flag INT DEFAULT 0;
 SET Flag = (SELECT COUNT(c.CMSID) FROM sssm_cms c 
@@ -15576,7 +15576,7 @@ SET Flag = (SELECT COUNT(c.CMSID) FROM sssm_cms c
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetConfig` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetConfig` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(C.ConfigID) FROM sssm_config C);
 IF(@count > 0) THEN 
   SELECT 
@@ -15602,7 +15602,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCountry` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCountry` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(CountryID) FROM sssm_country WHERE Status = 1);
 IF(@count > 0) THEN 
 
@@ -15618,7 +15618,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCurrentMotivationalQuote` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCurrentMotivationalQuote` ()  NO SQL BEGIN
 SET @flag = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE IsCurrent = 1);
     IF(@flag > 0) THEN 
         SELECT 
@@ -15635,7 +15635,7 @@ SET @flag = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerDocumentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCustomerDocumentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertydocument AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -15690,7 +15690,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerDocumentByCPropertyImage` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCustomerDocumentByCPropertyImage` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertyimage AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -15745,7 +15745,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerPayment` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCustomerPayment` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
 
 SET @cnt = (SELECT COUNT(CP.CustomerPaymentID) FROM sssm_customerpayment AS CP
               INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
@@ -15787,7 +15787,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerPaymentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCustomerPaymentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT)  NO SQL BEGIN
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
 SET @cnt = (SELECT COUNT(CP.CustomerPaymentID) FROM sssm_customerpayment AS CP
@@ -15869,7 +15869,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_getCustomerRemainder` (IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_getCustomerRemainder` (IN `_Path` VARCHAR(250))  NO SQL BEGIN
 
   SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
   IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -15954,7 +15954,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerVideoByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetCustomerVideoByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyVideoID) FROM sssm_customerpropertyvideo AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -16010,7 +16010,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_getDashboardCount` (IN `_ID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_getDashboardCount` (IN `_ID` INT)  NO SQL BEGIN
     IF(_ID = -1) THEN SET _ID = NULL; END IF;
 
     SET @TotalProperty = (SELECT COUNT(P.PropertyID) FROM sssm_property P WHERE P.Status=1 AND P.ProjectID = IFNULL(_ID,P.ProjectID));
@@ -16030,7 +16030,7 @@ CREATE DEFINER=`` PROCEDURE `usp_M_getDashboardCount` (IN `_ID` INT)  NO SQL BEG
         @PendingVideoProperty AS PendingVideoProperty; 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetDesignation` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetDesignation` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(DesignationID) FROM sssm_designation WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -16045,7 +16045,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_getDeviceByEmployee` (IN `_UserID` INT, IN `_Type` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_getDeviceByEmployee` (IN `_UserID` INT, IN `_Type` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_UserID = -1) THEN SET _UserID =NULL; END IF;
 IF(_Type = -1) THEN SET _Type =NULL; END IF;
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
@@ -16121,7 +16121,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO SQL BEGIN
 	SET @Count=(SELECT COUNT(A.UserID) FROM sssm_admindetails A WHERE A.Status=1);
     IF(@Count>0) THEN
     	SELECT 
@@ -16133,7 +16133,7 @@ CREATE DEFINER=`` PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO SQL BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetGoodbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetGoodbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
 IF(_CategoryID=0) THEN SET _CategoryID=0; END IF;
  
 SET @Count=(SELECT COUNT(GoodsID) FROM ss_goods WHERE CategoryID=_CategoryID AND Status=1);
@@ -16150,7 +16150,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetGroup` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetGroup` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(GroupID) FROM sssm_group WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -16165,7 +16165,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardItem_List` (IN `_GoodsReceivedNoteID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetInwardItem_List` (IN `_GoodsReceivedNoteID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G
                 WHERE  G.Status=1  AND G.GoodsReceivedNoteID=_GoodsReceivedNoteID
             );
@@ -16192,7 +16192,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150))  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G
                 WHERE  G.Status=1  
             );
@@ -16230,7 +16230,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardMaster_ListbyVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150), IN `_VendorID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetInwardMaster_ListbyVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150), IN `_VendorID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G
                 WHERE  G.Status=1   AND G.VendorID=_VendorID
             );
@@ -16268,7 +16268,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(NotificationID) FROM sssm_notification WHERE UserID = _ID);
 
 IF(@cnt > 0) THEN 
@@ -16321,11 +16321,11 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetNotificationCount` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetNotificationCount` ()  NO SQL BEGIN
 SELECT COUNT(NotificationID) as NotificationCount FROM sssm_notification WHERE IsRead <> 1;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetPropertyByCustomer` (IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetPropertyByCustomer` (IN `_CustomerID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(P.PropertyID) FROM 
     sssm_property P
     INNER JOIN sssm_customerproperty CP ON CP.PropertyID = P.PropertyID
@@ -16349,7 +16349,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetPropertyMileStoneByProperty` (IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetPropertyMileStoneByProperty` (IN `_PropertyID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PMS.ProjectMileStoneID) FROM 
     sssm_projectmilestone PMS
     INNER JOIN sssm_project PO ON PO.ProjectID = PMS.ProjectID
@@ -16378,7 +16378,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetRoleMappingByID` (IN `RID` INT, IN `PID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetRoleMappingByID` (IN `RID` INT, IN `PID` INT)  NO SQL BEGIN
 SET PID = IF(PID=-1,NULL,PID);
 IF RID = -1 OR RID = -2 THEN 
   SELECT RID AS RoleID,
@@ -16444,7 +16444,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetState` (IN `_CountryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetState` (IN `_CountryID` INT)  NO SQL BEGIN
 SET @count = (SELECT COUNT(S.StateID) FROM sssm_state S
                 INNER JOIN sssm_country C ON (S.CountryID = C.CountryID)
               WHERE S.Status = 1 AND C.Status = 1 AND S.CountryID = IFNULL(_CountryID,S.CountryID));
@@ -16463,7 +16463,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_GetVendorbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_GetVendorbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
 IF(_CategoryID=0) THEN SET _CategoryID=0; END IF;
  
 SET @Count=(SELECT COUNT(VendorID) FROM ss_vendor WHERE  CategoryID=_CategoryID);
@@ -16480,7 +16480,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_getVisitorRemainder` ()  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_getVisitorRemainder` ()  NO SQL BEGIN
 
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -16541,7 +16541,7 @@ IF(@cnt > 0) THEN
     END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_M_SignUp` (IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(13), IN `_Password` VARCHAR(50), IN `_path` VARCHAR(250), IN `_NotificationToken` TEXT, IN `_DeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), IN `_DeviceUID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSVersion` VARCHAR(20))  NO SQL BEGIN
+CREATE PROCEDURE `usp_M_SignUp` (IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(13), IN `_Password` VARCHAR(50), IN `_path` VARCHAR(250), IN `_NotificationToken` TEXT, IN `_DeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), IN `_DeviceUID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSVersion` VARCHAR(20))  NO SQL BEGIN
 
 DECLARE ResultId INT DEFAULT 0;
 DECLARE user_Id INT DEFAULT 0;
@@ -16644,7 +16644,7 @@ SET EmailExistStatus = (SELECT COUNT(t.UserID) FROM sssm_admindetails t WHERE (t
 END IF;
 END$$
 
-CREATE DEFINER=`` PROCEDURE `usp_W_GetEmailTemplateDetailByID` (IN `emailtemplet_id` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_W_GetEmailTemplateDetailByID` (IN `emailtemplet_id` INT)  NO SQL BEGIN
 SELECT EmailTemplateID , EmailTemplateTitle, EmailSubject, Content, Status from  sssm_emailtemplate
  where EmailTemplateID = emailtemplet_id;
 END$$
@@ -16652,7 +16652,7 @@ END$$
 --
 -- Functions
 --
-CREATE DEFINER=`` FUNCTION `Fn_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_errorlog(
@@ -16677,7 +16677,7 @@ INSERT INTO sssm_errorlog(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_AddActivityLog` (`_Method` VARCHAR(150) CHARSET utf8, `_Activity` TEXT CHARSET utf8, `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), `_IPAddress` VARCHAR(16), `_CreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_A_AddActivityLog` (`_Method` VARCHAR(150) CHARSET utf8, `_Activity` TEXT CHARSET utf8, `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), `_IPAddress` VARCHAR(16), `_CreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -16713,7 +16713,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_AddCustomerProcess` (`_ID` INT, `_CustomerType` ENUM('Customer','Visitor'), `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_A_AddCustomerProcess` (`_ID` INT, `_CustomerType` ENUM('Customer','Visitor'), `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
 
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 
@@ -16736,7 +16736,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_A_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_errorlog(
@@ -16761,7 +16761,7 @@ INSERT INTO sssm_errorlog(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_AddNotification` (`_UserID` INT, `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_A_AddNotification` (`_UserID` INT, `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
 
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 
@@ -16782,7 +16782,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_AddUser` (`pEmailID` VARCHAR(100), `pPassword` VARCHAR(100), `pMobileNo` VARCHAR(15), `pUserType` ENUM('Admin','Employee','Customer','Visitor'), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_A_AddUser` (`pEmailID` VARCHAR(100), `pPassword` VARCHAR(100), `pMobileNo` VARCHAR(15), `pUserType` ENUM('Admin','Employee','Customer','Visitor'), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
 INSERT INTO sssm_user(
@@ -16803,17 +16803,17 @@ INSERT INTO sssm_user(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_Date,"%d-%m-%Y"));
 RETURN  @DateFormated;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_DateTime,"%d-%m-%Y %H:%i:%s"));
 RETURN  @DateFormated;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
@@ -16827,7 +16827,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @details = (SELECT 
   GROUP_CONCAT(CONCAT(PJ.Title,"-",PT.PropertyNo,IF(CP.IsCancelled=1,"(Cancelled)",IF(CP.IsHold,"(Hold)",''))))
  FROM
@@ -16841,7 +16841,7 @@ GROUP BY CP.CustomerID);
 RETURN IFNULL(@details,'');
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_A_TotremPayByCustomer` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE FUNCTION `Fn_A_TotremPayByCustomer` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND CustomerPaymentID != CPID);
 IF(@Amount > @Pay) THEN
@@ -16851,12 +16851,12 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetCustomerIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetCustomerIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @CustomerID = (SELECT IFNULL(CustomerID,0) AS CustomerID FROM sssm_customer WHERE VisitorID = _ID);
 RETURN @CustomerID;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
   SELECT Message
@@ -16868,7 +16868,7 @@ IF(IFNULL(ErrorMessage,'')='') THEN SET ErrorMessage = _MessageKey; END IF;
 RETURN ErrorMessage;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(GSTAmount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND AmountType IN (0,2));
@@ -16883,7 +16883,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @Item = (SELECT GROUP_CONCAT(G.GoodsName,' ',GI.Qty,' ',U.UOMName,' * ',GI.Rate,' = ',GI.FinalPrice ) AS Item  FROM ss_goodreceiveditems GI  
 INNER JOIN ss_goods G  ON G.GoodsID=GI.GoodsID
 INNER JOIN ss_uom U ON U.UOMID=GI.UOMID
@@ -16891,7 +16891,7 @@ where GI.GoodsReceivedNoteID=_ID);
 RETURN @Item;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetLastPayInstalmentNo` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetLastPayInstalmentNo` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @instalmentno = (SELECT 
 	IFNULL(PMS.InstalmentNo,0) AS InstalmentNo
 FROM 
@@ -16904,7 +16904,7 @@ ORDER BY PMS.InstalmentNo DESC LIMIT 1);
 RETURN @instalmentno;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 	IF(_Type="AddVisitor") THEN 
 		RETURN "Add Visitor";
 	ELSEIF(_Type="VisitorReminder") THEN
@@ -16929,7 +16929,7 @@ CREATE DEFINER=`` FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT
 	END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,'') AS Feedback
@@ -16954,7 +16954,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectGalleryID) FROM sssm_projectgallery WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	SET @Image = (SELECT ImagePath FROM sssm_projectgallery WHERE ProjectID = _ProjectID ORDER BY ProjectGalleryID LIMIT 1);
@@ -16964,7 +16964,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetRefundAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetRefundAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(RefundAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(RefundAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND AmountType IN (0,1));
@@ -16979,7 +16979,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetRefundGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetRefundGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(RefundGSTAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND AmountType IN (0,2));
@@ -16994,7 +16994,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetRemainingGSTAmount` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE FUNCTION `Fn_GetRemainingGSTAmount` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(GSTAmount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND CustomerPaymentID != CPID);
 IF(@Amount > @Pay) THEN
@@ -17004,7 +17004,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetRemainingRefund` (`_ID` INT, `_RID` INT, `_IsAmount` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE FUNCTION `Fn_GetRemainingRefund` (`_ID` INT, `_RID` INT, `_IsAmount` INT) RETURNS DOUBLE NO SQL BEGIN
 IF(_IsAmount = 1) THEN 
  SET @Amount = (SELECT IFNULL(RefundAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
  SET @Pay = (SELECT IFNULL(SUM(RefundAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND RefundID != _RID);
@@ -17024,7 +17024,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetReportFeedbackData` (`_ID` INT, `_Type` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetReportFeedbackData` (`_ID` INT, `_Type` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE) RETURNS INT(11) NO SQL BEGIN
 SET @Item = (SELECT COUNT(U.UserFeedbackID)
 FROM ss_userfeedback U 
 WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND 
@@ -17032,7 +17032,7 @@ WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND
 RETURN @Item;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 DECLARE Data TEXT;
 SET @Count = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 IF(@Count > 0) THEN 
@@ -17058,7 +17058,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetRoleProjectByModule` (`_RoleID` INT, `_ProjectID` INT, `_ModuleID` INT, `_Action` VARCHAR(20)) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetRoleProjectByModule` (`_RoleID` INT, `_ProjectID` INT, `_ModuleID` INT, `_Action` VARCHAR(20)) RETURNS INT(11) NO SQL BEGIN
 IF(_RoleID = -1 OR _RoleID = -2 )THEN
 	RETURN 1;
 END IF;
@@ -17077,19 +17077,19 @@ END IF;
 RETURN @Flag;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetSitesCountIDByReport` (`_Source` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE, `_ProjectID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetSitesCountIDByReport` (`_Source` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE, `_ProjectID` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_ProjectID=-1) THEN SET _ProjectID=NULL; END IF;
 SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_visitorsites WHERE VisitSource=_Source  AND _FromDate <= InquiryDate AND 
           _EndDate >= InquiryDate AND ProjectID = IFNULL(_ProjectID,ProjectID));
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetSitesCountIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetSitesCountIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_visitorsites WHERE VisitorID = _ID);
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type = "Requirenment") THEN
 SET @Data = (SELECT IFNULL(GROUP_CONCAT(V.Requirement),'') AS Requirement FROM ss_visitorsites V WHERE V.VisitorID= _ID);
 ELSEIF(_Type = "LeadType") THEN
@@ -17102,14 +17102,14 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetVisitorDataInquiryDate` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS DATE NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorDataInquiryDate` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS DATE NO SQL BEGIN
 IF(_Type = "InquiryDate") THEN
 SET @Data = (SELECT IFNULL(V.InquiryDate,'') AS InquiryDate FROM ss_visitorsites V WHERE V.VisitorID= _ID ORDER BY V.VisitorSitesID DESC LIMIT 1);
 END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,NULL) AS Feedback
@@ -17128,7 +17128,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_GetVisitorNextReminderStatus` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorNextReminderStatus` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -17152,13 +17152,13 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
 SET @Date = (SELECT PurchaseDate FROM sssm_customerproperty WHERE 
              CustomerID = _CustomerID ORDER BY PurchaseDate DESC LIMIT 1);
              RETURN IFNULL(@Date,'');
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_AddDevice` (`pDeviceName` VARCHAR(100), `pDeviceUID` VARCHAR(50), `pOSVersion` VARCHAR(10), `pDeviceTokenID` TEXT, `pDeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), `pUserID` INT(11)) RETURNS INT(11) NO SQL BEGIN 
+CREATE FUNCTION `Fn_M_AddDevice` (`pDeviceName` VARCHAR(100), `pDeviceUID` VARCHAR(50), `pOSVersion` VARCHAR(10), `pDeviceTokenID` TEXT, `pDeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), `pUserID` INT(11)) RETURNS INT(11) NO SQL BEGIN 
 
   DECLARE User_Type VARCHAR(50) DEFAULT 0;
   
@@ -17207,7 +17207,7 @@ END IF;
 RETURN 1;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @Document = (SELECT 
 GROUP_CONCAT(CONCAT(CPD.Title,'~',CPD.DocumentUrl)) 
 FROM sssm_customerpropertydocument CPD
@@ -17216,7 +17216,7 @@ WHERE CP.CustomerPropertyID = _ID);
 RETURN IFNULL(@Document,'');
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN 
 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
@@ -17231,7 +17231,7 @@ RETURN ErrorMessage;
 
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 DECLARE Data Text;
 IF(_ActionType = "AddVisitor") THEN 
   SET @Count = (SELECT COUNT(V.VisitorID) FROM sssm_visitor V
@@ -17553,7 +17553,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_IsVisitIdle` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_M_IsVisitIdle` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(VisitorID) FROM sssm_visitorreminder WHERE VisitorID = _VisitorID AND NoIdle = 1);
 IF(@COUNT > 0) THEN 
 	RETURN 1;
@@ -17562,7 +17562,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_M_IsVisitorConvert` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_M_IsVisitorConvert` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(VisitorID) FROM sssm_customer WHERE VisitorID = _VisitorID);
 IF(@COUNT > 0) THEN 
 	RETURN 1;
@@ -17571,17 +17571,17 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_TotnoOfPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE FUNCTION `Fn_TotnoOfPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Tot = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
 RETURN IFNULL(@Tot,0);
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_TotnoOfPayment` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE FUNCTION `Fn_TotnoOfPayment` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerPaymentID) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`` FUNCTION `Fn_TotremPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE FUNCTION `Fn_TotremPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT Fn_TotnoOfPayByCustomer(_ID));
 IF(@Amount > @Pay) THEN
@@ -17608,7 +17608,7 @@ CREATE TABLE `brands` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `brands`
@@ -17652,7 +17652,7 @@ CREATE TABLE `sssm_activitylog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_activitylog`
@@ -17969,7 +17969,25 @@ INSERT INTO `sssm_activitylog` (`ActivityLogID`, `MethodName`, `ActivityDescript
 (308, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-08 18:18:51', NULL, NULL, 1),
 (309, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 19:05:11', NULL, NULL, 1),
 (310, 'EditPagemaster', 'Dj Parth Parth has updated pagemaster socialevents', 'Admin Web', 2, '::1', 2, '2025-01-08 19:05:21', NULL, NULL, 1),
-(311, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 19:20:07', NULL, NULL, 1);
+(311, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 19:20:07', NULL, NULL, 1),
+(312, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:34:35', NULL, NULL, 1),
+(313, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:35:30', NULL, NULL, 1),
+(314, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:36:10', NULL, NULL, 1),
+(315, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:38:53', NULL, NULL, 1),
+(316, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:40:11', NULL, NULL, 1),
+(317, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:41:30', NULL, NULL, 1),
+(318, 'EditBanner', 'Dj Parth Parth has updated Banner Your Go TO DJ Solutions', 'Admin Web', 2, '::1', 2, '2025-01-08 21:55:07', NULL, NULL, 1),
+(319, 'EditBanner', 'Dj Parth Parth has updated Banner DJ Services for Business, Done Right', 'Admin Web', 2, '::1', 2, '2025-01-08 21:55:46', NULL, NULL, 1),
+(320, 'EditBanner', 'Dj Parth Parth has updated Banner Government Event Specialists', 'Admin Web', 2, '::1', 2, '2025-01-08 21:56:22', NULL, NULL, 1),
+(321, 'EditBanner', 'Dj Parth Parth has updated Banner We provide innovative solutions to expand business', 'Admin Web', 2, '::1', 2, '2025-01-08 21:57:19', NULL, NULL, 1),
+(322, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:58:55', NULL, NULL, 1),
+(323, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:59:17', NULL, NULL, 1),
+(324, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:59:38', NULL, NULL, 1),
+(325, 'AddPagemaster', 'Dj Parth Parth has added new pagemaster.', 'Admin Web', 2, '::1', 2, '2025-01-08 21:59:57', NULL, NULL, 1),
+(326, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:04', NULL, NULL, 1),
+(327, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:23', NULL, NULL, 1),
+(328, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:37', NULL, NULL, 1),
+(329, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:57', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -17997,7 +18015,7 @@ CREATE TABLE `sssm_admindetails` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_admindetails`
@@ -18023,7 +18041,7 @@ CREATE TABLE `sssm_blastmessages` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18043,7 +18061,7 @@ CREATE TABLE `sssm_blogs` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_blogs`
@@ -18082,7 +18100,7 @@ CREATE TABLE `sssm_cancelproperty` (
   `IsDealClosed` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18113,7 +18131,7 @@ CREATE TABLE `sssm_chanelpartner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18130,7 +18148,7 @@ CREATE TABLE `sssm_cities` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_cities`
@@ -18791,7 +18809,7 @@ CREATE TABLE `sssm_cms` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_cms`
@@ -18801,7 +18819,16 @@ INSERT INTO `sssm_cms` (`CMSID`, `PageID`, `Title`, `Content`, `CreatedBy`, `Cre
 (3, 2, 'About us', '<section class=\"p-0 bg-light-gray wow animate__fadeIn\">\n<div class=\"container\">\n<div class=\"row align-items-center\">\n<div class=\"col-lg-6 text-center align-self-end\"><img src=\"assets/front/images/about-ceo2.jpg\" alt=\"\" /></div>\n<div class=\"col-lg-5 col-md-10 text-center text-lg-start offset-lg-1 mx-auto me-lg-0 lg-padding-50px-tb\"><i class=\"fa-solid fa-quote-left text-deep-pink icon-large margin-5px-bottom\"></i>\n<h5 class=\"text-extra-dark-gray alt-font text-uppercase font-weight-700\">Transforming Events with Music and Passion</h5>\n<p class=\"w-90 md-w-100\">At DJ Parth, creating unique event experiences is our passion. Our skilled DJ crew provides outstanding entertainment options that are customized to your distinct vision. With years of expertise and a passion for music, we enhance events with expert lighting design, personalized playlists, and emceeing. Our aim is to surpass your anticipations and establish enduring recollections. Together, let\'s realize your vision!</p>\n<img src=\"assets/front/images/signature-dark.png\" alt=\"\" class=\"margin-15px-top md-no-margin-top\" /> <span class=\"text-extra-dark-gray text-large d-block margin-30px-top alt-font font-weight-600 sm-margin-20px-top\">Parth Gadhia</span> <span class=\"d-block\">Founder</span></div>\n</div>\n</div>\n</section>\n<section class=\"wow animate__fadeIn\">\n<div class=\"container\">\n<div class=\"row justify-content-center\">\n<div class=\"col-lg-4 col-md-6 col-sm-8 md-margin-40px-bottom text-center text-lg-start sm-margin-30px-bottom wow animate__fadeInRight\">\n<h5 class=\"text-extra-dark-gray font-weight-600 alt-font m-0\">We are offering Unmatched Entertainment Experience.</h5>\n</div>\n<div class=\"col-lg-8\">\n<div class=\"row row-cols-1 row-cols-sm-2\"><!-- start feature box item -->\n<div class=\"col text-center text-lg-start xs-margin-30px-bottom wow animate__fadeInRight last-paragraph-no-margin\" data-wow-delay=\"0.2s\">\n<div class=\"row m-0\">\n<div class=\"col-lg-3 text-center sm-no-padding-lr\">\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0 md-margin-10px-bottom\">01</h2>\n</div>\n<div class=\"col-lg-9 margin-5px-top sm-no-padding-lr\"><span class=\"alt-font text-medium text-extra-dark-gray margin-5px-bottom d-block\">Latest Trend</span>\n<p class=\"w-80 lg-w-100\">We always follows Latest Music and Trends in Music industry.</p>\n</div>\n</div>\n</div>\n<!-- end feature box item --> <!-- start feature box item -->\n<div class=\"col text-center text-lg-start wow animate__fadeInRight last-paragraph-no-margin\" data-wow-delay=\"0.4s\">\n<div class=\"row m-0\">\n<div class=\"col-lg-3 text-center sm-no-padding-lr\">\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0 md-margin-10px-bottom\">02</h2>\n</div>\n<div class=\"col-lg-9 margin-5px-top sm-no-padding-lr\"><span class=\"alt-font text-medium text-extra-dark-gray margin-5px-bottom d-block\">Modern Equipments</span>\n<p class=\"w-80 lg-w-100\">We are using Cutting-Edge DJ Equipments for Crystal-Clear Sound Quality.</p>\n</div>\n</div>\n</div>\n<!-- end feature box item --></div>\n</div>\n</div>\n</div>\n</section>\n<section id=\"about\" class=\"p-0 wow animate__fadeIn\">\n<div class=\"container-fluid\">\n<div class=\"row\">\n<div class=\"col-xl-4 col-md-6 bg-extra-dark-gray d-flex align-items-center wow animate__fadeIn\">\n<div class=\"padding-six-all md-padding-nine-all sm-padding-50px-tb sm-padding-15px-lr\">\n<h5 class=\"alt-font text-white-2\">We provide high quality and cost effective services</h5>\n<p class=\"text-extra-large font-weight-300 text-extra-light-gray\">Since our foundation in 2014 our goal has been to use latest technology to create quality experiences.</p>\n<p class=\"w-90 sm-w-100\">Experience exceptional DJ entertainment at an affordable price with us. Our team of professionals is dedicated to providing top-notch services that meet your needs without overspending. From weddings to corporate events, we tailor our packages to ensure high-quality sound, lighting, and ambiance. Our cost-effective solutions don\'t compromise on quality, ensuring an unforgettable experience.</p>\n</div>\n</div>\n<div class=\"col-xl-4 col-md-6 bg-extra-dark-gray cover-background sm-h-400px wow animate__fadeIn\" style=\"background-image: url(\'assets/front/images/about-img1.jpg\');\"></div>\n<div class=\"col-xl-4 col-md-12 bg-extra-dark-gray align-items-center padding-five-tb padding-five-half-lr lg-padding-50px-tb md-padding-70px-tb md-padding-ten-lr xs-padding-50px-tb xs-padding-20px-lr wow animate__fadeIn\">\n<div class=\"row justify-content-center\">\n<div class=\"col-md-12 col-sm-8 margin-four-bottom lg-margin-six-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center text-md-start\">\n<h5 class=\"alt-font text-white-2 margin-35px-bottom sm-margin-15px-bottom\">We provide professional services within time-frame.</h5>\n<p class=\"text-extra-large font-weight-300 text-extra-light-gray\">Punctual, Professional and Perfect DJ Services for your Event.</p>\n<p class=\"w-90 sm-w-100\">We understand the importance of timely delivery. Our professional DJs guarantee expert services within agreed-upon time-frames, ensuring seamless event execution. From Setup to Teardown, we manage every detail:</p>\n<p class=\"w-90 sm-w-100\">- Prompt arrivals and setups - Customized playlists ready on time - Efficient communication and coordination - Event schedule adherence</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</section>\n<section class=\"wow animate__fadeIn\">\n<div class=\"container\">\n<div class=\"row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4\"><!-- counter box item -->\n<div class=\"col md-margin-50px-bottom sm-margin-40px-bottom text-center wow animate__fadeInDown\">\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"6000\" data-speed=\"2000\">6000+</h5>\n<span class=\"d-block margin-three-bottom\">Happy Clients</span></div>\n<!-- end counter box item --> <!-- counter box item -->\n<div class=\"col md-margin-50px-bottom sm-margin-40px-bottom text-center wow animate__fadeInDown\" data-wow-delay=\"0.2s\">\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"5200\" data-speed=\"2000\">5200+</h5>\n<span class=\"d-block margin-three-bottom\">Social Events</span></div>\n<!-- end counter box item --> <!-- counter box item -->\n<div class=\"col xs-margin-40px-bottom text-center wow animate__fadeInDown\" data-wow-delay=\"0.4s\">\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"750\" data-speed=\"2000\">750+</h5>\n<span class=\"d-block margin-three-bottom\">Corporate Events</span></div>\n<!-- end counter box item --> <!-- counter box item -->\n<div class=\"col text-center wow animate__fadeInDown\" data-wow-delay=\"0.6s\">\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"100\" data-speed=\"2000\">100+</h5>\n<span class=\"d-block margin-three-bottom\">Government Events</span></div>\n<!-- end counter box item --></div>\n</div>\n</section>', 1, '2017-12-06 16:51:32', 2, '2025-01-02 17:33:37', 1),
 (5, 3, 'Blogs', '<p class=\"h4\"><span style=\"font-size: medium;\">Palasa  is young &amp; fresh and is built on two strong beliefs. One is &lsquo;Practicality&rsquo; and the other is what it&rsquo;s tagline says,&nbsp;&lsquo;Constructing Fortunes&rsquo;.</span></p>\n<p><span style=\"font-size: medium;\">Practicality by a sense of design detailing and simple measures taken to ensure ease of use for all. The function is definitely given priority over form, fancy materials or fad -based ideas.</span></p>', 2, '2024-07-24 23:06:50', 2, '2024-07-30 18:42:15', 1),
 (6, 7, 'Privacy Policy', '<!-- Service Detailss Start -->\n<div class=\"singleServicePage\" style=\"margin-bottom: -100px;\">\n<div class=\"container largeContainer\">\n<div class=\"row\">\n<div class=\"col-xl-12\">\n<div class=\"ssContent\">\n<div class=\"subTitle\">Protecting Your Data</div>\n<h2 class=\"secTitle\">Expert Recruitment Solution for Manufacturing Excellence</h2>\n<p>We at Unique HR Consultancy value the privacy of our clients, candidates, and website users. We gather, use, and safeguard personal information in accordance with our privacy policy.</p>\n<p><strong>Data Collection</strong> <br /> <br /> We collect personal data from candidates, including: <br /> <br /> - Contact information (name, email, phone number) <br /> - Resume and CV information <br /> - Job preferences and search criteria <br /> - Interview and assessment results <br /> <br /> We also collect data from clients, including: <br /> - Company information (name, address, contact details) <br /> - Job descriptions and requirements <br /> - Recruitment needs and preferences </p>\n<p><strong>Data Use</strong> We use personal data to: <br /> <br /> - Match candidates with job openings <br /> - Provide recruitment services to clients <br /> - Improve our website and services <br /> - Communicate with candidates and clients <br /> <strong>Data Protection</strong> <br /><br /> We protect personal data by: <br /> - Storing data securely on our servers <br /> - Limiting access to authorized personnel <br /> - Using encryption and firewalls <br /> - Implementing data backup and disaster recovery procedures</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n<!-- Services Details End -->\n<p>&nbsp;</p>\n<!-- Related Service Start -->\n<div class=\"relatedService\">\n<div class=\"container largeContainer\">\n<div class=\"row rlsContent\">\n<div class=\"col-lg-12\">\n<h2>Contact Us</h2>\n<p>If you have questions or concerns about our privacy policy, please contact us at info@unique-hr.com or +917383357731.</p>\n</div>\n</div>\n</div>\n</div>\n<!-- Related Service End -->\n<p>&nbsp;</p>', 2, '2024-07-30 20:11:26', 2, '2024-08-13 23:26:49', 1),
-(21, 22, 'Social Events', '<section class=\"p-0 one-third-screen position-relative wow animate__fadeIn\">\r\n<div class=\"opacity-medium bg-extra-dark-gray z-index-0\"></div>\r\n<div class=\"container position-relative\">\r\n<div class=\"row align-items-center\">\r\n<div class=\"col-12 one-third-screen d-flex flex-column justify-content-center page-title-large text-center\"><!-- start sub title --> <span class=\"d-block text-white-2 opacity6 margin-10px-bottom alt-font\">Your Go TO DJ Solutions</span> <!-- end sub title --> <!-- start page title -->\r\n<h1 class=\"alt-font text-white-2 font-weight-600 w-55 md-w-80 sm-w-100 mx-auto mb-0\">Transform Your Party with Our Dynamic DJ Experience</h1>\r\n<!-- end page title --></div>\r\n<div class=\"down-section text-center\"></div>\r\n</div>\r\n</div>\r\n<div class=\"swiper z-index-minus2 position-absolute top-0 h-100\" data-slider-options=\"{ &quot;loop&quot;: true, &quot;effect&quot;:&quot;fade&quot;, &quot;slidesPerView&quot;: &quot;1&quot;, &quot;allowTouchMove&quot;:true, &quot;autoplay&quot;: { &quot;delay&quot;: 5000, &quot;disableOnInteraction&quot;: false }, &quot;keyboard&quot;: { &quot;enabled&quot;: true, &quot;onlyInViewport&quot;: true }, &quot;navigation&quot;: { &quot;nextEl&quot;: &quot;.swiper-button-next&quot;, &quot;prevEl&quot;: &quot;.swiper-button-prev&quot; }, &quot;pagination&quot;: { &quot;el&quot;: &quot;.swiper-pagination-01&quot;, &quot;clickable&quot;: true } }\">\r\n<div class=\"swiper-wrapper\"><!-- start slider item -->\r\n<div class=\"swiper-slide cover-background\" style=\"background-image: url(\'assets/front/images/02 dj banner social events.jpg\');\"></div>\r\n<!-- end slider item --></div>\r\n<!-- <div class=\"swiper-pagination swiper-pagination-01 swiper-pagination-white\"></div> --></div>\r\n</section>\r\n<!-- end page title section --> <!-- start tabs section -->\r\n<section class=\"wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-xl-7 col-lg-7 col-sm-9 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\r\n<div class=\"alt-font text-medium-gray margin-10px-bottom text-uppercase text-small\">Get Ready to Dance on DJ music Beats</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Unforgettable Social Events Start Here with Professional DJ Solutions</h5>\r\n</div>\r\n</div>\r\n<div class=\"row\">\r\n<div class=\"col-12 justify-content-center text-center p-0 tab-style1\" id=\"animated-tab\"><!-- start tab navigation -->\r\n<ul class=\"nav nav-tabs margin-50px-bottom sm-no-margin-bottom\">\r\n<li class=\"nav-item\"><a href=\"#tab6_sec1\" data-bs-toggle=\"tab\" class=\"nav-link active\"><span><i class=\"fas fa-comments icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">01. Discussion</span></a></li>\r\n<li class=\"nav-item\"><a href=\"#tab6_sec2\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-lightbulb icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">02. Creative Concept</span></a></li>\r\n<li class=\"nav-item\"><a href=\"#tab6_sec3\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-cogs icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">03. Production</span></a></li>\r\n<li class=\"nav-item\"><a href=\"#tab6_sec4\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-smile icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">04. Happy Client</span></a></li>\r\n</ul>\r\n<!-- end tab navigation -->\r\n<div class=\"tab-content\"><!-- start tab content -->\r\n<div id=\"tab6_sec1\" class=\"tab-pane fade show active\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/03 Social Event.png\" alt=\"\" /></div>\r\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\r\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">01. Discussion</span> <span class=\"alt-font text-medium-gray text-medium\">We Discuss Events Goals, Music Preferences, Theme, Genre and Tempo. We do understand Client\'s Event Vision and Objectives.</span></div>\r\n</div>\r\n<div class=\"col-lg-4 col-md-6 text-start\">\r\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Don&rsquo;t worry, you&rsquo;re in safe hands</span>\r\n<p class=\"w-100\">Seasoned DJs with 10+ Years of Experience, We are Expertise in Weddings, Birthday Parties, Sangeet and other Parties. Staying Current with Music Trends and Technology.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end tab content --> <!-- start tab content -->\r\n<div id=\"tab6_sec2\" class=\"tab-pane fade in\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/01 Social Event.png\" alt=\"\" /></div>\r\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\r\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">02. Creative Concept</span> <span class=\"alt-font text-medium-gray text-medium\">We helps our Clients for Bringing Social Event Vision to Life. Our team is Specialized for Concept-to-Reality Planning. </span></div>\r\n</div>\r\n<div class=\"col-lg-4 col-md-6 text-start\">\r\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Where Memories are Crafted</span>\r\n<p class=\"w-100\">Being an Innovative DJ, We offer Bespoke Music Creation, Seamless Transitions and Electrifying Performances.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end tab content --> <!-- start tab content -->\r\n<div id=\"tab6_sec3\" class=\"tab-pane fade in\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/02 Social Event.png\" alt=\"\" /></div>\r\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\r\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">03. Production</span> <span class=\"alt-font text-medium-gray text-medium\">Our Expert team is committed to provide Flawless executions. Keeping all minor things in mind at the time of Production.</span></div>\r\n</div>\r\n<div class=\"col-lg-4 col-md-6 text-start\">\r\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Event Perfection, Every Single Time</span>\r\n<p class=\"w-100\">Our major focus on Event Production by using better Sound Systems, Dynamic Lighting and Innovative Designs.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end tab content --> <!-- start tab content -->\r\n<div id=\"tab6_sec4\" class=\"tab-pane fade in\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/04 Social Event.png\" alt=\"\" /></div>\r\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\r\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">04. Happy Client</span> <span class=\"alt-font text-medium-gray text-medium\">Don\'t just take our word for it. Check out our Client Reviews. After Serving 6000+ Clients, still we are maintaining 95% Client Satisfaction Rate. </span></div>\r\n</div>\r\n<div class=\"col-lg-4 col-md-6 text-start\">\r\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Client Satisfaction, Our Top Priority</span>\r\n<p class=\"w-100\">Our Happy Clients share their Stories of Joy, laughter and celebration, thanks to our tailored DJ Solutions.</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end tab content --></div>\r\n<!-- end tab content section --></div>\r\n<!-- end tab --></div>\r\n</div>\r\n</section>\r\n<!-- end tabs section --> <!-- start feature box section -->\r\n<section class=\"no-padding wow animate__fadeIn bg-extra-dark-gray\">\r\n<div class=\"container-fluid\">\r\n<div class=\"row row-cols-1 row-cols-lg-2\">\r\n<div class=\"col cover-background md-h-500px sm-h-350px wow animate__fadeInLeft\" style=\"background-image: url(\'assets/front/images/services-img8.jpg\');\">\r\n<div class=\"hidden-sm h-350px\"></div>\r\n</div>\r\n<div class=\"col padding-six-all xl-padding-four-all lg-padding-six-all md-padding-nine-half-tb md-padding-30px-lr wow animate__fadeInRight\">\r\n<div class=\"row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-sm-2 m-0\"><!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-drum text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Navratri</div>\r\n<p class=\"w-95 xl-w-100\">Navratri Festival is celebrated with Vibrant Colours, Rhythmic Beats and Endless fun.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-heart text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Wedding Ceremony</div>\r\n<p class=\"w-95 xl-w-100\">We are specialised into Customized playlists for ceremony, cocktail hours and reception.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-users text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-white-2 margin-5px-bottom alt-font\">College Social Events</div>\r\n<p class=\"w-95 xl-w-100\">We have team of Experienced DJs familiar with College crowds expectations with professional equipment and lighting.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-calendar-alt text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Other Social Events</div>\r\n<p class=\"w-95 xl-w-100\">We also provide services for Graduation Parties, Baby Showers, Bridal Showers, Engagement Party, Reunions, Charity Events etc.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --></div>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start section -->\r\n<section class=\"pb-0 bg-light-gray wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-8 col-md-10 margin-eight-bottom text-center last-paragraph-no-margin\">\r\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">Musical Solutions for All</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600\">Sound-wave Entertainment: Weddings to College Life</h5>\r\n<p class=\"d-inline-block\">Make Your special Day unforgettable with enchanting melodies! Our Expert Artist craft personalized play-lists, blending romance and Joy, ensuring an unforgettable event experience.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-12 text-center\"><img src=\"assets/front/images/services-img10.jpg\" alt=\"\" /></div>\r\n</div>\r\n</div>\r\n</section>', 2, '2025-01-08 19:20:07', NULL, NULL, 1);
+(21, 22, 'Social Events', '<section class=\"p-0 one-third-screen position-relative wow animate__fadeIn\">\n<div class=\"opacity-medium bg-extra-dark-gray z-index-0\"></div>\n<div class=\"container position-relative\">\n<div class=\"row align-items-center\">\n<div class=\"col-12 one-third-screen d-flex flex-column justify-content-center page-title-large text-center\"><!-- start sub title --> <span class=\"d-block text-white-2 opacity6 margin-10px-bottom alt-font\">Your Go TO DJ Solutions</span> <!-- end sub title --> <!-- start page title -->\n<h1 class=\"alt-font text-white-2 font-weight-600 w-55 md-w-80 sm-w-100 mx-auto mb-0\">Transform Your Party with Our Dynamic DJ Experience</h1>\n<!-- end page title --></div>\n<div class=\"down-section text-center\"></div>\n</div>\n</div>\n<div class=\"swiper z-index-minus2 position-absolute top-0 h-100\" data-slider-options=\"{ &quot;loop&quot;: true, &quot;effect&quot;:&quot;fade&quot;, &quot;slidesPerView&quot;: &quot;1&quot;, &quot;allowTouchMove&quot;:true, &quot;autoplay&quot;: { &quot;delay&quot;: 5000, &quot;disableOnInteraction&quot;: false }, &quot;keyboard&quot;: { &quot;enabled&quot;: true, &quot;onlyInViewport&quot;: true }, &quot;navigation&quot;: { &quot;nextEl&quot;: &quot;.swiper-button-next&quot;, &quot;prevEl&quot;: &quot;.swiper-button-prev&quot; }, &quot;pagination&quot;: { &quot;el&quot;: &quot;.swiper-pagination-01&quot;, &quot;clickable&quot;: true } }\">\n<div class=\"swiper-wrapper\"><!-- start slider item -->\n<div class=\"swiper-slide cover-background\" style=\"background-image: url(\'assets/front/images/02 dj banner social events.jpg\');\"></div>\n<!-- end slider item --></div>\n<!-- <div class=\"swiper-pagination swiper-pagination-01 swiper-pagination-white\"></div> --></div>\n</section>\n<!-- end page title section --> <!-- start tabs section -->\n<section class=\"wow animate__fadeIn\">\n<div class=\"container\">\n<div class=\"row justify-content-center\">\n<div class=\"col-xl-7 col-lg-7 col-sm-9 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\n<div class=\"alt-font text-medium-gray margin-10px-bottom text-uppercase text-small\">Get Ready to Dance on DJ music Beats</div>\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Unforgettable Social Events Start Here with Professional DJ Solutions</h5>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-12 justify-content-center text-center p-0 tab-style1\" id=\"animated-tab\"><!-- start tab navigation -->\n<ul class=\"nav nav-tabs margin-50px-bottom sm-no-margin-bottom\">\n<li class=\"nav-item\"><a href=\"#tab6_sec1\" data-bs-toggle=\"tab\" class=\"nav-link active\"><span><i class=\"fas fa-comments icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">01. Discussion</span></a></li>\n<li class=\"nav-item\"><a href=\"#tab6_sec2\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-lightbulb icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">02. Creative Concept</span></a></li>\n<li class=\"nav-item\"><a href=\"#tab6_sec3\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-cogs icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">03. Production</span></a></li>\n<li class=\"nav-item\"><a href=\"#tab6_sec4\" data-bs-toggle=\"tab\" class=\"nav-link\"><span><i class=\"fas fa-smile icon-medium text-medium-gray margin-10px-bottom d-block\"></i></span><span class=\"alt-font text-medium-gray text-uppercase text-small\">04. Happy Client</span></a></li>\n</ul>\n<!-- end tab navigation -->\n<div class=\"tab-content\"><!-- start tab content -->\n<div id=\"tab6_sec1\" class=\"tab-pane fade show active\">\n<div class=\"row m-0\">\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/03 Social Event.png\" alt=\"\" /></div>\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">01. Discussion</span> <span class=\"alt-font text-medium-gray text-medium\">We Discuss Events Goals, Music Preferences, Theme, Genre and Tempo. We do understand Client\'s Event Vision and Objectives.</span></div>\n</div>\n<div class=\"col-lg-4 col-md-6 text-start\">\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Don&rsquo;t worry, you&rsquo;re in safe hands</span>\n<p class=\"w-100\">Seasoned DJs with 10+ Years of Experience, We are Expertise in Weddings, Birthday Parties, Sangeet and other Parties. Staying Current with Music Trends and Technology.</p>\n</div>\n</div>\n</div>\n</div>\n<!-- end tab content --> <!-- start tab content -->\n<div id=\"tab6_sec2\" class=\"tab-pane fade in\">\n<div class=\"row m-0\">\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/01 Social Event.png\" alt=\"\" /></div>\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">02. Creative Concept</span> <span class=\"alt-font text-medium-gray text-medium\">We helps our Clients for Bringing Social Event Vision to Life. Our team is Specialized for Concept-to-Reality Planning. </span></div>\n</div>\n<div class=\"col-lg-4 col-md-6 text-start\">\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Where Memories are Crafted</span>\n<p class=\"w-100\">Being an Innovative DJ, We offer Bespoke Music Creation, Seamless Transitions and Electrifying Performances.</p>\n</div>\n</div>\n</div>\n</div>\n<!-- end tab content --> <!-- start tab content -->\n<div id=\"tab6_sec3\" class=\"tab-pane fade in\">\n<div class=\"row m-0\">\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/02 Social Event.png\" alt=\"\" /></div>\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">03. Production</span> <span class=\"alt-font text-medium-gray text-medium\">Our Expert team is committed to provide Flawless executions. Keeping all minor things in mind at the time of Production.</span></div>\n</div>\n<div class=\"col-lg-4 col-md-6 text-start\">\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Event Perfection, Every Single Time</span>\n<p class=\"w-100\">Our major focus on Event Production by using better Sound Systems, Dynamic Lighting and Innovative Designs.</p>\n</div>\n</div>\n</div>\n</div>\n<!-- end tab content --> <!-- start tab content -->\n<div id=\"tab6_sec4\" class=\"tab-pane fade in\">\n<div class=\"row m-0\">\n<div class=\"col-lg-4 text-start md-margin-30px-bottom\"><img src=\"assets/front/images/04 Social Event.png\" alt=\"\" /></div>\n<div class=\"col-lg-4 col-md-6 text-start sm-margin-30px-bottom\">\n<div class=\"d-flex flex-column justify-content-center padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 border-all border-width-2 border-color-extra-light-gray\"><span class=\"text-medium font-weight-600 alt-font text-uppercase margin-10px-bottom d-block text-extra-dark-gray\">04. Happy Client</span> <span class=\"alt-font text-medium-gray text-medium\">Don\'t just take our word for it. Check out our Client Reviews. After Serving 6000+ Clients, still we are maintaining 95% Client Satisfaction Rate. </span></div>\n</div>\n<div class=\"col-lg-4 col-md-6 text-start\">\n<div class=\"d-flex flex-column justify-content-center align-items-start padding-45px-all lg-padding-35px-all md-padding-30px-all h-100 w-100 bg-light-gray\"><span class=\"text-extra-dark-gray alt-font margin-10px-bottom d-inline-block text-medium\">Client Satisfaction, Our Top Priority</span>\n<p class=\"w-100\">Our Happy Clients share their Stories of Joy, laughter and celebration, thanks to our tailored DJ Solutions.</p>\n</div>\n</div>\n</div>\n</div>\n<!-- end tab content --></div>\n<!-- end tab content section --></div>\n<!-- end tab --></div>\n</div>\n</section>\n<!-- end tabs section --> <!-- start feature box section -->\n<section class=\"no-padding wow animate__fadeIn bg-extra-dark-gray\">\n<div class=\"container-fluid\">\n<div class=\"row row-cols-1 row-cols-lg-2\">\n<div class=\"col cover-background md-h-500px sm-h-350px wow animate__fadeInLeft\" style=\"background-image: url(\'assets/front/images/services-img8.jpg\');\">\n<div class=\"hidden-sm h-350px\"></div>\n</div>\n<div class=\"col padding-six-all xl-padding-four-all lg-padding-six-all md-padding-nine-half-tb md-padding-30px-lr wow animate__fadeInRight\">\n<div class=\"row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-sm-2 m-0\"><!-- start features box item -->\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-drum text-medium-gray icon-medium\"></i>\n<div class=\"feature-content\">\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Navratri</div>\n<p class=\"w-95 xl-w-100\">Navratri Festival is celebrated with Vibrant Colours, Rhythmic Beats and Endless fun.</p>\n</div>\n</div>\n</div>\n<!-- end features box item --> <!-- start features box item -->\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-heart text-medium-gray icon-medium\"></i>\n<div class=\"feature-content\">\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Wedding Ceremony</div>\n<p class=\"w-95 xl-w-100\">We are specialised into Customized playlists for ceremony, cocktail hours and reception.</p>\n</div>\n</div>\n</div>\n<!-- end features box item --> <!-- start features box item -->\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-users text-medium-gray icon-medium\"></i>\n<div class=\"feature-content\">\n<div class=\"text-white-2 margin-5px-bottom alt-font\">College Social Events</div>\n<p class=\"w-95 xl-w-100\">We have team of Experienced DJs familiar with College crowds expectations with professional equipment and lighting.</p>\n</div>\n</div>\n</div>\n<!-- end features box item --> <!-- start features box item -->\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom last-paragraph-no-margin\">\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-calendar-alt text-medium-gray icon-medium\"></i>\n<div class=\"feature-content\">\n<div class=\"text-white-2 margin-5px-bottom alt-font\">Other Social Events</div>\n<p class=\"w-95 xl-w-100\">We also provide services for Graduation Parties, Baby Showers, Bridal Showers, Engagement Party, Reunions, Charity Events etc.</p>\n</div>\n</div>\n</div>\n<!-- end features box item --></div>\n</div>\n</div>\n</div>\n</section>\n<!-- end feature box section --> <!-- start section -->\n<section class=\"pb-0 bg-light-gray wow animate__fadeIn\">\n<div class=\"container\">\n<div class=\"row justify-content-center\">\n<div class=\"col-lg-8 col-md-10 margin-eight-bottom text-center last-paragraph-no-margin\">\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">Musical Solutions for All</div>\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600\">Sound-wave Entertainment: Weddings to College Life</h5>\n<p class=\"d-inline-block\">Make Your special Day unforgettable with enchanting melodies! Our Expert Artist craft personalized play-lists, blending romance and Joy, ensuring an unforgettable event experience.</p>\n</div>\n</div>\n</div>\n<div class=\"container-fluid\">\n<div class=\"row\">\n<div class=\"col-12 text-center\"><img src=\"assets/front/images/services-img10.jpg\" alt=\"\" /></div>\n</div>\n</div>\n</section>', 2, '2025-01-08 19:20:07', NULL, NULL, 1),
+(22, 23, 'Corporate Events', '<!-- start hero section -->\r\n<section class=\"pb-0 wow animate__fadeIn\" id=\"section-down\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-xl-8 col-lg-9 col-md-10 margin-six-bottom text-center last-paragraph-no-margin\">\r\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">Expertise in Corporate Events</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600\">Revolutionize Your Corporate Events with Cutting-Edge Sound and Visuals</h5>\r\n<p class=\"w-80 mx-auto d-inline-block sm-w-100\">Elevate your Business gatherings with Customized DJ Services and unparalleled expertise. Experience the art of corporate events, crafted by DJ Parth.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid wow animate__fadeIn\">\r\n<div class=\"row\">\r\n<div class=\"col-12 text-center\"><img src=\"assets/front/images/services-img11.jpg\" alt=\"\" /></div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end banner section --> <!-- start feature box section -->\r\n<section class=\"parallax wow animate__fadeIn\" data-parallax-background-ratio=\"0.4\" style=\"background-image: url(\'assets/front/images/parallax-bg21.jpg\');\">\r\n<div class=\"container\">\r\n<div class=\"row row-cols-1 row-cols-lg-3 row-cols-md-2 justify-content-center\"><!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin md-margin-30px-bottom xs-margin-15px-bottom wow animate__fadeInRight\">\r\n<div class=\"padding-50px-all lg-padding-30px-all bg-white box-shadow text-center h-100\">\r\n<div class=\"padding-35px-all d-inline-block rounded-circle margin-40px-bottom sm-margin-30px-bottom bg-light-gray\"><img src=\"assets/front/images/image-icon4.png\" alt=\"\" /></div>\r\n<span class=\"alt-font text-extra-dark-gray font-weight-600 d-block margin-20px-bottom\">Professional Networking</span>\r\n<p>Corporate events provide opportunities for attendees to connect with colleagues, industry leaders, and potential clients, fostering meaningful relationships and business collaborations.</p>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin md-margin-30px-bottom xs-margin-15px-bottom wow animate__fadeInRight\" data-wow-delay=\"0.2s\">\r\n<div class=\"padding-50px-all lg-padding-30px-all bg-white box-shadow text-center h-100\">\r\n<div class=\"padding-35px-all d-inline-block rounded-circle margin-40px-bottom sm-margin-30px-bottom bg-light-gray\"><img src=\"assets/front/images/image-icon2.png\" alt=\"\" /></div>\r\n<span class=\"alt-font text-extra-dark-gray font-weight-600 d-block margin-20px-bottom\">Educational Content</span>\r\n<p>Corporate events often feature keynote speakers, panel discussions, workshops, and training sessions, offering valuable insights, industry trends, and skill development.</p>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin wow animate__fadeInRight\" data-wow-delay=\"0.4s\">\r\n<div class=\"padding-50px-all lg-padding-30px-all bg-white box-shadow text-center h-100\">\r\n<div class=\"padding-35px-all d-inline-block rounded-circle margin-40px-bottom sm-margin-30px-bottom bg-light-gray\"><img src=\"assets/front/images/image-icon3.png\" alt=\"\" /></div>\r\n<span class=\"alt-font text-extra-dark-gray font-weight-600 d-block margin-20px-bottom\">Brand Promotion and Entertainment</span>\r\n<p>Corporate events showcase company culture, values, and achievements through engaging activities, entertainment, and customized experiences, enhancing brand reputation and employee engagement.</p>\r\n</div>\r\n</div>\r\n<!-- end features box item --></div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start feature box section -->\r\n<section class=\"wow animate__fadeIn lg-padding-two-lr md-no-padding-lr\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-8 col-sm-10 margin-eight-bottom text-center last-paragraph-no-margin\">\r\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">Amplify Your Corporate Events</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Transform your Corporate events into unforgettable experiences with DJ Parth\'s DJ Services</h5>\r\n</div>\r\n</div>\r\n<div class=\"row row-cols-1 row-cols-lg-3 row-cols-sm-2\"><!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom wow animate__fadeInUp last-paragraph-no-margin\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-rocket text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Product Launch</div>\r\n<p class=\"d-inline-block sm-w-90\">Amplify your Product launch with tailored DJ Sets, professional hosting, energetic music, lighting design and Event Production.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom wow animate__fadeInUp last-paragraph-no-margin\" data-wow-delay=\"0.2s\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-briefcase text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Corporate Retreats</div>\r\n<p class=\"d-inline-block sm-w-90\">Boost team bonding with expert DJ services for corporate retreats and company gatherings. Our expertise is in offering Seamless execution.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col margin-six-bottom md-margin-50px-bottom sm-margin-40px-bottom wow animate__fadeInUp last-paragraph-no-margin\" data-wow-delay=\"0.4s\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-users-cog text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Team Building Events</div>\r\n<p class=\"d-inline-block sm-w-90\">Foster teamwork and fun with DJ Services for team-building events. We accommodate Interactive games, Team Building exercises and other activities.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col md-margin-50px-bottom sm-margin-40px-bottom wow animate__fadeInUp last-paragraph-no-margin\" data-wow-delay=\"0.6s\">\r\n<div class=\"feature-box-5 position-relative \"><i class=\"fas fa-microphone-alt text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Conferences &amp; Seminars</div>\r\n<p class=\"d-inline-block sm-w-90\">Elevate Conferences and Seminars with expert DJ Services. We are offering memorable experiences, seamless transitions and engaging entertainment.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col xs-margin-40px-bottom wow animate__fadeInUp last-paragraph-no-margin\" data-wow-delay=\"0.8s\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-bullhorn text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Trade Shows</div>\r\n<p class=\"d-inline-block sm-w-90\">Draw crowds and elevate brand presence with DJ services for trade shows. We also offers Lead Generation activities and Product showcase.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col wow animate__fadeInUp last-paragraph-no-margin\" data-wow-delay=\"1s\">\r\n<div class=\"feature-box-5 position-relative\"><i class=\"fas fa-trophy text-medium-gray icon-medium\"></i>\r\n<div class=\"feature-content\">\r\n<div class=\"text-extra-dark-gray margin-10px-bottom alt-font font-weight-600\">Award Ceremony</div>\r\n<p class=\"d-inline-block sm-w-90\">Honouring excellence with DJ Services for award ceremonies through elegant music, precise timing and celebratory ambiance.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --></div>\r\n</div>\r\n</section>\r\n<!-- end feature box section -->', 2, '2025-01-08 21:38:53', NULL, NULL, 1),
+(23, 24, 'Government Events', '<!-- start feature box section -->\r\n<section class=\"wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-8 col-md-10 margin-eight-bottom text-center last-paragraph-no-margin\">\r\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">DJ Services for Government Conferences and Galas</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600\">Transforming Government Events into unforgettable experiences</h5>\r\n<p class=\"d-inline-block\">We understand the importance of creating memorable and dignified experiences for government events. Our expert DJ services are designed to elevate conferences, galas, ceremonies, and other official gatherings, ensuring a sophisticated and enjoyable atmosphere for dignitaries, officials, and attendees.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container\">\r\n<div class=\"row row-cols-1 row-cols-lg-3 row-cols-sm-2 justify-content-center\"><!-- feature box item-->\r\n<div class=\"col md-margin-30px-bottom xs-margin-15px-bottom last-paragraph-no-margin wow animate__fadeInUp\">\r\n<div class=\"feature-box\">\r\n<div class=\"content\"><i class=\"fas fa-landmark text-medium-gray icon-large margin-25px-bottom md-margin-15px-bottom\"></i>\r\n<div class=\"text-medium alt-font text-capitalize text-extra-dark-gray margin-10px-bottom md-margin-5px-bottom\">Government Event Expertise</div>\r\n<p class=\"w-85 mx-auto md-w-100\">Our experienced DJs have a deep understanding of the nuances and protocols involved in government events.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end feature box item--> <!-- feature box item-->\r\n<div class=\"col md-margin-30px-bottom xs-margin-15px-bottom last-paragraph-no-margin wow animate__fadeInUp\" data-wow-delay=\"0.2s\">\r\n<div class=\"feature-box\">\r\n<div class=\"content\"><i class=\"fas fa-music text-medium-gray icon-large margin-25px-bottom md-margin-15px-bottom\"></i>\r\n<div class=\"text-medium alt-font text-capitalize text-extra-dark-gray margin-10px-bottom md-margin-5px-bottom\">Customized Music Solutions</div>\r\n<p class=\"w-85 mx-auto md-w-100\">We craft tailored playlists to reflect the tone and theme of your event. Personalized consultation to understand your event vision.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end feature box item--> <!-- feature box item-->\r\n<div class=\"col last-paragraph-no-margin wow animate__fadeInUp\" data-wow-delay=\"0.4s\">\r\n<div class=\"feature-box\">\r\n<div class=\"content\"><i class=\"fas fa-microphone text-medium-gray icon-large margin-25px-bottom md-margin-15px-bottom\"></i>\r\n<div class=\"text-medium alt-font text-capitalize text-extra-dark-gray margin-10px-bottom md-margin-5px-bottom\">Professional Emcee Services</div>\r\n<p class=\"w-85 mx-auto md-w-100\">Our skilled emcees ensure seamless transitions and precise announcements. WE offer Professional event coordination and planning.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end feature box item--></div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start parallax section -->\r\n<section class=\"wow animate__fadeIn bg-extra-dark-gray\">\r\n<div class=\"container\">\r\n<div class=\"row align-items-center\"><!-- start feature box item -->\r\n<div class=\"col-lg-6 lg-margin-15px-top md-no-margin-top md-margin-ten-bottom sm-padding-five-lr sm-margin-ten-bottom wow animate__fadeIn last-paragraph-no-margin\">\r\n<div class=\"padding-fourteen-right md-no-padding-right text-center text-lg-start\">\r\n<h5 class=\"alt-font text-white-2\">Commitment to exceptional entertainment and customer service</h5>\r\n<p class=\"w-90 lg-w-100 mx-auto mx-lg-0 text-medium-gray\">We\'re dedicated to delivering exceptional DJ experiences that exceed your expectations. Our commitment to customer satisfaction drives everything we do, from personalized consultations to flawless event execution.</p>\r\n<p class=\"w-90 lg-w-100 mx-auto mx-lg-0 text-medium-gray\">Your Event, Our Priority: Unparalleled DJ Services and Unmatched Customer Care.</p>\r\n</div>\r\n</div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col-lg-3 col-sm-6 position-relative text-center wow animate__fadeIn\" data-wow-delay=\"0.4s\"><img src=\"assets/front/images/image-6.jpg\" alt=\"\" class=\"w-100\" /></div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col-lg-3 col-sm-6 position-relative text-center wow animate__fadeIn\" data-wow-delay=\"0.4s\"><img src=\"assets/front/images/image-7.jpg\" alt=\"\" class=\"w-100\" /></div>\r\n<!-- end feature box item --></div>\r\n</div>\r\n</section>\r\n<!-- end parallax section --> <!-- start section -->\r\n<section class=\"pb-0 bg-light-gray wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-8 col-md-10 margin-eight-bottom text-center last-paragraph-no-margin\">\r\n<div class=\"alt-font text-deep-pink margin-10px-bottom text-uppercase text-small\">We listen to your ideas and bring them to life</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600\">Curated music selections reflecting your style and theme</h5>\r\n<p class=\"d-inline-block\">we believe every event is unique and deserving of tailored attention. Our expert DJs take the time to understand your vision, preferences, and goals, crafting customized entertainment solutions that leave a lasting impression.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-12 text-center\"><img src=\"assets/front/images/services-img10.jpg\" alt=\"\" /></div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end section  -->', 2, '2025-01-08 21:40:11', NULL, NULL, 1);
+INSERT INTO `sssm_cms` (`CMSID`, `PageID`, `Title`, `Content`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(24, 25, 'AV Rental', '<!-- start section -->\r\n<section class=\"p-0 bg-light-gray wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row align-items-center\">\r\n<div class=\"col-lg-6 text-center align-self-end\"><img src=\"assets/front/images/about-ceo2.jpg\" alt=\"\" /></div>\r\n<div class=\"col-lg-5 col-md-10 text-center text-lg-start offset-lg-1 mx-auto me-lg-0 lg-padding-50px-tb\"><i class=\"fa-solid fa-quote-left text-deep-pink icon-large margin-5px-bottom\"></i>\r\n<h5 class=\"text-extra-dark-gray alt-font text-uppercase font-weight-700\">Design is not just what it looks like and feels like. Design is how it works.</h5>\r\n<p class=\"w-90 md-w-100\">Pofo philosophy that great design can only be delivered by people with a deep social and cultural understanding of the communities they designing. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever...</p>\r\n<img src=\"assets/front/images/signature-dark.png\" alt=\"\" class=\"margin-15px-top md-no-margin-top\" /> <span class=\"text-extra-dark-gray text-large d-block margin-30px-top alt-font font-weight-600 sm-margin-20px-top\">Colin Smith</span> <span class=\"d-block\">From the chairman\'s desk</span></div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end section --> <!-- start feature box section -->\r\n<section class=\"wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-4 col-md-6 col-sm-8 md-margin-40px-bottom text-center text-lg-start sm-margin-30px-bottom wow animate__fadeInRight\">\r\n<h5 class=\"text-extra-dark-gray font-weight-600 alt-font m-0\">The world\'s most powerful wordpress website builder</h5>\r\n</div>\r\n<div class=\"col-lg-8\">\r\n<div class=\"row row-cols-1 row-cols-sm-2\"><!-- start feature box item -->\r\n<div class=\"col text-center text-lg-start xs-margin-30px-bottom wow animate__fadeInRight last-paragraph-no-margin\" data-wow-delay=\"0.2s\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-3 text-center sm-no-padding-lr\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0 md-margin-10px-bottom\">01</h2>\r\n</div>\r\n<div class=\"col-lg-9 margin-5px-top sm-no-padding-lr\"><span class=\"alt-font text-medium text-extra-dark-gray margin-5px-bottom d-block\">Modern Framework</span>\r\n<p class=\"w-80 lg-w-100\">Lorem Ipsum is simply text the printing and typesetting standard industry.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col text-center text-lg-start wow animate__fadeInRight last-paragraph-no-margin\" data-wow-delay=\"0.4s\">\r\n<div class=\"row m-0\">\r\n<div class=\"col-lg-3 text-center sm-no-padding-lr\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0 md-margin-10px-bottom\">02</h2>\r\n</div>\r\n<div class=\"col-lg-9 margin-5px-top sm-no-padding-lr\"><span class=\"alt-font text-medium text-extra-dark-gray margin-5px-bottom d-block\">Live Website Builder</span>\r\n<p class=\"w-80 lg-w-100\">Lorem Ipsum is simply text the printing and typesetting standard industry.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end feature box item --></div>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start information section -->\r\n<section id=\"about\" class=\"p-0 wow animate__fadeIn\">\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-xl-4 col-md-6 bg-extra-dark-gray d-flex align-items-center wow animate__fadeIn\">\r\n<div class=\"padding-six-all md-padding-nine-all sm-padding-50px-tb sm-padding-15px-lr\">\r\n<h5 class=\"alt-font text-white-2\">We provide high quality and cost effective services</h5>\r\n<p class=\"text-extra-large font-weight-300 text-extra-light-gray\">Since our foundation in 2005 our goal has been to use digital technology to create experiences.</p>\r\n<p class=\"w-90 sm-w-100\">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since. Lorem Ipsum has been the industry. Lorem Ipsum has been the industry\'s standard dummy text since. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>\r\n<a href=\"services-classic.html\" class=\"btn btn-small btn-rounded btn-transparent-white\">Explore services</a></div>\r\n</div>\r\n<div class=\"col-xl-4 col-md-6 bg-extra-dark-gray cover-background sm-h-400px wow animate__fadeIn\" style=\"background-image: url(\'assets/front/images/about-img1.jpg\');\"></div>\r\n<div class=\"col-xl-4 col-md-12 bg-extra-dark-gray align-items-center padding-five-tb padding-five-half-lr lg-padding-50px-tb md-padding-70px-tb md-padding-ten-lr xs-padding-50px-tb xs-padding-20px-lr wow animate__fadeIn\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-md-12 col-sm-8 margin-four-bottom lg-margin-six-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center text-md-start\">\r\n<h5 class=\"alt-font text-white-2 margin-35px-bottom sm-margin-15px-bottom\">We provide high quality and cost effective offshore web services.</h5>\r\n</div>\r\n</div>\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-12 margin-30px-bottom text-center\"><!-- start progress bar item -->\r\n<div class=\"progress progress-step-style-02 bg-transparent-white2 rounded-0 margin-55px-bottom\"><span class=\"progress-title text-extra-small text-uppercase text-dark-gray\">Jquery - 4 years Experience</span>\r\n<div class=\"progress-bar bg-gradient-light-red-light-white rounded-0\" role=\"progressbar\" aria-valuenow=\"92\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>\r\n<span class=\"progress-bar-percent text-small\">92%</span></div>\r\n<!-- end progress bar item --> <!-- start  progress bar item -->\r\n<div class=\"progress progress-step-style-02 bg-transparent-white2 rounded-0 margin-55px-bottom\"><span class=\"progress-title text-extra-small text-uppercase text-dark-gray\">Wordpress - 6 years Experience</span>\r\n<div class=\"progress-bar bg-gradient-light-red-light-white rounded-0\" role=\"progressbar\" aria-valuenow=\"97\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>\r\n<span class=\"progress-bar-percent text-small\">97%</span></div>\r\n<!-- end progress bar item --> <!-- start  progress bar item -->\r\n<div class=\"progress progress-step-style-02 bg-transparent-white2 rounded-0 margin-55px-bottom\"><span class=\"progress-title text-extra-small text-uppercase text-dark-gray\">HTML5 - 5 years Experience</span>\r\n<div class=\"progress-bar bg-gradient-light-red-light-white rounded-0\" role=\"progressbar\" aria-valuenow=\"98\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>\r\n<span class=\"progress-bar-percent text-small\">98%</span></div>\r\n<!-- end progress bar item --> <!-- start  progress bar item -->\r\n<div class=\"progress progress-step-style-02 bg-transparent-white2 rounded-0\"><span class=\"progress-title text-extra-small text-uppercase text-dark-gray\">Photography - 6 years Experience</span>\r\n<div class=\"progress-bar bg-gradient-light-red-light-white rounded-0\" role=\"progressbar\" aria-valuenow=\"92\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>\r\n<span class=\"progress-bar-percent text-small\">92%</span></div>\r\n<!-- end progress bar item --></div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end information section --> <!-- start counter section -->\r\n<section class=\"wow animate__fadeIn\">\r\n<div class=\"container\">\r\n<div class=\"row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4\"><!-- counter box item -->\r\n<div class=\"col md-margin-50px-bottom sm-margin-40px-bottom text-center wow animate__fadeInDown\">\r\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"350\" data-speed=\"2000\">350</h5>\r\n<span class=\"d-block margin-three-bottom\">Happy Clients</span>\r\n<div class=\"separator-line-verticle-large bg-deep-pink d-inline-block\"></div>\r\n</div>\r\n<!-- end counter box item --> <!-- counter box item -->\r\n<div class=\"col md-margin-50px-bottom sm-margin-40px-bottom text-center wow animate__fadeInDown\" data-wow-delay=\"0.2s\">\r\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"1500\" data-speed=\"2000\">1500</h5>\r\n<span class=\"d-block margin-three-bottom\">Photo Capture</span>\r\n<div class=\"separator-line-verticle-large bg-deep-pink d-inline-block\"></div>\r\n</div>\r\n<!-- end counter box item --> <!-- counter box item -->\r\n<div class=\"col xs-margin-40px-bottom text-center wow animate__fadeInDown\" data-wow-delay=\"0.4s\">\r\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"875\" data-speed=\"2000\">875</h5>\r\n<span class=\"d-block margin-three-bottom\">Work Completed</span>\r\n<div class=\"separator-line-verticle-large bg-deep-pink d-inline-block\"></div>\r\n</div>\r\n<!-- end counter box item --> <!-- counter box item -->\r\n<div class=\"col text-center wow animate__fadeInDown\" data-wow-delay=\"0.6s\">\r\n<h5 class=\"text-extra-dark-gray font-weight-600 m-0 counter alt-font\" data-to=\"984\" data-speed=\"2000\">984</h5>\r\n<span class=\"d-block margin-three-bottom\">Telephonic Talk</span>\r\n<div class=\"separator-line-verticle-large bg-deep-pink d-inline-block\"></div>\r\n</div>\r\n<!-- end counter box item --></div>\r\n</div>\r\n</section>\r\n<!-- end counter section --> <!-- start feature box section -->\r\n<section class=\"wow animate__fadeIn parallax\" data-parallax-background-ratio=\"0.5\" style=\"background-image: url(\'https://via.placeholder.com/1920x1080\');\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-6 col-md-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center last-paragraph-no-margin\">\r\n<h5 class=\"alt-font font-weight-700 text-extra-dark-gray text-uppercase\">About Agency</h5>\r\n<p>We are idea-driven, working with a strong focus on design and user experience. Our projects should engage your audience, we want to create wonderful digital things that people love to be part of and use.</p>\r\n</div>\r\n</div>\r\n<div class=\"row row-cols-1 row-cols-lg-3 row-cols-md-2 justify-content-center align-items-center\"><!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin md-margin-30px-bottom wow animate__fadeInUp\">\r\n<div class=\"bg-white text-center\"><a href=\"services-simple.html\"><img src=\"https://via.placeholder.com/750x500\" alt=\"\" /></a>\r\n<div class=\"padding-45px-all md-padding-30px-all\"><span class=\"text-extra-dark-gray font-weight-600 d-block alt-font margin-10px-bottom\">Understand the situation</span>\r\n<p>Lorem Ipsum is simply text of the printing and typesetting industry. Lorem Ipsum has been standard dummy.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin md-margin-30px-bottom wow animate__fadeInUp\" data-wow-delay=\"0.2s\">\r\n<div class=\"bg-white text-center\"><a href=\"services-simple.html\"><img src=\"https://via.placeholder.com/750x500\" alt=\"\" /></a>\r\n<div class=\"padding-45px-all md-padding-30px-all\"><span class=\"text-extra-dark-gray font-weight-600 d-block alt-font margin-10px-bottom\">Bring the experience to life</span>\r\n<p>Lorem Ipsum is simply text of the printing and typesetting industry. Lorem Ipsum has been standard dummy.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --> <!-- start features box item -->\r\n<div class=\"col-sm-8 last-paragraph-no-margin wow animate__fadeInUp\" data-wow-delay=\"0.4s\">\r\n<div class=\"bg-white text-center\"><a href=\"services-simple.html\"><img src=\"https://via.placeholder.com/750x500\" alt=\"\" /></a>\r\n<div class=\"padding-45px-all md-padding-30px-all\"><span class=\"text-extra-dark-gray font-weight-600 d-block alt-font margin-10px-bottom\">Strategise chart the course</span>\r\n<p>Lorem Ipsum is simply text of the printing and typesetting industry. Lorem Ipsum has been standard dummy.</p>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end features box item --></div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start feature box section -->\r\n<section class=\"p-0 wow animate__fadeIn\">\r\n<div class=\"container-fluid xs-padding-30px-tb\">\r\n<div class=\"row row-cols-1 row-cols-lg-4 row-cols-sm-2 feature-box-14 border-top border-color-light-gray xs-no-border-top\"><!-- start feature box item -->\r\n<div class=\"col text-center d-flex align-items-center last-paragraph-no-margin wow animate__fadeInRight p-0\">\r\n<div class=\"padding-fifteen-all md-padding-50px-all sm-padding-30px-all w-100\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0\">01</h2>\r\n<span class=\"d-block alt-font text-medium text-extra-dark-gray margin-15px-top margin-10px-bottom sm-margin-5px-bottom\">Discussion of the Idea</span>\r\n<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard text.</p>\r\n</div>\r\n</div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col text-center d-flex align-items-center last-paragraph-no-margin wow animate__fadeInRight p-0\" data-wow-delay=\"0.2s\">\r\n<div class=\"padding-fifteen-all md-padding-50px-all sm-padding-30px-all w-100\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0\">02</h2>\r\n<span class=\"d-block alt-font text-medium text-extra-dark-gray margin-15px-top margin-10px-bottom sm-margin-5px-bottom\">Elaboration of the Core</span>\r\n<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard text.</p>\r\n</div>\r\n</div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col text-center d-flex align-items-center last-paragraph-no-margin wow animate__fadeInRight p-0\" data-wow-delay=\"0.4s\">\r\n<div class=\"padding-fifteen-all md-padding-50px-all sm-padding-30px-all w-100\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0\">03</h2>\r\n<span class=\"d-block alt-font text-medium text-extra-dark-gray margin-15px-top margin-10px-bottom sm-margin-5px-bottom\">Handcrafted Templates</span>\r\n<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard text.</p>\r\n</div>\r\n</div>\r\n<!-- end feature box item --> <!-- start feature box item -->\r\n<div class=\"col text-center d-flex align-items-center last-paragraph-no-margin wow animate__fadeInRight p-0\" data-wow-delay=\"0.6s\">\r\n<div class=\"padding-fifteen-all md-padding-50px-all sm-padding-30px-all w-100\">\r\n<h2 class=\"text-light-gray alt-font letter-spacing-minus-3 mb-0\">04</h2>\r\n<span class=\"d-block alt-font text-medium text-extra-dark-gray margin-15px-top margin-10px-bottom sm-margin-5px-bottom\">Testing for Perfection</span>\r\n<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard text.</p>\r\n</div>\r\n</div>\r\n<!-- start feature box item --></div>\r\n</div>\r\n</section>\r\n<!-- end feature box section --> <!-- start parallax testimonial section -->\r\n<section class=\"parallax wow animate__fadeIn\" data-parallax-background-ratio=\"0.5\" style=\"background-image: url(\'https://via.placeholder.com/1920x900\');\">\r\n<div class=\"opacity-medium bg-extra-dark-gray\"></div>\r\n<div class=\"container\">\r\n<div class=\"row xs-no-margin-lr\">\r\n<div class=\"swiper white-move\" data-slider-options=\"{ &quot;slidesPerView&quot;: &quot;1&quot;, &quot;allowTouchMove&quot;:true, &quot;keyboard&quot;: { &quot;enabled&quot;: true, &quot;onlyInViewport&quot;: true }, &quot;navigation&quot;: { &quot;nextEl&quot;: &quot;.swiper-button-next&quot;, &quot;prevEl&quot;: &quot;.swiper-button-prev&quot; }, &quot;pagination&quot;: { &quot;el&quot;: &quot;.swiper-pagination&quot;, &quot;clickable&quot;: true } }\">\r\n<div class=\"swiper-wrapper\"><!-- start testimonial slide item -->\r\n<div class=\"swiper-slide\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-7 col-md-10\">\r\n<div class=\"media d-block d-md-flex text-center text-md-start align-items-center padding-30px-lr lg-padding-15px-lr w-100\"><img src=\"https://via.placeholder.com/300x300\" alt=\"\" class=\"rounded-circle w-130px margin-50px-right lg-w-100px md-w-120px sm-w-100px sm-no-margin-right sm-margin-15px-bottom\" />\r\n<div class=\"media-body last-paragraph-no-margin\">\r\n<p class=\"text-extra-light-gray\">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>\r\n<span class=\"text-white-2 alt-font d-inline-block text-uppercase text-small margin-15px-top\">- Jay Benjamin</span></div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- start testimonial slide item -->\r\n<div class=\"swiper-slide\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-7 col-md-10\">\r\n<div class=\"media d-block d-md-flex text-center text-md-start align-items-center padding-30px-lr lg-padding-15px-lr w-100\"><img src=\"https://via.placeholder.com/300x300\" alt=\"\" class=\"rounded-circle w-130px margin-50px-right lg-w-100px md-w-120px sm-w-100px sm-no-margin-right sm-margin-15px-bottom\" />\r\n<div class=\"media-body last-paragraph-no-margin\">\r\n<p class=\"text-extra-light-gray\">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>\r\n<span class=\"text-white-2 alt-font d-inline-block text-uppercase text-small margin-15px-top\">- Herman Miller</span></div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end testimonial slide item --> <!-- start testimonial slide item -->\r\n<div class=\"swiper-slide\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-lg-7 col-md-10\">\r\n<div class=\"media d-block d-md-flex text-center text-md-start align-items-center padding-30px-lr lg-padding-15px-lr w-100\"><img src=\"https://via.placeholder.com/300x300\" alt=\"\" class=\"rounded-circle w-130px margin-50px-right lg-w-100px md-w-120px sm-w-100px sm-no-margin-right sm-margin-15px-bottom\" />\r\n<div class=\"media-body last-paragraph-no-margin\">\r\n<p class=\"text-extra-light-gray\">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>\r\n<span class=\"text-white-2 alt-font text-uppercase text-small margin-15px-top d-inline-block\">- Hugh Macleod</span></div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<!-- end testimonial slide item --></div>\r\n<div class=\"swiper-button-next arrow-light end-0\"></div>\r\n<div class=\"swiper-button-prev arrow-light start-0\"></div>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end parallax testimonial section --> <!-- start clients carousel slider section -->\r\n<section class=\"border-top border-color-extra-light-gray wow animate__fadeIn bg-light-gray\">\r\n<div class=\"container text-center\">\r\n<div class=\"row\">\r\n<div class=\"swiper black-move\" data-slider-options=\"{ &quot;slidesPerView&quot;: &quot;1&quot;, &quot;loop&quot;:true, &quot;allowTouchMove&quot;:true, &quot;autoplay&quot;: { &quot;delay&quot;: 3000, &quot;disableOnInteraction&quot;: false}, &quot;keyboard&quot;: { &quot;enabled&quot;: true, &quot;onlyInViewport&quot;: true }, &quot;navigation&quot;: { &quot;nextEl&quot;: &quot;.swiper-button-next&quot;, &quot;prevEl&quot;: &quot;.swiper-button-prev&quot; }, &quot;pagination&quot;: { &quot;el&quot;: &quot;.swiper-pagination-03&quot;, &quot;clickable&quot;: true }, &quot;breakpoints&quot;: { &quot;1200&quot;:{ &quot;slidesPerView&quot;:&quot;4&quot; }, &quot;992&quot;: { &quot;slidesPerView&quot;:&quot;3&quot; }, &quot;768&quot;: { &quot;slidesPerView&quot;:&quot;3&quot; } } }\">\r\n<div class=\"swiper-wrapper\"><!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-1.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-2.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-3.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-4.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-5.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-6.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-7.png\" alt=\"\" /></div>\r\n<!-- end slider item --> <!-- start slider item -->\r\n<div class=\"swiper-slide text-center\"><img src=\"assets/front/images/logo-8.png\" alt=\"\" /></div>\r\n<!-- end slider item --></div>\r\n<!-- start swiper pagination --> <!-- <div class=\"swiper-pagination swiper-pagination-03\"></div> --> <!-- end swiper pagination --></div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end clients slider section --> <!-- end blog section -->', 2, '2025-01-08 21:41:30', NULL, NULL, 1),
+(25, 26, 'Anchor', '<!-- start portfolio section -->\n<section class=\"wow animate__fadeIn no-padding-bottom\">\n<div class=\"container\">\n<div class=\"row justify-content-center\">\n<div class=\"col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\n<div class=\"alt-font text-medium-gray margin-15px-bottom text-uppercase text-small\">Book an Artist</div>\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Discover and Book the Perfect Artist for an Event</h5>\n</div>\n</div>\n</div>\n<div class=\"container-fluid\">\n<div class=\"row\">\n<div class=\"col-12 filter-content overflow-hidden\">\n<ul class=\"hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium\">\n<li class=\"grid-sizer\"></li>\n<!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item181.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Naked Soap</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item182.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Berlin Design</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item183.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Abstract Comics</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item184.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Teabag Collection</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio-item item -->\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item185.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Herbal Beauty Salon</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item186.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Tailoring Interior</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item187.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Pixflow Studio</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --> <!-- start portfolio item -->\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\n<figure>\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item188.jpg\" alt=\"\" /></div>\n<figcaption>\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\n<div class=\"portfolio-hover-box align-middle\">\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Designblast Inc</span>\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\n</div>\n</div>\n</div>\n</figcaption></figure>\n</a></li>\n<!-- end portfolio item --></ul>\n</div>\n</div>\n</div>\n</section>\n<!-- end portfolio section -->', 2, '2025-01-08 22:02:04', NULL, NULL, 1),
+(26, 27, 'Music Band', '<!-- start portfolio section -->\r\n<section class=\"wow animate__fadeIn no-padding-bottom\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\r\n<div class=\"alt-font text-medium-gray margin-15px-bottom text-uppercase text-small\">Book an Artist</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Discover and Book the Perfect Artist for an Event</h5>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-12 filter-content overflow-hidden\">\r\n<ul class=\"hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium\">\r\n<li class=\"grid-sizer\"></li>\r\n<!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item181.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Naked Soap</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item182.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Berlin Design</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item183.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Abstract Comics</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item184.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Teabag Collection</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio-item item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item185.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Herbal Beauty Salon</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item186.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Tailoring Interior</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item187.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Pixflow Studio</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item188.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Designblast Inc</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --></ul>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end portfolio section -->', 2, '2025-01-08 22:02:23', NULL, NULL, 1),
+(27, 28, 'Dj', '<!-- start portfolio section -->\r\n<section class=\"wow animate__fadeIn no-padding-bottom\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\r\n<div class=\"alt-font text-medium-gray margin-15px-bottom text-uppercase text-small\">Book an Artist</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Discover and Book the Perfect Artist for an Event</h5>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-12 filter-content overflow-hidden\">\r\n<ul class=\"hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium\">\r\n<li class=\"grid-sizer\"></li>\r\n<!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item181.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Naked Soap</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item182.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Berlin Design</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item183.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Abstract Comics</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item184.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Teabag Collection</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio-item item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item185.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Herbal Beauty Salon</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item186.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Tailoring Interior</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item187.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Pixflow Studio</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item188.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Designblast Inc</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --></ul>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end portfolio section -->', 2, '2025-01-08 22:02:37', NULL, NULL, 1);
+INSERT INTO `sssm_cms` (`CMSID`, `PageID`, `Title`, `Content`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(28, 29, 'Standup Comedian', '<!-- start portfolio section -->\r\n<section class=\"wow animate__fadeIn no-padding-bottom\">\r\n<div class=\"container\">\r\n<div class=\"row justify-content-center\">\r\n<div class=\"col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center\">\r\n<div class=\"alt-font text-medium-gray margin-15px-bottom text-uppercase text-small\">Book an Artist</div>\r\n<h5 class=\"alt-font text-extra-dark-gray font-weight-600 mb-0\">Discover and Book the Perfect Artist for an Event</h5>\r\n</div>\r\n</div>\r\n</div>\r\n<div class=\"container-fluid\">\r\n<div class=\"row\">\r\n<div class=\"col-12 filter-content overflow-hidden\">\r\n<ul class=\"hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium\">\r\n<li class=\"grid-sizer\"></li>\r\n<!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item181.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Naked Soap</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item182.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Berlin Design</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item183.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Abstract Comics</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item184.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Teabag Collection</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio-item item -->\r\n<li class=\"grid-item wow animate__fadeInUp\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item185.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Herbal Beauty Salon</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.2s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item186.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Tailoring Interior</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Brochure</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.4s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item187.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Pixflow Studio</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Branding and Identity</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --> <!-- start portfolio item -->\r\n<li class=\"grid-item wow animate__fadeInUp\" data-wow-delay=\"0.6s\"><a href=\"artist-details.html\">\r\n<figure>\r\n<div class=\"portfolio-img\"><img src=\"assets/front/images/portfolio-item188.jpg\" alt=\"\" /></div>\r\n<figcaption>\r\n<div class=\"portfolio-hover-main text-center last-paragraph-no-margin\">\r\n<div class=\"portfolio-hover-box align-middle\">\r\n<div class=\"portfolio-hover-content position-relative\"><span class=\"font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray\">Designblast Inc</span>\r\n<p class=\"text-medium-gray text-uppercase text-extra-small\">Web and Photography</p>\r\n</div>\r\n</div>\r\n</div>\r\n</figcaption></figure>\r\n</a></li>\r\n<!-- end portfolio item --></ul>\r\n</div>\r\n</div>\r\n</div>\r\n</section>\r\n<!-- end portfolio section -->', 2, '2025-01-08 22:02:57', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -18830,7 +18857,7 @@ CREATE TABLE `sssm_config` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_config`
@@ -18853,7 +18880,7 @@ CREATE TABLE `sssm_country` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_country`
@@ -19136,7 +19163,7 @@ CREATE TABLE `sssm_customer` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customer`
@@ -19172,7 +19199,7 @@ CREATE TABLE `sssm_customerpayment` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerpayment`
@@ -19199,7 +19226,7 @@ CREATE TABLE `sssm_customerprocess` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerprocess`
@@ -19261,7 +19288,7 @@ CREATE TABLE `sssm_customerproperty` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerproperty`
@@ -19286,7 +19313,7 @@ CREATE TABLE `sssm_customerpropertydocument` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerpropertydocument`
@@ -19312,7 +19339,7 @@ CREATE TABLE `sssm_customerpropertyimage` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19330,7 +19357,7 @@ CREATE TABLE `sssm_customerpropertyvideo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19349,7 +19376,7 @@ CREATE TABLE `sssm_customerreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19365,7 +19392,7 @@ CREATE TABLE `sssm_designation` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_designation`
@@ -19402,7 +19429,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `DeviceName` varchar(100) DEFAULT NULL,
   `DeviceOS` varchar(40) DEFAULT NULL,
   `OSVersion` varchar(40) DEFAULT NULL,
-  `DeviceTokenID` text CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `DeviceTokenID` text CHARACTER SET utf8 DEFAULT NULL,
   `DeviceType` enum('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS') NOT NULL,
   `UserType` varchar(20) NOT NULL,
   `UserID` int(11) NOT NULL,
@@ -19411,7 +19438,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -19429,7 +19456,7 @@ CREATE TABLE `sssm_emailtemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_emailtemplate`
@@ -19462,7 +19489,7 @@ CREATE TABLE `sssm_errorlog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_errorlog`
@@ -19554,7 +19581,7 @@ CREATE TABLE `sssm_familymembers` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime NOT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19570,7 +19597,7 @@ CREATE TABLE `sssm_group` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_group`
@@ -19599,7 +19626,7 @@ CREATE TABLE `sssm_jobpost` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_jobpost`
@@ -19622,7 +19649,7 @@ CREATE TABLE `sssm_messages` (
   `MessageKey` varchar(150) NOT NULL,
   `Message` varchar(250) NOT NULL,
   `ErrorCode` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_messages`
@@ -20175,7 +20202,7 @@ CREATE TABLE `sssm_module` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_module`
@@ -20263,7 +20290,7 @@ CREATE TABLE `sssm_motivationalquote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20280,7 +20307,7 @@ CREATE TABLE `sssm_notification` (
   `IsRead` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_notification`
@@ -20310,7 +20337,7 @@ CREATE TABLE `sssm_pagemaster` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_pagemaster`
@@ -20321,7 +20348,14 @@ INSERT INTO `sssm_pagemaster` (`PageID`, `PageName`, `CategoryID`, `SubCategoryI
 (2, 'About', 6, 0, 2, '2025-07-01 10:49:09', NULL, NULL, 1),
 (3, 'Blogs', 9, 0, 2, '2025-07-01 10:49:09', NULL, NULL, 1),
 (7, 'Privacy', 0, 0, 2, '2025-07-01 10:49:09', NULL, NULL, 1),
-(22, 'social-events', 7, 5, 2, '2025-01-08 19:05:11', 2, '2025-01-08 19:05:21', 1);
+(22, 'social-events', 7, 5, 2, '2025-01-08 19:05:11', 2, '2025-01-08 19:05:21', 1),
+(23, 'corporate-events', 7, 6, 2, '2025-01-08 21:34:35', NULL, NULL, 1),
+(24, 'government-events', 7, 7, 2, '2025-01-08 21:35:30', NULL, NULL, 1),
+(25, 'av-rentals', 7, 8, 2, '2025-01-08 21:36:10', NULL, NULL, 1),
+(26, 'anchor', 8, 11, 2, '2025-01-08 21:58:55', NULL, NULL, 1),
+(27, 'music-band', 8, 12, 2, '2025-01-08 21:59:17', NULL, NULL, 1),
+(28, 'dj', 8, 13, 2, '2025-01-08 21:59:38', NULL, NULL, 1),
+(29, 'standup-comedian', 8, 14, 2, '2025-01-08 21:59:57', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -20350,7 +20384,7 @@ CREATE TABLE `sssm_project` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_project`
@@ -20375,7 +20409,7 @@ CREATE TABLE `sssm_projectgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20394,7 +20428,7 @@ CREATE TABLE `sssm_projectmilestone` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20411,7 +20445,7 @@ CREATE TABLE `sssm_projectwiserule` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20433,7 +20467,7 @@ CREATE TABLE `sssm_property` (
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1,
   `IsCommercial` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_property`
@@ -20702,7 +20736,7 @@ CREATE TABLE `sssm_propertyimagetitle` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_propertyimagetitle`
@@ -20737,7 +20771,7 @@ CREATE TABLE `sssm_refund` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20760,7 +20794,7 @@ CREATE TABLE `sssm_reminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL COMMENT 'responded by ',
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20779,7 +20813,7 @@ CREATE TABLE `sssm_response` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20812,7 +20846,7 @@ CREATE TABLE `sssm_rolemap` (
   `ModifiedDate` datetime DEFAULT NULL,
   `ModifiedBy` int(11) DEFAULT NULL,
   `Status` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_rolemap`
@@ -21085,7 +21119,7 @@ CREATE TABLE `sssm_roleproject` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_roleproject`
@@ -21115,7 +21149,7 @@ CREATE TABLE `sssm_roles` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_roles`
@@ -21142,7 +21176,7 @@ CREATE TABLE `sssm_sections` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_sections`
@@ -21168,7 +21202,7 @@ CREATE TABLE `sssm_smstemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_smstemplate`
@@ -21198,7 +21232,7 @@ CREATE TABLE `sssm_state` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_state`
@@ -21872,7 +21906,7 @@ CREATE TABLE `sssm_testimonial` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_testimonial`
@@ -21915,7 +21949,7 @@ CREATE TABLE `sssm_user` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_user`
@@ -21947,7 +21981,7 @@ CREATE TABLE `sssm_usersetting` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_usersetting`
@@ -21992,7 +22026,7 @@ CREATE TABLE `sssm_visitor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_visitor`
@@ -22021,7 +22055,7 @@ CREATE TABLE `sssm_visitorfollowup` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22041,7 +22075,7 @@ CREATE TABLE `sssm_visitorreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_visitorreminder`
@@ -22069,7 +22103,7 @@ CREATE TABLE `sssm_visitorreminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22087,7 +22121,7 @@ CREATE TABLE `ss_artistgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_artistgallery`
@@ -22116,7 +22150,7 @@ CREATE TABLE `ss_banner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `ss_banner`
@@ -22124,7 +22158,15 @@ CREATE TABLE `ss_banner` (
 
 INSERT INTO `ss_banner` (`BannerID`, `BannerTitle`, `PageID`, `SequenceNo`, `SubTitle1`, `SubTitle2`, `SubTitle3`, `Image`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
 (12, 'Making Moments Memorable\n', 2, '1', 'Pulse-Pounding Beats,', 'Unforgettable Events', 'Your DJ Partner', '20240824110438_.jpg', 2, '2024-07-27 10:35:30', 2, '2024-08-24 14:34:38', 1),
-(13, 'Making Moments Memorable', 3, '1', 'Soundtrack Your', 'Celebration by ', 'Personalized DJ Services', '20240813181027_.jpg', 2, '2024-07-27 10:46:24', 2, '2024-08-13 21:40:28', 1);
+(13, 'Making Moments Memorable', 3, '1', 'Soundtrack Your', 'Celebration by ', 'Personalized DJ Services', '20240813181027_.jpg', 2, '2024-07-27 10:46:24', 2, '2024-08-13 21:40:28', 1),
+(29, 'Your Go TO DJ Solutions', 22, '1', 'Transform Your Party with', 'Our Dynamic DJ', 'Experience', '20250108172506_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:55:07', 1),
+(30, 'DJ Services for Business, Done Right', 23, '1', 'Unleash the Energy at', 'Your Next Corporate', 'Events', '20250108172545_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:55:46', 1),
+(31, 'Government Event Specialists', 24, '1', 'Professional DJ Services', 'for Dignified Occasions', '', '20250108172621_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:56:22', 1),
+(32, 'We provide innovative solutions to expand business', 25, '1', 'We are not your average', 'brand agency', '', '20250108172719_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:57:19', 1),
+(33, 'Elevate Your Event\r\n', 26, '1', 'Expert DJ Services for', 'Unforgettable Parties and', 'Celebrations', '20250108172719_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:57:19', 1),
+(34, 'Elevate Your Event\r\n', 27, '1', 'Expert DJ Services for', 'Unforgettable Parties and', 'Celebrations', '20250108172719_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:57:19', 1),
+(35, 'Elevate Your Event\r\n', 28, '1', 'Expert DJ Services for', 'Unforgettable Parties and', 'Celebrations', '20250108172719_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:57:19', 1),
+(36, 'Elevate Your Event\r\n', 29, '1', 'Expert DJ Services for', 'Unforgettable Parties and', 'Celebrations', '20250108172719_.jpg', 2, '2024-07-27 10:46:24', 2, '2025-01-08 21:57:19', 1);
 
 -- --------------------------------------------------------
 
@@ -22144,7 +22186,7 @@ CREATE TABLE `ss_category` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ss_category`
@@ -22172,7 +22214,7 @@ CREATE TABLE `ss_feedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_feedback`
@@ -22218,7 +22260,7 @@ CREATE TABLE `ss_goodreceiveditems` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22235,7 +22277,7 @@ CREATE TABLE `ss_goods` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_goods`
@@ -22262,7 +22304,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `VendorID` int(11) NOT NULL,
   `CategoryID` int(11) NOT NULL,
   `ChallanNo` varchar(50) DEFAULT NULL,
-  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 COLLATE utf16_general_ci DEFAULT NULL,
+  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 DEFAULT NULL,
   `ChallanDate` date DEFAULT NULL,
   `InvoiceImageURL` varchar(150) DEFAULT NULL,
   `TotalPrice` varchar(10) DEFAULT NULL,
@@ -22271,7 +22313,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22291,7 +22333,7 @@ CREATE TABLE `ss_misscallapi` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22331,7 +22373,7 @@ CREATE TABLE `ss_opportunity` (
   `Status` int(11) NOT NULL DEFAULT 1,
   `RefName` varchar(50) DEFAULT NULL,
   `RefMobileNo` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_opportunity`
@@ -23199,7 +23241,7 @@ CREATE TABLE `ss_opportunityreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_opportunityreminder`
@@ -23222,7 +23264,7 @@ CREATE TABLE `ss_skill` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_skill`
@@ -23249,7 +23291,7 @@ CREATE TABLE `ss_subcategory` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `ss_subcategory`
@@ -23279,7 +23321,7 @@ CREATE TABLE `ss_uom` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_uom`
@@ -23318,7 +23360,7 @@ CREATE TABLE `ss_userfeedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -23342,7 +23384,7 @@ CREATE TABLE `ss_vendor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -23377,7 +23419,7 @@ CREATE TABLE `ss_visitorsites` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -23838,7 +23880,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `sssm_activitylog`
 --
 ALTER TABLE `sssm_activitylog`
-  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=312;
+  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
 
 --
 -- AUTO_INCREMENT for table `sssm_admindetails`
@@ -23880,7 +23922,7 @@ ALTER TABLE `sssm_cities`
 -- AUTO_INCREMENT for table `sssm_cms`
 --
 ALTER TABLE `sssm_cms`
-  MODIFY `CMSID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `CMSID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `sssm_config`
@@ -24012,7 +24054,7 @@ ALTER TABLE `sssm_notification`
 -- AUTO_INCREMENT for table `sssm_pagemaster`
 --
 ALTER TABLE `sssm_pagemaster`
-  MODIFY `PageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `PageID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `sssm_project`
@@ -24156,7 +24198,7 @@ ALTER TABLE `ss_artistgallery`
 -- AUTO_INCREMENT for table `ss_banner`
 --
 ALTER TABLE `ss_banner`
-  MODIFY `BannerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `BannerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `ss_category`
