@@ -114,9 +114,6 @@ class Contact extends CI_Controller
 
             $this->load->view('front/includes/footer');
         } else {
-
-
-
             $this->load->helper('file');
             $config['upload_path'] = 'assets/uploads/resume/';
             $config['allowed_types'] = 'doc|docx|pdf';
