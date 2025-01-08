@@ -252,6 +252,16 @@ define('TESTIMONIAL_THUMB_UPLOAD_PATH',    './assets/uploads/testimonial/thumbna
 define('TESTIMONIAL_THUMB_MAX_WIDTH',    250);
 define('TESTIMONIAL_THUMB_MAX_HEIGHT',    250);
 
+
+define('GALLERY_MAX_HEIGHT',        -1);
+define('GALLERY_MAX_WIDTH',            -1);
+define('GALLERY_MAX_SIZE',            102400);
+define('GALLERY_ALLOWED_TYPES',        'gif|jpg|png|jpeg');
+define('GALLERY_UPLOAD_PATH',        './assets/uploads/gallery/');
+define('GALLERY_THUMB_UPLOAD_PATH',    './assets/uploads/gallery/thumbnail/');
+define('GALLERY_THUMB_MAX_WIDTH',    250);
+define('GALLERY_THUMB_MAX_HEIGHT',    250);
+
 define('BLOG_ID', 5);
 define('ABOUT_ID', 3);
 define('PRIVACY_ID', 6);

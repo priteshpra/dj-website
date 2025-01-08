@@ -118,6 +118,17 @@ if (!function_exists('getPageCombobox')) {
     }
 }
 
+if (!function_exists('getUserNameCombobox')) {
+    function getUserNameCombobox($Selected = 0)
+    {
+        $CI = &get_instance();
+        $data = array();
+        $data['all_data'] = $CI->common_model->getUserNameCombobox();
+        $data['Selected'] = $Selected;
+        return $CI->load->view('common_view_files/username_combo_box', $data, TRUE);
+    }
+}
+
 /**
  * Purpose : drop-down box of City
  * Parameters :
@@ -170,6 +181,19 @@ if (!function_exists('getAllCountryForCombobox')) {
         $data['selected_country_id'] = $selected_country_id;
 
         return $CI->load->view('common_view_files/country_combo_box', $data, TRUE);
+    }
+}
+
+if (!function_exists('getArtistCatCombobox')) {
+    function getArtistCatCombobox($selected_country_id = 0)
+    {
+        $CI = &get_instance();
+        $CI->load->model('admin/common_model');
+        $data = array();
+        $data['all_data'] = $CI->common_model->getArtistCatCombobox();
+        $data['Selected'] = $selected_country_id;
+
+        return $CI->load->view('common_view_files/artist_combo_box', $data, TRUE);
     }
 }
 /**

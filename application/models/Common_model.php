@@ -65,6 +65,13 @@ class Common_model extends CI_Model
         return $query->result();
     }
 
+    function getArtistCatCombobox()
+    {
+        $query = $this->db->query("call usp_A_GetArtistCat_ComboBox()");
+        $query->next_result();
+        return $query->result();
+    }
+
     function getVisitor()
     {
         $query = $this->db->query("call usp_A_GetVisitor_ComboBox()");
@@ -105,6 +112,13 @@ class Common_model extends CI_Model
     function getPageCombobox($StateID = 0)
     {
         $query = $this->db->query("call usp_A_pagename_ComboBox()");
+        $query->next_result();
+        return $query->result();
+    }
+
+    function getUserNameCombobox($StateID = 0)
+    {
+        $query = $this->db->query("call usp_A_username_ComboBox()");
         $query->next_result();
         return $query->result();
     }

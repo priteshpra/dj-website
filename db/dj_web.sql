@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 03, 2025 at 02:00 PM
+-- Generation Time: Jan 08, 2025 at 01:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -25,11 +25,11 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `aa_test` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50))  NO SQL BEGIN
-    IF(_Name='') THEN SET _Name=NULL;END IF;
-    IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
-    IF(_Project='') THEN SET _Project=NULL;END IF;
-    IF(_Source='All') THEN SET _Source=NULL;END IF;
+CREATE DEFINER=`` PROCEDURE `aa_test` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50))  NO SQL BEGIN
+    IF (_Name = '') THEN SET _Name=NULL;END IF;
+    IF (_MobileNo = '') THEN SET _MobileNo=NULL;END IF;
+    IF (_Project = '') THEN SET _Project=NULL;END IF;
+    IF (_Source = 'All') THEN SET _Source=NULL;END IF;
       SET @Count=(  SELECT  
                   COUNT(O.OpportunityID) 
                 FROM ss_opportunity O
@@ -105,7 +105,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -135,7 +135,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddCategory` (IN `_CategoryName` VARCHAR(100), IN `_CreatedBy` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddCategory` (IN `_CategoryName` VARCHAR(100), IN `_CreatedBy` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -168,7 +168,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddFeedback` (IN `_Feedback` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddFeedback` (IN `_Feedback` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -196,7 +196,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddGoods` (IN `_GoodsName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddGoods` (IN `_GoodsName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -226,7 +226,36 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddSkill` (IN `_SkillName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+DECLARE _ID INT DEFAULT 0;
+DECLARE EXIT handler for sqlexception
+   BEGIN
+        
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+        SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+        ROLLBACK;
+        SELECT "Add Skill" AS Method , @full_error AS Message;
+    END;
+    START TRANSACTION;
+
+SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
+
+INSERT INTO ss_skill (SkillName,CreatedDate,CreatedBy,Status)
+VALUES (
+      IFNULL(_SkillName,''),
+      CONVERT_TZ(NOW(),@@session.time_zone,@TimeZone),    
+      IFNULL(_CreatedBy,0),
+      IFNULL(_Status,0)
+      );
+SET @LAST_ID = LAST_INSERT_ID();
+SET @ID=(SELECT Fn_A_AddActivityLog('AddSkill',' has added Skill.',_UserType,_IPAddress,_CreatedBy));
+SELECT @LAST_ID AS ID;
+
+COMMIT;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_AddSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(200), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -259,7 +288,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddUOM` (IN `_UOMName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddUOM` (IN `_UOMName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -287,7 +316,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_AddUserFeedback` (IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_FeedbackID` INT, IN `_CallStartDateTime` VARCHAR(100), IN `_CallEndDateTime` VARCHAR(100), IN `_Remarks` TEXT, IN `_SitesID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_FeedbackDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_AddUserFeedback` (IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_FeedbackID` INT, IN `_CallStartDateTime` VARCHAR(100), IN `_CallEndDateTime` VARCHAR(100), IN `_Remarks` TEXT, IN `_SitesID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_FeedbackDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -325,7 +354,75 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddBanner` (IN `_BannerTitle` VARCHAR(200), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150), IN `_SequenceNo` VARCHAR(100))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+DECLARE admin_name VARCHAR(50);
+DECLARE EXIT handler for sqlexception
+  BEGIN
+  DECLARE admin_name VARCHAR(50);
+    ROLLBACK;
+    GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+    SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+    SELECT "Add Artist" AS Method , @full_error AS Message;
+  END;
+  START TRANSACTION;
+  SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
+INSERT INTO sssm_user (
+        FirstName,
+        LastName,
+        DisplayName,
+        EmailID,
+        Password,
+        MobileNo,
+        Address,
+        CountryID,
+        StateID,
+        CityID,
+        Rating,
+        Experience,
+        Languages,
+        IsOpenToTravel,
+        Skills,
+        AboutArtist,
+        VideoFileURL,
+        Status,
+        CreatedDate,
+        CreatedBy,
+        ArtistCategoryID
+    )
+    VALUES (
+       IFNULL(_FirstName, ''),
+        IFNULL(_LastName, ''),
+        IFNULL(_DisplayName, ''),
+        IFNULL(_EmailID, ''),
+        IFNULL(_Password, ''),
+        IFNULL(_MobileNo, ''),
+        IFNULL(_Address, ''),
+        IFNULL(_CountryID, 0),
+        IFNULL(_StateID, 0),
+        IFNULL(_CityID, 0),
+        IFNULL(_Rating, 0),
+        IFNULL(_Experience, ''),
+        IFNULL(_Languages, ''),
+        IFNULL(_IsOpenToTravel, 0),
+        IFNULL(_Skills, ''),
+        IFNULL(_AboutArtist, ''),
+        IFNULL(_VideoFileURL, ''),
+        IFNULL(_Status, 0),
+        CONVERT_TZ(NOW(), @@session.time_zone, @TimeZone),
+        IFNULL(_CreatedBy, 0),
+         IFNULL(_ArtistCategoryID, 0)
+    );
+
+
+SET @ID=(SELECT Fn_A_AddActivityLog('AddArtist',' has added new artist.',_UserType,_IPAddress,_CreatedBy));
+ 
+SELECT LAST_INSERT_ID() AS ID;
+COMMIT;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_AddBanner` (IN `_BannerTitle` VARCHAR(200), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150), IN `_SequenceNo` VARCHAR(100))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -360,7 +457,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -393,7 +490,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddBulkMessages` (IN `_Type` VARCHAR(20), IN `_Subject` VARCHAR(250), IN `_Message` TEXT, IN `_Receiver` VARCHAR(20), IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddBulkMessages` (IN `_Type` VARCHAR(20), IN `_Subject` VARCHAR(250), IN `_Message` TEXT, IN `_Receiver` VARCHAR(20), IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -421,7 +518,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_EmailID` VARCHAR(50), IN `_Password` VARCHAR(30), IN `_MobileNo` VARCHAR(15), IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(50), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_BankName` VARCHAR(250), IN `_IFSCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_EmailID` VARCHAR(50), IN `_Password` VARCHAR(30), IN `_MobileNo` VARCHAR(15), IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(50), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_BankName` VARCHAR(250), IN `_IFSCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -448,7 +545,7 @@ SELECT @LAST_CT_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCity` (IN `_CityName` VARCHAR(200) CHARSET utf8, IN `_StateID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCity` (IN `_CityName` VARCHAR(200) CHARSET utf8, IN `_StateID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -477,7 +574,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -508,7 +605,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCountry` (IN `_CountryName` VARCHAR(100), IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCountry` (IN `_CountryName` VARCHAR(100), IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
 	BEGIN
 		ROLLBACK;
@@ -534,7 +631,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomer` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomer` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT DEFAULT 0;
   DECLARE EXIT handler for sqlexception
   BEGIN
@@ -601,7 +698,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerMileStone` (IN `_ProjectMileStoneID` INT, IN `_CustomerPropertyID` INT, IN `_CreatedBy` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerMileStone` (IN `_ProjectMileStoneID` INT, IN `_CustomerPropertyID` INT, IN `_CreatedBy` INT)  NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -617,7 +714,7 @@ INSERT INTO sssm_customermilestone(ProjectMileStoneID,CustomerPropertyID, Create
 SELECT LAST_INSERT_ID() AS ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerPayment` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_MileStone` TEXT, IN `_Path` VARCHAR(250), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPayment` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_MileStone` TEXT, IN `_Path` VARCHAR(250), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -766,7 +863,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
 DECLARE flag INT DEFAULT 0;
   DECLARE EXIT handler for sqlexception
     BEGIN
@@ -884,7 +981,7 @@ DECLARE flag INT DEFAULT 0;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerPropertyDocument` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyDocument` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -989,7 +1086,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerPropertyImage` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250), IN `_Title` VARCHAR(250), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyImage` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250), IN `_Title` VARCHAR(250), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Path` VARCHAR(250), IN `_CustomerPropertyDocumentID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1094,7 +1191,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerPropertyVideo` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyVideoID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerPropertyVideo` (IN `_CustomerPropertyID` INT, IN `_DocumentUrl` VARCHAR(250) CHARSET utf8, IN `_Title` VARCHAR(250) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS') CHARSET utf8, IN `_IPAddress` VARCHAR(15) CHARSET utf8, IN `_Path` VARCHAR(250) CHARSET utf8, IN `_CustomerPropertyVideoID` INT)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1200,7 +1297,7 @@ FROM (SELECT
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Message` TEXT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Message` TEXT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1236,7 +1333,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(@customerID,'Customer', CONCAT(@a
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1265,7 +1362,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddDesignationByCSV` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddDesignationByCSV` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_CreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
@@ -1293,7 +1390,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEmail` VARCHAR(70), IN `_SupportEmail` VARCHAR(70), IN `_TimeZone` VARCHAR(50), IN `_AppVersionAndroid` DOUBLE, IN `_AppVersionIOS` DOUBLE, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16), IN `_CreatedBy` INT, IN `_ConfigID` INT, IN `_ModifiedBy` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEmail` VARCHAR(70), IN `_SupportEmail` VARCHAR(70), IN `_TimeZone` VARCHAR(50), IN `_AppVersionAndroid` DOUBLE, IN `_AppVersionIOS` DOUBLE, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16), IN `_CreatedBy` INT, IN `_ConfigID` INT, IN `_ModifiedBy` INT)  NO SQL BEGIN
   IF(_CrashEmail    ='')   THEN SET _CrashEmail =NULL; END IF;
   IF(_SupportEmail    ='') THEN SET _SupportEmail =NULL; END IF;
   IF(_TimeZone    ='') THEN SET _TimeZone =NULL; END IF;
@@ -1345,7 +1442,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEditConfig` (IN `_CrashEma
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEditFollowup` (IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_FollowupDate` DATETIME, IN `_FollowBy` INT, IN `_ID` INT, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_AddEditFollowup` (IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_FollowupDate` DATETIME, IN `_FollowBy` INT, IN `_ID` INT, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN 
 SET @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
 IF(_FollowupDate = "1000-01-01") THEN SET _FollowupDate = NULL; END IF;
@@ -1387,7 +1484,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `_ProjectID` INT, IN `_Rule` TEXT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `_ProjectID` INT, IN `_Rule` TEXT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
   SET @TimeZone = (SELECT TimeZone FROM sssm_config Limit 1);
   IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
   SET @projectName = (SELECT Title FROM sssm_project WHERE  ProjectID = _ProjectID);
@@ -1425,7 +1522,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEditProjectWiseRule` (IN `
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1454,7 +1551,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(250), IN `_Password` VARCHAR(100), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_PassCode` VARCHAR(10), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(250), IN `_Password` VARCHAR(100), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_PassCode` VARCHAR(10), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1521,7 +1618,38 @@ SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm
 COMMIT;   
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddGallery` (IN `_Title` VARCHAR(200), IN `_UserID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_Image` VARCHAR(150))  NO SQL BEGIN
+DECLARE admin_name VARCHAR(50);
+DECLARE EXIT handler for sqlexception
+  BEGIN
+  DECLARE admin_name VARCHAR(50);
+    ROLLBACK;
+    GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+    SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+    SELECT "Add Gallery" AS Method , @full_error AS Message;
+  END;
+  START TRANSACTION;
+  SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
+
+INSERT INTO ss_artistgallery(Title,UserID,DocumentURL,CreatedDate,CreatedBy,Status)
+VALUES (
+      IFNULL(_Title,''),
+      IFNULL(_UserID,''),
+      IFNULL(_Image,''),
+      CONVERT_TZ(NOW(),@@session.time_zone,@TimeZone),    
+      IFNULL(_CreatedBy,0),
+      IFNULL(_Status,0)
+      );
+
+SET @ID=(SELECT Fn_A_AddActivityLog('AddGallery',' has added new Gallery.',_UserType,_IPAddress,_CreatedBy));
+ 
+SELECT LAST_INSERT_ID() AS ID;
+COMMIT;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_AddGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1550,7 +1678,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddInward` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(200), IN `_ChallanDate` DATE, IN `_TotalPrice` VARCHAR(10), IN `_CategoryID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddInward` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(200), IN `_ChallanDate` DATE, IN `_TotalPrice` VARCHAR(10), IN `_CategoryID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -1585,7 +1713,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddInwardItem` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_GoodsReceivedNoteID` INT, IN `_GoodsID` INT, IN `_Qty` FLOAT, IN `_UOMID` INT, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddInwardItem` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CreatedBy` INT, IN `_Status` INT, IN `_GoodsReceivedNoteID` INT, IN `_GoodsID` INT, IN `_Qty` FLOAT, IN `_UOMID` INT, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -1619,7 +1747,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddJobPost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddJobPost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1654,7 +1782,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddMisscallAPI` (IN `_MsgId` VARCHAR(50) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_LongCode` VARCHAR(30), IN `_RcvFrom` VARCHAR(30), IN `_RcvTime` VARCHAR(100), IN `_MsgText` VARCHAR(100))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddMisscallAPI` (IN `_MsgId` VARCHAR(50) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_LongCode` VARCHAR(30), IN `_RcvFrom` VARCHAR(30), IN `_RcvTime` VARCHAR(100), IN `_MsgText` VARCHAR(100))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1687,7 +1815,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddMotivationalQuote` (IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddMotivationalQuote` (IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1719,7 +1847,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddOpportunity` (IN `_Type` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Dt` DATE, IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(100), IN `_Message` TEXT, IN `_Name` VARCHAR(100), IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunity` (IN `_Type` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Dt` DATE, IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(100), IN `_Message` TEXT, IN `_Name` VARCHAR(100), IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -1760,7 +1888,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddOpportunityAPI` (IN `_Type` VARCHAR(30) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_city` VARCHAR(150), IN `_dt` VARCHAR(20), IN `_email` VARCHAR(150), IN `_isd` VARCHAR(10), IN `_locality` VARCHAR(150), IN `_loginid` VARCHAR(150), IN `_mobile` VARCHAR(30), IN `_msg` TEXT, IN `_name` VARCHAR(150), IN `_pid` VARCHAR(150), IN `_project` VARCHAR(150), IN `_subject` VARCHAR(150), IN `_time` VARCHAR(30), IN `_tranType` VARCHAR(150), IN `_VTime` VARCHAR(30), IN `_vdate` VARCHAR(30))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunityAPI` (IN `_Type` VARCHAR(30) CHARSET utf8, IN `_CreatedBy` INT, IN `Status` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16), IN `_city` VARCHAR(150), IN `_dt` VARCHAR(20), IN `_email` VARCHAR(150), IN `_isd` VARCHAR(10), IN `_locality` VARCHAR(150), IN `_loginid` VARCHAR(150), IN `_mobile` VARCHAR(30), IN `_msg` TEXT, IN `_name` VARCHAR(150), IN `_pid` VARCHAR(150), IN `_project` VARCHAR(150), IN `_subject` VARCHAR(150), IN `_time` VARCHAR(30), IN `_tranType` VARCHAR(150), IN `_VTime` VARCHAR(30), IN `_vdate` VARCHAR(30))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -1803,7 +1931,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddOpportunityReminder` (IN `_OpportunityID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddOpportunityReminder` (IN `_OpportunityID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -1838,7 +1966,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1869,7 +1997,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddProject` (IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddProject` (IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1902,7 +2030,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddProjectGallery` (IN `_ImagePath` VARCHAR(250), IN `_ProjectID` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddProjectGallery` (IN `_ImagePath` VARCHAR(250), IN `_ProjectID` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1930,7 +2058,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddProjectMileStone` (IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddProjectMileStone` (IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1958,7 +2086,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -1989,7 +2117,7 @@ SELECT @LAST_ID AS ID, _ProjectID as ProjectID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddPropertyTitleImage` (IN `_ProjectID` INT, IN `_Title` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddPropertyTitleImage` (IN `_ProjectID` INT, IN `_Title` VARCHAR(50), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2018,7 +2146,7 @@ SELECT @LAST_ID AS ID, _ProjectID as ProjectID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddRefund` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddRefund` (IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(9), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -2078,7 +2206,7 @@ SELECT _ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@adminn
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddReminderAction` (IN `_ID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_RemindedBy` INT, IN `_ActionUser` ENUM('Customer','CustomerProperty','CustomerReminder','Visitor','VisitorReminder'), IN `_Subject` VARCHAR(100), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Attachment` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddReminderAction` (IN `_ID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_RemindedBy` INT, IN `_ActionUser` ENUM('Customer','CustomerProperty','CustomerReminder','Visitor','VisitorReminder'), IN `_Subject` VARCHAR(100), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Attachment` VARCHAR(250))  NO SQL BEGIN
   DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2248,7 +2376,7 @@ SET @process = (SELECT Fn_A_AddCustomerProcess(@customerID,@Type, CONCAT(IFNULL(
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddRespose` (IN `_ReminderID` INT, IN `_ReminderType` ENUM('Customer','Visitor'), IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddRespose` (IN `_ReminderID` INT, IN `_ReminderType` ENUM('Customer','Visitor'), IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2283,7 +2411,7 @@ IF(_ReminderType = "Customer") THEN
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddRoleMapping` (IN `query` TEXT, IN `vCreatedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddRoleMapping` (IN `query` TEXT, IN `vCreatedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE row_count INT DEFAULT 0;    
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2306,7 +2434,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddRoles` (IN `vRoleName` VARCHAR(150), IN `vDescription` TEXT, IN `vCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddRoles` (IN `vRoleName` VARCHAR(150), IN `vDescription` TEXT, IN `vCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS','Web','Android','IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_roles (RoleName, Description, CreatedBy, CreatedDate)
@@ -2325,7 +2453,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddRoletoAdmin` (IN `pUserID` INT, IN `pRoleID` INT, IN `pCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddRoletoAdmin` (IN `pUserID` INT, IN `pRoleID` INT, IN `pCreatedBy` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Phc Web','Phc Android','Phc IOS','Taluka Web','Taluka Android','Taluka IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
         ROLLBACK;
@@ -2349,7 +2477,7 @@ UPDATE  sssm_admindetails
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2380,7 +2508,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `__UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `__IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_CreatedBy` INT(11), IN `_Status` INT(11), IN `__UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `__IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2411,7 +2539,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
   BEGIN
     ROLLBACK;
@@ -2440,7 +2568,7 @@ SELECT LAST_INSERT_ID() AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -2472,7 +2600,7 @@ COMMIT;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVendor` (IN `_EmailID` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_MobileNo` VARCHAR(13), IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(50), IN `_PANNo` VARCHAR(50), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVendor` (IN `_EmailID` VARCHAR(100), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_MobileNo` VARCHAR(13), IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(50), IN `_PANNo` VARCHAR(50), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE _ID INT DEFAULT 0;
 DECLARE EXIT handler for sqlexception
    BEGIN
@@ -2520,7 +2648,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_EmailID` VARCHAR(250), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_OpportunityID` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_EmailID` VARCHAR(250), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_OpportunityID` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100))  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2624,7 +2752,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitor` (IN `_EmployeeID`
    COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitorIdle` (IN `_ID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsIdle` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorIdle` (IN `_ID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsIdle` INT)  NO SQL BEGIN 
 SET @Count= (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE VisitorID = _ID);
 
 IF(@Count > 0) THEN
@@ -2647,7 +2775,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitorReminder` (IN `_VisitorID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorReminder` (IN `_VisitorID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2682,7 +2810,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(_VisitorID,'Visitor', CONCAT(@adm
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitorReminderAction` (IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorReminderAction` (IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2712,7 +2840,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitorSites` (IN `_VisitorID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ProjectID` INT, IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_ChannelPartner` VARCHAR(200), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitorSites` (IN `_VisitorID` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ProjectID` INT, IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_ChannelPartner` VARCHAR(200), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
    BEGIN
         
@@ -2761,7 +2889,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitor_27012020` (IN `_EmployeeID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AddVisitor_27012020` (IN `_EmployeeID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ProjectID` INT, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -2904,7 +3032,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AddVisitor_27012020` (IN `_Em
    COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_AvailableProperty` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_AvailableProperty` (IN `_ID` INT)  NO SQL BEGIN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
     SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
     
@@ -2928,7 +3056,7 @@ AND FIND_IN_SET(IF((ActionType='CustomerReminder' OR ActionType = 'EditCustomerR
     SELECT 1 AS ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CancelledProperty` (IN `_ID` INT, IN `_UserID` INT, IN `_IsCancelFee` INT, IN `_Reason` TEXT, IN `_CancelFeeAmount` INT, IN `_RefundAmount` INT, IN `_RefundGSTAmount` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CancelledProperty` (IN `_ID` INT, IN `_UserID` INT, IN `_IsCancelFee` INT, IN `_Reason` TEXT, IN `_CancelFeeAmount` INT, IN `_RefundAmount` INT, IN `_RefundGSTAmount` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 SET @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;    
     UPDATE
@@ -2984,7 +3112,7 @@ IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
         SELECT _ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@adminname , ' has cancelled property of ', @CustomerName,'.'), _UserID, _ID, 'CancelledProperty') as addProcess;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_ChangeRefundCloseStatus` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_ChangeRefundCloseStatus` (IN `_ID` INT)  NO SQL BEGIN
 UPDATE sssm_cancelproperty
   SET 
     IsDealClosed = 1
@@ -2993,7 +3121,7 @@ WHERE
 SELECT _ID AS ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11))  NO SQL BEGIN
 
 DECLARE OldStatus int(11);
 SET @table_name = TableName;
@@ -3009,7 +3137,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckCurrentPassword` (IN `ID` INT, IN `pPassword` VARCHAR(250))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckCurrentPassword` (IN `ID` INT, IN `pPassword` VARCHAR(250))  NO SQL BEGIN 
 SET @cnt = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID = ID AND Status = 1);
 IF(@cnt > 0) THEN 
   SELECT COUNT(UserID) AS cnt FROM sssm_admindetails WHERE UserID = ID AND Password = pPassword;
@@ -3018,7 +3146,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckCustomerEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckCustomerEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_CustomerID` INT)  NO SQL BEGIN
 SET @CNTE = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE 
             EmailID = _EmailID AND CustomerID != _CustomerID);
 SET @CNTM = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE 
@@ -3037,7 +3165,7 @@ END IF;
             
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckDuplicate` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `DataValue` VARCHAR(200) CHARSET utf8, IN `UFieldName` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicate` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `DataValue` VARCHAR(200) CHARSET utf8, IN `UFieldName` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 
 SET @table_name = TableName;
@@ -3056,7 +3184,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckDuplicateDouble` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` VARCHAR(200) CHARSET utf8, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicateDouble` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` VARCHAR(200) CHARSET utf8, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -3077,7 +3205,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckDuplicateDouble_140519` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` INT, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckDuplicateDouble_140519` (IN `TableName` VARCHAR(200), IN `FieldName` VARCHAR(200), IN `FieldNameValue` VARCHAR(200) CHARSET utf8, IN `SecondFieldName` VARCHAR(200), IN `SecondFieldNameValue` INT, IN `UFieldID` VARCHAR(200), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -3098,7 +3226,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckEmployeeEmailExist` (IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(20), IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckEmployeeEmailExist` (IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(20), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID <> 0) THEN
 	SET @MCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE MobileNo = _MobileNo AND UserID <> _ID);
 	IF(@MCount > 0) THEN 
@@ -3121,7 +3249,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckLogin` (IN `_EmailID` VARCHAR(250), IN `_Password` VARCHAR(100))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckLogin` (IN `_EmailID` VARCHAR(250), IN `_Password` VARCHAR(100))  NO SQL BEGIN
 SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND Status != 0);
   IF(@ResultCount > 0) THEN
     SET @VERFLAG = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND IsAllow = 1);
@@ -3154,7 +3282,7 @@ SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE (EmailID =
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckMultipleProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckMultipleProperty` (IN `_CustomerID` INT, IN `_PropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT ProjectID FROM sssm_property WHERE PropertyID = _PropertyID);
 SET @BlockMultiple = (SELECT BlockMultiple  FROM sssm_project WHERE ProjectID = @ProjectID);
 IF(@BlockMultiple = 1)THEN
@@ -3172,7 +3300,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckProperty` (IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID <> 0) THEN
 	SET @MCount = (SELECT COUNT(PropertyID) FROM sssm_property WHERE ProjectID = _ProjectID AND PropertyNo = _PropertyNo AND PropertyID <> _ID);
 	IF(@MCount > 0) THEN 
@@ -3190,7 +3318,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID` VARCHAR(250))  NO SQL BEGIN
     SET @ResultCount = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE EmailID = _EmailID AND Status != 0);
     IF (@ResultCount > 0) THEN
       SELECT 1 AS ID;
@@ -3199,7 +3327,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckUserExist` (IN `_EmailID
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckVendorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckVendorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     SET @ECount = (SELECT COUNT(UserID) FROM sssm_user WHERE EmailID = _EmailID AND UserID <> IFNULL(_ID,0));
     SET @MCount = (SELECT COUNT(UserID) FROM sssm_user WHERE MobileNo = _MobileNo AND UserID <> IFNULL(_ID,0));
@@ -3214,7 +3342,7 @@ IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CheckVisitorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_CheckVisitorEmailExist` (IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(15), IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     SET @ECount = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE EmailID = _EmailID AND VisitorID <> IFNULL(_ID,0));
     SET @MCount = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE MobileNo = _MobileNo AND VisitorID <> IFNULL(_ID,0));
@@ -3229,7 +3357,7 @@ IF(_ID = 0 OR _ID = '') THEN SET _ID = NULL; END IF;
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_CustomerPropertyReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_CustomerPropertyReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE)  NO SQL BEGIN 
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
@@ -3889,7 +4017,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT)  NO SQL BEGIN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
     SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
     
@@ -3927,7 +4055,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_DeleteProperty` (IN `_ID` INT
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_DuePayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_PurchaseFromDate` VARCHAR(20), IN `_PurchaseToDate` VARCHAR(20), IN `_RoleID` INT, IN `_DType` VARCHAR(50), IN `_Percentage` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_DuePayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_PurchaseFromDate` VARCHAR(20), IN `_PurchaseToDate` VARCHAR(20), IN `_RoleID` INT, IN `_DType` VARCHAR(50), IN `_Percentage` INT)  NO SQL BEGIN
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
   SET @TMPRoleID  = _RoleID;
   IF(_RoleID = -1 || _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -4095,7 +4223,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditAdminDetail` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_ModifiedBy` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin','Employee','Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditAdminDetail` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_ModifiedBy` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin','Employee','Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 SET @CNT = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID = _UserID);
 IF(@CNT > 0) THEN
@@ -4139,7 +4267,53 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditBanner` (IN `_BannerTitle` VARCHAR(150), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250), IN `_SequenceNo` INT)  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_ModifiedBy` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+DECLARE flag INT;
+DECLARE EXIT handler for sqlexception
+    BEGIN
+        ROLLBACK;
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+        SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+        SELECT "Edit Cms" AS Method , @full_error AS Message;
+    END;
+    START TRANSACTION;
+    SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+  IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
+SET flag = (SELECT count(UserID) from  sssm_user WHERE  UserID = _ID);
+    IF(flag > 0) THEN
+
+UPDATE  sssm_user SET
+    FirstName = IFNULL(_FirstName, ''), 
+    LastName = IFNULL(_LastName, ''), 
+    DisplayName = IFNULL(_DisplayName, ''), 
+    EmailID = IFNULL(_EmailID, ''), 
+    Password = IFNULL(_Password, ''), 
+    MobileNo = IFNULL(_MobileNo, ''), 
+    Address = IFNULL(_Address, ''), 
+    CountryID = IFNULL(_CountryID, 0), 
+    StateID = IFNULL(_StateID, 0), 
+    CityID = IFNULL(_CityID, 0), 
+    Rating = IFNULL(_Rating, 0), 
+    Experience = IFNULL(_Experience, ''), 
+    Languages = IFNULL(_Languages, ''), 
+    IsOpenToTravel = IFNULL(_IsOpenToTravel, 0), 
+    Skills = IFNULL(_Skills, ''), 
+    AboutArtist = IFNULL(_AboutArtist, ''), 
+    VideoFileURL = IFNULL(_VideoFileURL, ''), 
+    Status = IFNULL(_Status, 0), 
+    ModifiedDate = CONVERT_TZ(NOW(), @@session.time_zone, @TimeZone), 
+    ModifiedBy = IFNULL(_ModifiedBy, 0),
+    ArtistCategoryID = IFNULL(_ArtistCategoryID, 0)
+    WHERE UserID = _ID;
+
+
+SET @ID=(SELECT Fn_A_AddActivityLog('EditArtist',' has updated Artist.',_UserType,_IPAddress,_ModifiedBy));
+SELECT _ID AS ID;
+END IF;
+COMMIT;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_EditBanner` (IN `_BannerTitle` VARCHAR(150), IN `_PageID` INT, IN `_SubTitle1` VARCHAR(200), IN `_SubTitle2` VARCHAR(200), IN `_SubTitle3` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250), IN `_SequenceNo` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4174,7 +4348,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditBasicEmployee` (IN `_ID` INT, IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_MobileNo` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditBasicEmployee` (IN `_ID` INT, IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_MobileNo` VARCHAR(16))  NO SQL BEGIN
 SET @Mobileexist = 0;
 IF(_FirstName = '') THEN SET _FirstName = NULL; END IF;
 IF(_LastName = '') THEN SET _LastName = NULL; END IF;
@@ -4216,7 +4390,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditBlogs` (IN `_BlogID` INT, IN `_BlogTitle` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_PublishedDate` DATE, IN `_Content` TEXT, IN `_ShortContent` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4250,7 +4424,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ModifiedBy` INT, IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(30), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_ID` INT, IN `_BankName` VARCHAR(250), IN `_IFCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditChanelPartners` (IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_ModifiedBy` INT, IN `_FirmName` VARCHAR(100), IN `_FirstName` VARCHAR(50), IN `_LastName` VARCHAR(50), IN `_PanCard` VARCHAR(50), IN `_AadharCard` VARCHAR(30), IN `_GSTNumber` VARCHAR(50), IN `_BankAccount` VARCHAR(50), IN `_Status` INT, IN `_ID` INT, IN `_BankName` VARCHAR(250), IN `_IFCCode` VARCHAR(16), IN `_ReraCode` VARCHAR(30), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4294,7 +4468,7 @@ DECLARE EXIT handler for sqlexception
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCity` (IN `_CityName` VARCHAR(250) CHARSET utf8, IN `_StateID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCity` (IN `_CityName` VARCHAR(250) CHARSET utf8, IN `_StateID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4325,7 +4499,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCms` (IN `_PageID` INT, IN `_Content` TEXT, IN `_Title` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4356,7 +4530,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCountry` (IN `_CountryName` VARCHAR(500), IN `_ModifiedBy` INT(11), IN `_Status` INT(11), IN `_ID` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCountry` (IN `_CountryName` VARCHAR(500), IN `_ModifiedBy` INT(11), IN `_Status` INT(11), IN `_ID` INT(11), IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
   
   DECLARE row_count INT DEFAULT 0;    
   DECLARE ReturnStatus VARCHAR(50) DEFAULT '0';    
@@ -4394,7 +4568,7 @@ IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
         COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCustomer` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(15), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomer` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_MobileNo1` VARCHAR(15), IN `_Address` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_EmailID` VARCHAR(255), IN `_MobileNo` VARCHAR(15), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4435,7 +4609,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCustomerPayment` (IN `_ID` INT, IN `_MileStone` TEXT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerPayment` (IN `_ID` INT, IN `_MileStone` TEXT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_PaymentAmount` INT, IN `_GSTAmount` INT, IN `_PaymentDate` DATE, IN `_PaymentMode` ENUM('Cheque','Online','Cash'), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4575,7 +4749,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCustomerProperty` (IN `_ID` INT, IN `_CustomerID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerProperty` (IN `_ID` INT, IN `_CustomerID` INT, IN `_PurchaseDate` DATE, IN `_Amount` INT, IN `_GSTAmount` INT, IN `_CustomerFirstName` VARCHAR(100), IN `_CustomerLastName` VARCHAR(100), IN `_CustomerAddress` TEXT, IN `_CustomerEmailID` VARCHAR(250), IN `_CustomerPanNo` VARCHAR(10), IN `_CustomerAdhaarNo` VARCHAR(16), IN `_CustomerMobileNo` VARCHAR(15), IN `_CustomerMobileNo1` VARCHAR(15), IN `_CustomerSFirstName` VARCHAR(100), IN `_CustomerSLastName` VARCHAR(100), IN `_CustomerSAddress` TEXT, IN `_CustomerSEmailID` VARCHAR(250), IN `_CustomerSPanNo` VARCHAR(10), IN `_CustomerSAdhaarNo` VARCHAR(16), IN `_CustomerSMobileNo` VARCHAR(15), IN `_CustomerSMobileNo1` VARCHAR(15), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ChannelPartner` VARCHAR(200), IN `_IsHold` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4640,7 +4814,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditCustomerReminder` (IN `_ID` INT, IN `_Amount` DOUBLE, IN `_ReminderDate` DATETIME, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditCustomerReminder` (IN `_ID` INT, IN `_Amount` DOUBLE, IN `_ReminderDate` DATETIME, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4680,7 +4854,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditDesignation` (IN `_Designation` VARCHAR(100) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -4710,7 +4884,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditEmailTemplate` (IN `_EmailTemplateTitle` VARCHAR(500) CHARSET utf8, IN `_EmailSubject` VARCHAR(200) CHARSET utf8, IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4742,7 +4916,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_ModifiedBy` INT, IN `_PassCode` VARCHAR(10), IN `_UserID` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditEmployee` (IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_Email` VARCHAR(50), IN `_Address` VARCHAR(100), IN `_CellPhone` VARCHAR(15), IN `_ModifiedBy` INT, IN `_PassCode` VARCHAR(10), IN `_UserID` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_IsAdmin` INT, IN `_RoleID` INT, IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4786,7 +4960,38 @@ END IF;
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditGallery` (IN `_Title` VARCHAR(150), IN `_UserID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_Image` VARCHAR(250))  NO SQL BEGIN
+DECLARE flag INT;
+DECLARE EXIT handler for sqlexception
+    BEGIN
+        ROLLBACK;
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+        SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+        SELECT "Edit Gallery" AS Method , @full_error AS Message;
+    END;
+    START TRANSACTION;
+    SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+    IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
+
+    SET flag = (SELECT count(ArtistGalleryID) from  ss_artistgallery WHERE  ArtistGalleryID = _ID);
+
+    IF(flag > 0) THEN
+      UPDATE ss_artistgallery SET
+      Title = IFNULL(_Title, ''),
+      UserID = IFNULL(_UserID, ''),
+      DocumentURL = IFNULL(_Image, ''),
+      ModifiedBy = IFNULL(_ModifiedBy,0),        
+      Status = IFNULL(_Status, 0),
+      ModifiedDate = CONVERT_TZ(NOW(),@@session.time_zone,@TimeZone)
+      WHERE ArtistGalleryID = _ID;
+
+      SET @ID=(SELECT Fn_A_AddActivityLog('EditGallery',CONCAT(' has updated Gallery ',_Title),_UserType,_IPAddress,_ModifiedBy));
+      SELECT _ID AS ID;
+    END IF;
+COMMIT;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_EditGroup` (IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `_ModifiedBy` INT, IN `_Status` INT, IN `ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4816,7 +5021,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditInwardItem` (IN `_ModifiedBy` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(20), IN `_ID` INT, IN `_GoodsID` INT, IN `_UOMID` INT, IN `_Qty` DOUBLE, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE, IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditInwardItem` (IN `_ModifiedBy` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(20), IN `_ID` INT, IN `_GoodsID` INT, IN `_UOMID` INT, IN `_Qty` DOUBLE, IN `_Rate` DOUBLE, IN `_FinalPrice` DOUBLE, IN `_Status` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4849,7 +5054,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditInwardMaster` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(150), IN `_ChallanDate` DATE, IN `_TotalPrice` DOUBLE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditInwardMaster` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT, IN `_VendorID` INT, IN `_ChallanNo` VARCHAR(50), IN `_ChallanPhotoURL` VARCHAR(150), IN `_ChallanDate` DATE, IN `_TotalPrice` DOUBLE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4884,7 +5089,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditJobpost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditJobpost` (IN `_Title` VARCHAR(200), IN `_Industry` VARCHAR(200), IN `_Experience` VARCHAR(200), IN `_Location` VARCHAR(200), IN `_text` TEXT, IN `_FilePath` VARCHAR(200), IN `_PublishedDate` DATE, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4919,7 +5124,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditMessage` (IN `iMessage` VARCHAR(100) CHARSET utf8, IN `iModifiedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditMessage` (IN `iMessage` VARCHAR(100) CHARSET utf8, IN `iModifiedBy` INT, IN `ID` INT, IN `UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -4943,7 +5148,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditMotivationalQuote` (IN `_ID` INT, IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_ModifiedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditMotivationalQuote` (IN `_ID` INT, IN `_Message` TEXT, IN `_IsCurrent` INT, IN `_ModifiedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -4979,7 +5184,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditOpportunityReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditOpportunityReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5015,7 +5220,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditPagemaster` (IN `_PageName` VARCHAR(100) CHARSET utf8, IN `_CategoryID` INT, IN `_SubCategoryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS','Company Web','Company Android','Company IOS','Mentor Web','Mentor Android','Mentor IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5043,7 +5248,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditProject` (IN `_ID` INT, IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditProject` (IN `_ID` INT, IN `_Title` VARCHAR(250), IN `_Location` VARCHAR(250), IN `_Description` TEXT, IN `_GroupID` INT, IN `_TotalUnits` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_ATSPercentage` INT, IN `_Prefix` VARCHAR(50), IN `_ProjectType` VARCHAR(50), IN `_Type` ENUM('New','InProgress','Hold','Completed'))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5077,7 +5282,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditProjectMileStone` (IN `_ID` INT, IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditProjectMileStone` (IN `_ID` INT, IN `_ProjectID` INT, IN `_InstalmentNo` INT, IN `_MileStone` VARCHAR(100), IN `_Percentage` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5109,7 +5314,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditProperty` (IN `_ID` INT, IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditProperty` (IN `_ID` INT, IN `_ProjectID` INT, IN `_PropertyNo` VARCHAR(50), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_SaleableArea` VARCHAR(10), IN `_TarreceSaleableArea` VARCHAR(10))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5142,7 +5347,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditPropertyImageTitle` (IN `_ID` INT, IN `_ProjectID` INT, IN `_Title` VARCHAR(250), IN `_ModifiedBy` INT, IN `_Status` TINYINT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditPropertyImageTitle` (IN `_ID` INT, IN `_ProjectID` INT, IN `_Title` VARCHAR(250), IN `_ModifiedBy` INT, IN `_Status` TINYINT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(10))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5173,7 +5378,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditRefund` (IN `_ID` INT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditRefund` (IN `_ID` INT, IN `_CustomerPropertyID` INT, IN `_AmountType` INT, IN `_RefundAmount` INT, IN `_GSTAmount` INT, IN `_RefundDate` DATE, IN `_PaymentMode` VARCHAR(20), IN `_ChequeNo` VARCHAR(6), IN `_IFCCode` VARCHAR(16), IN `_AccountNo` VARCHAR(25), IN `_BankName` VARCHAR(250), IN `_BranchName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_UTR` VARCHAR(50))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5209,7 +5414,7 @@ SELECT _ID AS ID;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditReminderAction` (IN `_ID` INT, IN `_CustomerReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_RemindedBy` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditReminderAction` (IN `_ID` INT, IN `_CustomerReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_RemindedBy` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5247,7 +5452,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditRoles` (IN `_RoleName` VARCHAR(150), IN `_Description` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditRoles` (IN `_RoleName` VARCHAR(150), IN `_Description` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5270,7 +5475,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditSection` (IN `_PageID` INT, IN `_Content` TEXT, IN `_SequenceNo` VARCHAR(200), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5301,7 +5506,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditSMSTemplate` (IN `_Title` VARCHAR(250) CHARSET utf8, IN `_Message` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 
@@ -5336,7 +5541,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditState` (IN `_StateName` VARCHAR(250) CHARSET utf8, IN `_CountryID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
       ROLLBACK;
@@ -5367,7 +5572,7 @@ DECLARE EXIT handler for sqlexception
         COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditTestimonial` (IN `_TestimonialID` INT, IN `_Designation` VARCHAR(200), IN `_AuthorName` VARCHAR(200), IN `_Image` VARCHAR(200), IN `_Content` TEXT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5400,7 +5605,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVendor` (IN `_FirstName` VARCHAR(150), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(100), IN `_PANNo` VARCHAR(100), IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVendor` (IN `_FirstName` VARCHAR(150), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_LastName` VARCHAR(150), IN `_BusinessName` VARCHAR(100), IN `_CategoryID` INT, IN `_GSTNo` VARCHAR(100), IN `_PANNo` VARCHAR(100), IN `_EmailID` VARCHAR(100), IN `_MobileNo` VARCHAR(13), IN `_BirthDate` DATE, IN `_AnniversaryDate` DATE)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5443,7 +5648,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVisitor` (IN `_EmployeeID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_Address` TEXT, IN `_CompanyName` VARCHAR(2500), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100), IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitor` (IN `_EmployeeID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_Address` TEXT, IN `_CompanyName` VARCHAR(2500), IN `_DesignationID` INT, IN `_BirthDate` DATE, IN `_BirthMonth` INT, IN `_AnniversaryDate` DATE, IN `_AnniversaryMonth` INT, IN `_SecondMobileNo` VARCHAR(15), IN `_SecondName` VARCHAR(100), IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5484,7 +5689,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVisitorReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorReminder` (IN `_ID` INT, IN `_Message` TEXT, IN `_ReminderDate` DATETIME, IN `_PastDate` DATETIME, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5520,7 +5725,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVisitorReminderAction` (IN `_ID` INT, IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorReminderAction` (IN `_ID` INT, IN `_VisitorReminderID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Message` TEXT, IN `_ReminderActionDate` DATETIME, IN `_ReminderBy` INT, IN `_CreatedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5556,7 +5761,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVisitorSites` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(250), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitorSites` (IN `_ProjectID` INT, IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_EmployeeID` INT, IN `_Requirement` VARCHAR(250), IN `_Budget` DOUBLE, IN `_VisitSource` VARCHAR(250), IN `_Remarks` TEXT, IN `_ChanelPartnerID` INT, IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(250), IN `_EntryDate` DATETIME, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(20), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(20))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -5603,7 +5808,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EditVisitor_27012020` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_EmployeeID` INT, IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(30), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EditVisitor_27012020` (IN `_ID` INT, IN `_FirstName` VARCHAR(100), IN `_LastName` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Address` TEXT, IN `_Profession` ENUM('Business','Job'), IN `_CompanyName` VARCHAR(255), IN `_DesignationID` INT, IN `_Requirement` TEXT, IN `_Budget` DOUBLE, IN `_VisitSource` TEXT, IN `_PromotionalNotifications` INT, IN `_Remarks` TEXT, IN `_ChannelPartner` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_VisitorCenter` VARCHAR(50), IN `_OutDoorLocation` VARCHAR(100), IN `_EntryDate` DATETIME, IN `_ChanelPartnerID` INT, IN `_Finance` VARCHAR(100), IN `_PropertyInterest` VARCHAR(100), IN `_PurposeofBuying` VARCHAR(100), IN `_PreferedTimeToCall` VARCHAR(100), IN `_EmployeeID` INT, IN `_InquiryDate` DATE, IN `_LeadType` VARCHAR(30), IN `_RefName` VARCHAR(50), IN `_RefMobileNo` VARCHAR(30), IN `_BirthDate` INT, IN `_BirthMonth` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
@@ -5663,7 +5868,7 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EmployeeChangePasscode` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EmployeeChangePasscode` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
 UPDATE sssm_admindetails 
  	SET PassCode = pPassword
     WHERE 
@@ -5671,7 +5876,7 @@ UPDATE sssm_admindetails
 SELECT pUserID AS ID; 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_EmployeeChangePassword` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_EmployeeChangePassword` (IN `pPassword` VARCHAR(100), IN `pUserID` INT)  NO SQL BEGIN
 UPDATE sssm_admindetails 
  	SET Password = pPassword
     WHERE 
@@ -5679,7 +5884,7 @@ UPDATE sssm_admindetails
 SELECT pUserID AS ID; 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GelAllModule` ()  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GelAllModule` ()  NO SQL BEGIN 
 SELECT 
 	IFNULL(M.ModuleID,0) AS ModuleID,
 	IFNULL(M.ModuleName,'') AS ModuleName,
@@ -5692,7 +5897,7 @@ WHERE
 	M.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetActivityLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pActivitylogName` VARCHAR(200) CHARSET utf8, IN `pDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetActivityLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pActivitylogName` VARCHAR(200) CHARSET utf8, IN `pDate` DATE)  NO SQL BEGIN
 IF(pActivitylogName = '') THEN SET pActivitylogName =NULL; END IF;
 IF(pDate = '1000-01-01') THEN SET pDate =NULL; END IF;
 IF(PageSize = -1) THEN
@@ -5762,7 +5967,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetAdminByID` (IN `_UserID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetAdminByID` (IN `_UserID` INT)  NO SQL BEGIN
 SET @CNT = (SELECT count(UserID) FROM sssm_admindetails WHERE UserID = _UserID AND Status = 1);
 IF(@CNT > 0)THEN 
   SELECT 
@@ -5783,7 +5988,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetAllPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetAllPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
 SELECT 
  	IFNULL(P.PropertyID,0) AS PropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -5794,7 +5999,92 @@ WHERE
     P.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBanner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BannerTitle` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetArtist` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
+IF(_FirstName = '') THEN SET _FirstName =NULL; END IF; 
+IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
+
+IF(PageSize = -1) THEN
+    SELECT 
+      IFNULL(c.UserID,0) AS UserID,
+      IFNULL(c.ArtistCategoryID,0) AS ArtistCategoryID,
+      IFNULL(s.SubCategoryName,0) AS SubCategoryName,
+      IFNULL(c.FirstName,'') AS FirstName,
+      IFNULL(c.LastName,'') AS LastName,
+      IFNULL(c.DisplayName,'') AS DisplayName,
+      IFNULL(c.EmailID,'') AS EmailID,
+      IFNULL(c.Password,'') AS Password,
+      IFNULL(c.MobileNo,'') AS MobileNo,
+      IFNULL(c.Address,'') AS Address,
+      IFNULL(c.CountryID,'') AS CountryID,
+      IFNULL(c.StateID,'') AS StateID,
+      IFNULL(c.CityID,'') AS CityID,
+      IFNULL(c.Rating,'') AS Rating,
+      IFNULL(c.Experience,'') AS Experience,
+      IFNULL(c.Languages,'') AS Languages,
+      IFNULL(c.IsOpenToTravel,'') AS IsOpenToTravel,
+      IFNULL(c.Skills,'') AS Skills,
+      IFNULL(c.AboutArtist,'') AS AboutArtist,
+      IFNULL(c.VideoFileURL,'') AS VideoFileURL,
+      IFNULL(c.Status,0) AS Status
+    FROM sssm_user c
+	LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
+    WHERE
+      c.FirstName = IFNULL(_FirstName,c.FirstName)
+      ORDER BY c.UserID;
+ELSE
+ SET @rownum:=0;
+ SELECT AA.*,@rownum AS rowcount FROM (
+        SELECT V.*, @rownum := @rownum + 1 AS Rno
+        FROM ( 
+              SELECT 
+				IFNULL(c.UserID,0) AS UserID,
+				IFNULL(c.ArtistCategoryID,0) AS ArtistCategoryID,
+				IFNULL(s.SubCategoryName,0) AS SubCategoryName,
+				IFNULL(c.FirstName,'') AS FirstName,
+				IFNULL(c.LastName,'') AS LastName,
+				IFNULL(c.DisplayName,'') AS DisplayName,
+				IFNULL(c.EmailID,'') AS EmailID,
+				IFNULL(c.Password,'') AS Password,
+				IFNULL(c.MobileNo,'') AS MobileNo,
+				IFNULL(c.Address,'') AS Address,
+				IFNULL(c.CountryID,'') AS CountryID,
+				IFNULL(c.StateID,'') AS StateID,
+				IFNULL(c.CityID,'') AS CityID,
+				IFNULL(c.Rating,'') AS Rating,
+				IFNULL(c.Experience,'') AS Experience,
+				IFNULL(c.Languages,'') AS Languages,
+				IFNULL(c.IsOpenToTravel,'') AS IsOpenToTravel,
+				IFNULL(c.Skills,'') AS Skills,
+				IFNULL(c.AboutArtist,'') AS AboutArtist,
+				IFNULL(c.VideoFileURL,'') AS VideoFileURL,
+				IFNULL(c.Status,0) AS Status
+				FROM sssm_user c
+				LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
+				WHERE
+				c.FirstName = IFNULL(_FirstName,c.FirstName) 
+				ORDER BY c.UserID
+             ) V   ORDER BY V.UserID             
+        ) AA
+        WHERE Rno BETWEEN (((CurrentPage*PageSize) - PageSize)+1) AND (CurrentPage*PageSize);
+
+END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetArtistByID` (IN `_ID` INT)  NO SQL BEGIN
+SELECT u.*,s.SubCategoryID,s.SubCategoryName
+from sssm_user u
+LEFT JOIN ss_subcategory s ON s.SubCategoryID = u.ArtistCategoryID
+where UserID = _ID;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_GetArtistCat_ComboBox` ()  NO SQL BEGIN
+
+SELECT SubCategoryID AS ArtistCategoryID, SubCategoryName FROM ss_subcategory WHERE Status=1;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBanner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BannerTitle` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
 IF(_BannerTitle = '') THEN SET _BannerTitle =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
 
@@ -5837,7 +6127,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBannerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBannerByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT
                 COUNT(R.BannerID)
               FROM
@@ -5863,13 +6153,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBlogByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBlogByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_blogs
 where BlogID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBlogs` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_BlogID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBlogs` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_BlogID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_BlogID = -1) THEN SET _BlogID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -5911,7 +6201,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBulkDetails` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBulkDetails` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_Type="AllCustomer") THEN
 	SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE Status = 1);
 	IF(@Count > 0) THEN
@@ -5975,7 +6265,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetBulkDetails_04062020` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetBulkDetails_04062020` (IN `_Type` VARCHAR(20), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_Type="AllCustomer") THEN
 	SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE Status = 1);
 	IF(@Count > 0) THEN
@@ -6035,7 +6325,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCancelledProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_IsCancelled` INT, IN `_IsHold` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCancelledProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT, IN `_IsCancelled` INT, IN `_IsHold` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN 
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
   SET @TMPRoleID  = _RoleID;
   IF(_RoleID = -1 || _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -6233,7 +6523,7 @@ IF(@cnt > 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCancelPropertyByCPID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCancelPropertyByCPID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CP.CancelPropertyID) FROM sssm_cancelproperty CP
                 INNER JOIN sssm_customerproperty CSP ON (CSP.CustomerPropertyID = CP.CustomerPropertyID)
                 INNER JOIN sssm_customer C ON (C.CustomerID = CSP.CustomerID)
@@ -6276,7 +6566,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_ID` INT)  NO SQL BEGIN
 	 SELECT 
        	IFNULL(C.ChanelPartnerID,0) AS ChanelPartnerID,
         IFNULL(C.FirmName,'')  AS FirmName,
@@ -6300,7 +6590,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetChanelPArtnerByID` (IN `_I
         WHERE C.ChanelPartnerID=_ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetChanelPartnerList` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FirmName` VARCHAR(50), IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_FullName` VARCHAR(250), IN `_MobileNo` VARCHAR(10))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPartnerList` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FirmName` VARCHAR(50), IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_FullName` VARCHAR(250), IN `_MobileNo` VARCHAR(10))  NO SQL BEGIN
 IF(_Name ='') THEN SET _Name = NULL; END IF;
 IF(_FirmName = '') THEN SET _FirmName =NULL; END IF; 
 IF(_Status = -1) THEN SET _Status =NULL; END IF;
@@ -6357,7 +6647,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetChanelPartnerList_combobox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetChanelPartnerList_combobox` (IN `_ID` INT)  NO SQL BEGIN
 IF(_ID = '0') THEN SET _ID =NULL; END IF; 
 
 SET @Count = (SELECT 
@@ -6385,7 +6675,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetChildModules` (IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetChildModules` (IN `ID` INT)  NO SQL BEGIN
 IF (ID = -1)
 THEN
 SELECT ModuleID, ParentID, ModuleName FROM sssm_module WHERE Status = 1 AND ParentID != 0;
@@ -6409,7 +6699,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCity` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_city` VARCHAR(250) CHARSET utf8, IN `_state` INT, IN `status_search` INT, IN `_country` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCity` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_city` VARCHAR(250) CHARSET utf8, IN `_state` INT, IN `status_search` INT, IN `_country` INT)  NO SQL BEGIN
 IF(_city = '') THEN SET _city =NULL; END IF; 
 IF(_state = -1) THEN SET _state =NULL; END IF;
 IF(_country = -1) THEN SET _country =NULL; END IF;
@@ -6462,17 +6752,17 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCityByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCityByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT CityID, CityName, StateID , Status 
 from sssm_cities
 where CityID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCity_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCity_ComboBox` ()  NO SQL BEGIN
  SELECT CityID , CityName from sssm_cities ORDER BY  CityName;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCms` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCms` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_PageID = -1) THEN SET _PageID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -6516,13 +6806,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCmsByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCmsByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT CMSID, PageID , Content, Title , Status 
 from sssm_cms
 where CMSID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN 
   DECLARE ConfigIDFlag INT DEFAULT 0;
   SET ConfigIDFlag = (SELECT COUNT(ConfigID) FROM sssm_config);
   IF(ConfigIDFlag > 0) THEN 
@@ -6542,7 +6832,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetConfig` ()  NO SQL BEGIN
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCountry` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_CountryName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCountry` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_CountryName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_CountryName = '') THEN SET _CountryName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -6586,20 +6876,20 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCountryByID` (IN `_ID` INT(11))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCountryByID` (IN `_ID` INT(11))  NO SQL BEGIN
 SELECT CountryName , CountryID , CreatedBy , CreatedDate, ModifiedBy, ModifiedDate, Status 
 from sssm_country 
 where CountryID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCountry_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCountry_ComboBox` ()  NO SQL BEGIN
         
  SELECT CountryID,CountryName FROM  
 sssm_country WHERE Status = 1 ORDER BY CountryName ASC;
  
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomer` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Status` INT, IN `_EmailID` VARCHAR(250), IN `_RoleID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_PropertyID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomer` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(200), IN `_MobileNo` VARCHAR(15), IN `_Status` INT, IN `_EmailID` VARCHAR(250), IN `_RoleID` INT, IN `_ProjectID` INT, IN `_Type` VARCHAR(50), IN `_PropertyID` INT)  NO SQL BEGIN 
   IF(_RoleID = -1) THEN SET _RoleID = NULL;    END IF;
   IF(_RoleID = -2) THEN SET _RoleID = NULL;    END IF;
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
@@ -6722,7 +7012,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerID) FROM sssm_customer WHERE CustomerID  = _ID);
 IF(@Count > 0) THEN
 
@@ -6746,11 +7036,11 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerByRoleID` (IN `roleid` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerByRoleID` (IN `roleid` INT)  NO SQL BEGIN
 SELECT RoleID,UserID FROM sssm_admindetails WHERE RoleID = roleid;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerBySearch` (IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerBySearch` (IN `_MobileNo` VARCHAR(15))  NO SQL BEGIN 
 IF(_MobileNo = '')THEN SET _MobileNo = -1; END IF;
 
 SET @cnt = (SELECT COUNT(CustomerID) FROM sssm_customer
@@ -6773,7 +7063,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerMileStone_Combobox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerMileStone_Combobox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(CM.CustomerMileStoneID,0) AS CustomerMileStoneID,
     IFNULL(CM.ProjectMileStoneID,0) AS ProjectMileStoneID,
@@ -6789,7 +7079,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerMileStone_Combobox
     ORDER BY PM.InstalmentNo;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -6873,7 +7163,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerPaymentByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPaymentByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CustomerPaymentID) FROM sssm_customerpayment AS CP
       INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
       INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -6914,7 +7204,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerProcess` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor','CustomerProperty'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProcess` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor','CustomerProperty'))  NO SQL BEGIN
 IF(_Type = "CustomerProperty") THEN
     
     SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
@@ -6999,7 +7289,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT, IN `_Status` INT, IN `_Path` VARCHAR(250), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT, IN `_Status` INT, IN `_Path` VARCHAR(250), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
   IF(_CustomerID = -1) THEN SET _CustomerID =NULL; END IF;
   IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
   IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
@@ -7192,7 +7482,7 @@ SET @Projects = _ProjectID;
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerPropertyID) FROM sssm_customerproperty WHERE CustomerPropertyID  = _ID);
 IF(@Count > 0) THEN
     SELECT 
@@ -7251,7 +7541,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerPropertyDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerPropertyDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CustomerID` INT)  NO SQL BEGIN
 IF(_CustomerID = -1) THEN SET _CustomerID =NULL; END IF;
 
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertydocument AS CP
@@ -7295,6 +7585,7 @@ ELSE
               IFNULL(Fn_A_ChangeDateTimeFormat(CP.CreatedDate),'') AS DocumentDate,
               IFNULL(CP.Status,0) AS Status
               FROM sssm_customerpropertydocument AS CP
+
               INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
               INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
               WHERE CPR.CustomerID = IFNULL(_CustomerID,CPR.CustomerID)
@@ -7308,7 +7599,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerProperty_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerProperty_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(CP.CustomerPropertyID,0) AS CustomerPropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -7316,7 +7607,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerProperty_ComboBox`
     IFNULL(P.ProjectID,0) AS ProjectID from sssm_customerproperty AS CP LEFT JOIN sssm_property AS P ON P.PropertyID = CP.PropertyID	WHERE CP.CustomerID = _ID AND CP.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','CustomerProperty'), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','CustomerProperty'), IN `_ProjectID` INT, IN `_RoleID` INT, IN `_DType` VARCHAR(50))  NO SQL BEGIN
 IF(_ID = -1) THEN SET _ID = NULL; END IF;
 IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
@@ -7581,7 +7872,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetCustomerReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetCustomerReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CustomerReminderID) FROM sssm_customerreminder WHERE CustomerReminderID = _ID);
 IF(@cnt > 0) THEN
 	SELECT 
@@ -7602,7 +7893,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetDesignation` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_designation` VARCHAR(100) CHARSET utf8, IN `status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignation` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_designation` VARCHAR(100) CHARSET utf8, IN `status_search` INT)  NO SQL BEGIN
 IF(_designation = '') THEN SET _designation =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -7639,19 +7930,19 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetDesignationByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignationByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT Designation , DesignationID , Status 
 from sssm_designation 
 where DesignationID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetDesignation_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetDesignation_ComboBox` ()  NO SQL BEGIN
 
 SELECT DesignationID, Designation FROM sssm_designation;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetDeviceInfo` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_DeviceName` VARCHAR(100) CHARSET utf8, IN `_DeviceOS` VARCHAR(40) CHARSET utf8, IN `_OSVersion` VARCHAR(40) CHARSET utf8, IN `_UserID` INT, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetDeviceInfo` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_DeviceName` VARCHAR(100) CHARSET utf8, IN `_DeviceOS` VARCHAR(40) CHARSET utf8, IN `_OSVersion` VARCHAR(40) CHARSET utf8, IN `_UserID` INT, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_UserID = -1) THEN SET _UserID =NULL; END IF;
 IF(_DeviceName = '') THEN SET _DeviceName =NULL; END IF;
 IF(_DeviceOS = '') THEN SET _DeviceOS =NULL; END IF;
@@ -7726,7 +8017,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UserID` INT, IN `_FilterDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UserID` INT, IN `_FilterDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT 
                 COUNT(U.UserFeedbackID) 
               FROM 
@@ -7825,7 +8116,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmailTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_EmailTemplateTitle` VARCHAR(500), IN `status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmailTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_EmailTemplateTitle` VARCHAR(500), IN `status_search` INT)  NO SQL BEGIN
 IF(_EmailTemplateTitle = '') THEN SET _EmailTemplateTitle =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -7859,13 +8150,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmailTemplateByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmailTemplateByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT EmailTemplateID, EmailTemplateTitle , EmailSubject,Content , Status 
 from sssm_emailtemplate 
 where EmailTemplateID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployeeByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(UserID) FROM sssm_admindetails WHERE UserID  = _ID);
 IF(@Count > 0) THEN
 	SELECT  
@@ -7889,7 +8180,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO SQL BEGIN
 	SET @Count=(SELECT COUNT(A.UserID) FROM sssm_admindetails A WHERE A.Status=1);
     IF(@Count>0) THEN
     	SELECT 
@@ -7901,7 +8192,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployeeCombobox` ()  NO S
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployeeRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pName` VARCHAR(50), IN `pRoleName` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployeeRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pName` VARCHAR(50), IN `pRoleName` VARCHAR(50))  NO SQL BEGIN
 IF(PageSize = -1) THEN
       SELECT
     a.UserID
@@ -7939,7 +8230,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployees` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(50), IN `_Email` VARCHAR(100), IN `_CellPhone` VARCHAR(13), IN `status_search` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployees` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_FirstName` VARCHAR(50), IN `_Email` VARCHAR(100), IN `_CellPhone` VARCHAR(13), IN `status_search` INT)  NO SQL BEGIN 
     DECLARE iUserID INT DEFAULT 0;
     IF(_FirstName = '') THEN SET _FirstName =NULL; END IF;
     IF(_Email = '') THEN SET _Email =NULL; END IF;
@@ -8024,7 +8315,7 @@ IFNULL(DATE_FORMAT(A.CreatedDate,"%d-%m-%Y %H:%i:%s"),'') AS CreatedDate
 END IF;   
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetEmployee_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetEmployee_ComboBox` ()  NO SQL BEGIN
 
 SELECT UserID, FirstName, LastName FROM sssm_admindetails
 WHERE Status=1
@@ -8032,7 +8323,7 @@ WHERE Status=1
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetErrorLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `method_name` VARCHAR(50) CHARSET utf8, IN `error_date` DATE, IN `status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetErrorLog` (IN `PageSize` INT, IN `CurrentPage` INT, IN `method_name` VARCHAR(50) CHARSET utf8, IN `error_date` DATE, IN `status_search` INT)  NO SQL BEGIN
 IF(method_name = '') THEN SET method_name =NULL; END IF;
 IF(error_date = '0000-00-00') THEN SET error_date =NULL; END IF;
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
@@ -8078,7 +8369,7 @@ END IF;
  
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetFeedbackFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_Type` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetFeedbackFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_Type` VARCHAR(50))  NO SQL BEGIN
       SET @Count=1;
             
 IF(_PageSize = -1 ) THEN 
@@ -8103,13 +8394,74 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetFollowupByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetFollowupByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT V.VisitorFollowupID,V.VisitorID,V.ActionType,V.Message,V.Response,A.Name,V.FollowupDate,A.EmailID AS VisitorEmail,AD.EmailID AS AdminEmail,CONCAT(IFNULL(AD.FirstName,''),' ',IFNULL(AD.LastName,'')) AS AdminName,V.FollowBy, V.Status 
 from sssm_visitorfollowup V LEFT JOIN sssm_visitor A ON A.VisitorID = V.VisitorID LEFT JOIN sssm_admindetails AD ON AD.UserID = V.FollowBy
 where V.VisitorFollowupID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGroup` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+IF(_Title = '') THEN SET _Title =NULL; END IF;
+IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
+
+SET @Count = (SELECT
+                COUNT(R.ArtistGalleryID)
+                FROM ss_artistgallery R
+                WHERE
+                R.Title LIKE CONCAT('%',IFNULL(_Title,R.Title),'%') AND
+                R.Status = IFNULL(_Status,R.Status)
+              );
+IF(_PageSize = -1 ) THEN
+  SET _PageSize = @Count*10;
+  SET _CurrentPage = 1;
+END IF;
+
+IF(@Count > 0) THEN
+  SET @rownum:=0;
+  SELECT AA.*,@rownum AS rowcount FROM (
+    SELECT V.*, @rownum := @rownum + 1 AS Rno FROM (
+      SELECT
+        IFNULL(R.ArtistGalleryID,0) AS ArtistGalleryID,
+        IFNULL(R.Title,'') AS Title,  
+        IFNULL(UserID,'') AS UserID,
+        IFNULL(R.DocumentURL,'') AS DocumentURL,
+        IFNULL(R.Status,0) AS Status
+      FROM ss_artistgallery R
+      WHERE
+        R.Title LIKE CONCAT('%',IFNULL(_Title,R.Title),'%') AND
+        R.Status = IFNULL(_Status,R.Status)
+      ORDER BY R.ArtistGalleryID
+    ) V      
+  ) AA WHERE Rno BETWEEN (((_CurrentPage*_PageSize) - _PageSize)+1) AND (_CurrentPage*_PageSize);
+ELSE
+    SELECT Fn_M_getErrorMessage('banner_not_found') AS Message;
+END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGalleryByID` (IN `_ID` INT)  NO SQL BEGIN
+SET @Count = (SELECT
+                COUNT(R.ArtistGalleryID)
+              FROM
+                ss_artistgallery R
+              WHERE R.ArtistGalleryID = _ID
+            );
+IF(@Count > 0) THEN
+    SELECT
+      IFNULL(R.ArtistGalleryID,0) AS ArtistGalleryID,
+      IFNULL(R.Title,'') AS Title,
+      IFNULL(UserID,'') AS UserID,
+      IFNULL(R.DocumentURL,'') AS DocumentURL,
+      IFNULL(R.Status,0) AS Status
+    FROM ss_artistgallery R
+    WHERE R.ArtistGalleryID = _ID;
+ELSE
+  SELECT Fn_M_getErrorMessage('banner_not_found') AS Message;
+END IF;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_A_GetGroup` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_GroupName` VARCHAR(200) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_GroupName = '') THEN SET _GroupName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -8152,17 +8504,17 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGroupByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetGroupByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT GroupID,GroupName,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,Status FROM sssm_group WHERE GroupID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetGroup_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetGroup_ComboBox` ()  NO SQL BEGIN
  SELECT GroupID, GroupName from sssm_group 
  WHERE Status = 1
  ORDER BY GroupName;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetInwardItemByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardItemByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G WHERE G.GoodsReceivedItemID = _ID);
 IF(@Count > 0) THEN
   SELECT
@@ -8187,7 +8539,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetInwardItem_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardItem_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G WHERE G.GoodsReceivedNoteID=_ID
             );
             
@@ -8225,7 +8577,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetInwardMasterByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMasterByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G WHERE G.GoodsReceivedNoteID = _ID);
 IF(@Count > 0) THEN
   SELECT
@@ -8252,7 +8604,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(150), IN `_ChallanDate` VARCHAR(30), IN `_ChallanNo` VARCHAR(150))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(150), IN `_ChallanDate` VARCHAR(30), IN `_ChallanNo` VARCHAR(150))  NO SQL BEGIN
 	IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_ChallanDate='0000-00-00') THEN SET _ChallanDate=NULL;END IF;
     IF(_ChallanNo=-1) THEN SET _ChallanNo=NULL;END IF;
@@ -8304,7 +8656,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetInwardMaster_ListByVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VendorID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetInwardMaster_ListByVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VendorID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G WHERE G.VendorID=_VendorID
             );
             
@@ -8342,7 +8694,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetJobPost` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetJobPost` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(200), IN `Status_search` INT)  NO SQL BEGIN
 IF(_Title = '') THEN SET _Title =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -8388,13 +8740,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetJobpostByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetJobpostByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_jobpost
 where JobPostingID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMessage` (IN `PageSize` INT, IN `CurrentPage` INT, IN `ilanguage` VARCHAR(50) CHARSET utf8, IN `message_key` VARCHAR(150) CHARSET utf8, IN `imessage` VARCHAR(250) CHARSET utf8)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMessage` (IN `PageSize` INT, IN `CurrentPage` INT, IN `ilanguage` VARCHAR(50) CHARSET utf8, IN `message_key` VARCHAR(150) CHARSET utf8, IN `imessage` VARCHAR(250) CHARSET utf8)  NO SQL BEGIN
 IF(message_key = '') THEN SET message_key =NULL; END IF; 
 IF(imessage = '') THEN SET imessage =NULL; END IF; 
 IF(ilanguage = '') THEN SET ilanguage =NULL; END IF; 
@@ -8444,18 +8796,18 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMessageDetailsByID` (IN `message_id` INT(11))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMessageDetailsByID` (IN `message_id` INT(11))  NO SQL BEGIN
 SELECT MessageID , Language,MessageKey , Message  
 from sssm_messages
 where MessageID = message_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMileStone` (IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMileStone` (IN `_PropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT ProjectID FROM sssm_property WHERE PropertyID = _PropertyID);
 SELECT ProjectMileStoneID FROM sssm_projectmilestone WHERE Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMileStoneByProperty` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMileStoneByProperty` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
 SET @ProjectID = (SELECT PT.ProjectID FROM sssm_customerproperty CP
 INNER JOIN sssm_property PT ON(CP.PropertyID = PT.PropertyID)
 WHERE CP.CustomerPropertyID = _CustomerPropertyID AND CP.Status = 1);
@@ -8485,7 +8837,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMilestonesByProjectID_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMilestonesByProjectID_ComboBox` (IN `_ID` INT)  NO SQL BEGIN
  SELECT 
  	IFNULL(PM.ProjectMileStoneID,0) AS ProjectMileStoneID,
     IFNULL(PM.InstalmentNo,0) AS InstalmentNo,
@@ -8493,7 +8845,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMilestonesByProjectID_Comb
     IFNULL(PM.MileStone,'') AS MileStone from sssm_projectmilestone AS PM WHERE PM.ProjectID = _ID AND PM.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMisscallAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMisscallAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(M.MisscallID,0) AS MisscallID, 
@@ -8524,7 +8876,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetModuleByRoleProjectID` (IN `_RoleProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetModuleByRoleProjectID` (IN `_RoleProjectID` INT)  NO SQL BEGIN
 SELECT 
 	IFNULL(RM.RoleMapID,0) AS RoleMapID,
 	IFNULL(RM.RoleProjectID,0) AS RoleProjectID,
@@ -8551,7 +8903,7 @@ WHERE
 	RM.RoleProjectID = _RoleProjectID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMotivationalQuote` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMotivationalQuote` (IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote);
 IF(@cnt > 0) THEN 
   IF(_PageSize = -1) THEN
@@ -8585,7 +8937,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetMotivationalQuoteByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetMotivationalQuoteByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE MotivationalQuoteID = _ID);
 IF(@cnt > 0) THEN 
     SELECT 
@@ -8599,7 +8951,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetNotificationSetting` (IN `_UserID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetNotificationSetting` (IN `_UserID` INT)  NO SQL BEGIN 
 	SELECT 
 		IFNULL(UserSettingID,0) AS UserSettingID,
 		IFNULL(UserID,0) AS UserID,
@@ -8616,7 +8968,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetNotificationSetting` (IN `
 		UserID = _UserID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpportunityByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.OpportunityID) 
               FROM 
                 ss_opportunity U WHERE OpportunityID = _ID);
@@ -8649,7 +9001,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpportunityReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_OpportunityID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_OpportunityID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.OpportunityReminderID) FROM ss_opportunityreminder AS VR 
     INNER JOIN ss_opportunity AS V ON (V.OpportunityID = VR.OpportunityID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = VR.ReminderBy)
@@ -8720,7 +9072,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpportunityReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(OpportunityReminderID) FROM ss_opportunityreminder WHERE OpportunityReminderID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -8744,7 +9096,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpportunityReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpportunityReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.OpportunityReminderID) 
           FROM ss_opportunityreminder AS VR
           INNER JOIN ss_opportunity AS V ON (V.OpportunityID = VR.OpportunityID)
@@ -8796,7 +9148,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpprtunityAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_UserId` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityAPI` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_UserId` INT)  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -8913,7 +9265,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpprtunityAPI_260220` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityAPI_260220` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -8979,7 +9331,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpprtunityDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityDSRReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9040,7 +9392,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpprtunityFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50), IN `_Feedback` VARCHAR(50), IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9155,7 +9507,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetOpprtunityNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetOpprtunityNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(50), IN `_MobileNo` VARCHAR(50), IN `_Project` VARCHAR(50), IN `_Source` VARCHAR(50))  NO SQL BEGIN
     IF(_Name='') THEN SET _Name=NULL;END IF;
     IF(_MobileNo='') THEN SET _MobileNo=NULL;END IF;
     IF(_Project='') THEN SET _Project=NULL;END IF;
@@ -9222,7 +9574,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPagemaster` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageName` VARCHAR(250) CHARSET utf8, IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPagemaster` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_PageName` VARCHAR(250) CHARSET utf8, IN `Status_search` INT)  NO SQL BEGIN
 IF(_PageName = '') THEN SET _PageName =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -9260,13 +9612,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPagemasterByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPagemasterByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT   PageID,PageName,CategoryID,SubCategoryID,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate
 from sssm_pagemaster
   where PageID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetParentModules` (IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetParentModules` (IN `ID` INT)  NO SQL BEGIN
 IF(ID = -1)
 THEN
   SELECT 
@@ -9293,7 +9645,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(50), IN `_Location` VARCHAR(13), IN `_GroupID` INT, IN `_Status` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProject` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Title` VARCHAR(50), IN `_Location` VARCHAR(13), IN `_GroupID` INT, IN `_Status` INT)  NO SQL BEGIN 
 IF(_Title = '') THEN SET _Title = NULL; END IF;
 IF(_Location = '') THEN SET _Location = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status = NULL; END IF; 
@@ -9366,7 +9718,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectID) FROM sssm_project WHERE ProjectID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9396,7 +9748,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectByRole` (IN `_UserID` INT, IN `_RoleID` INT, IN `_Type` VARCHAR(20))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectByRole` (IN `_UserID` INT, IN `_RoleID` INT, IN `_Type` VARCHAR(20))  NO SQL BEGIN 
 IF(_UserID = -1 ) THEN SET _UserID = NULL; END IF; 
 IF(_RoleID = -1 OR _RoleID = -2 ) THEN SET _RoleID = NULL; END IF; 
 IF(_RoleID IS NULL) THEN 
@@ -9451,7 +9803,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectGallery` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(ProjectID,0) AS ProjectID, 
@@ -9482,7 +9834,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectMileStone` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectMileStone` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(ProjectMileStoneID,0) AS ProjectMileStoneID, 
@@ -9523,7 +9875,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectMileStoneByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectMileStoneByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectMileStoneID) FROM sssm_projectmilestone WHERE ProjectMileStoneID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9543,7 +9895,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProjectRule` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProjectRule` (IN `_ProjectID` INT)  NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(ProjectWiseRuleID) FROM sssm_projectwiserule WHERE ProjectID = _ProjectID AND Status = 1);
 IF(@COUNT > 0) THEN 
 	SELECT Rule FROM sssm_projectwiserule WHERE ProjectID = _ProjectID AND Status = 1 ORDER BY ProjectWiseRuleID DESC LIMIT 1;
@@ -9552,7 +9904,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProject_ComboBox` (IN `_GroupID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProject_ComboBox` (IN `_GroupID` INT)  NO SQL BEGIN
 IF(_GroupID = -1) THEN SET _GroupID = NULL; END IF;
 	SELECT 
 		IFNULL(P.ProjectID,'') AS ProjectID,
@@ -9562,7 +9914,7 @@ IF(_GroupID = -1) THEN SET _GroupID = NULL; END IF;
 		WHERE P.Status = 1 AND P.GroupID = IFNULL(_GroupID,P.GroupID);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(PropertyID,0) AS PropertyID, 
@@ -9603,7 +9955,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PropertyID) FROM sssm_property WHERE PropertyID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9626,7 +9978,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByProjectID` (IN `_ProjectID` INT)  NO SQL BEGIN
 
 SET @PropertyIDs = (SELECT GROUP_CONCAT(V.PropertyID) FROM (SELECT DISTINCT(P.PropertyID) as PropertyID FROM sssm_property AS P INNER JOIN sssm_customerproperty CP ON (CP.PropertyID = P.PropertyID) WHERE P.ProjectID = _ProjectID AND CP.IsCancelled = 0 AND CP.Status = 1) V );
 
@@ -9659,7 +10011,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPropertyByWings` (IN `_Prefix` VARCHAR(50), IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyByWings` (IN `_Prefix` VARCHAR(50), IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 SET @PrgID=_ProjectID;
 	SELECT V.* FROM (SELECT 
     SUBSTR(PT.PropertyNo,_PrefixLen+1) AS PropertyNo,
@@ -9680,7 +10032,7 @@ SET @PrgID=_ProjectID;
         ORDER BY (V.PropertyNo+0);  
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPropertyImageTitle` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyImageTitle` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN 
 IF(_PageSize = -1) THEN
   SELECT  
     IFNULL(PropertyImageTitleID,0) AS PropertyImageTitleID, 
@@ -9717,7 +10069,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPropertyImageTitleByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPropertyImageTitleByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PropertyImageTitleID) FROM sssm_propertyimagetitle WHERE PropertyImageTitleID  = _ID);
 IF(@Count > 0) THEN
 
@@ -9737,7 +10089,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetProperty_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetProperty_ComboBox` ()  NO SQL BEGIN
 SELECT 
  	IFNULL(P.PropertyID,0) AS PropertyID,
     IFNULL(P.PropertyNo,'') AS PropertyNo,
@@ -9750,7 +10102,7 @@ LEFT JOIN sssm_customerproperty CP ON (CP.PropertyID = P.PropertyID)
     P.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetPurchaseProperty` (IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetPurchaseProperty` (IN `_ProjectID` INT)  NO SQL BEGIN
 SET @_PrefixLen = (SELECT LENGTH(Prefix) FROM sssm_project WHERE ProjectID = _ProjectID);
     SELECT V.* FROM (SELECT 
         SUBSTR(PT.PropertyNo,@_PrefixLen+1) AS PropertyNoNos,
@@ -9771,7 +10123,7 @@ SET @_PrefixLen = (SELECT LENGTH(Prefix) FROM sssm_project WHERE ProjectID = _Pr
         ORDER BY V.PropertyNoWings,(V.PropertyNoNos+0);        
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRefund` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRefund` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT, IN `_RoleID` INT)  NO SQL BEGIN
 SET @TMPRoleID = _RoleID;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 SET @cnt = (SELECT COUNT(R.RefundID) FROM sssm_refund AS R
@@ -9852,7 +10204,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRefundByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRefundByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(R.RefundID) FROM sssm_refund AS R
       INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = R.CustomerPropertyID)
       INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -9892,7 +10244,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_UserType` ENUM('Customer','Visitor'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_UserType` ENUM('Customer','Visitor'))  NO SQL BEGIN
 IF(_UserType = "Customer") THEN
 	SET @CustomerID = (SELECT CustomerID FROM sssm_customerproperty WHERE CustomerPropertyID = _ID);
 	SET @VistorID = (SELECT IFNULL(VisitorID,0) FROM sssm_customer WHERE CustomerID = @CustomerID);
@@ -10038,7 +10390,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(ReminderActionID) FROM sssm_reminderaction WHERE ReminderActionID = _ID);
 IF(@cnt > 0) THEN
 SELECT 
@@ -10060,7 +10412,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderID) FROM sssm_visitorreminder WHERE VisitorReminderID = _ID);
 IF(@cnt > 0) THEN
 	SELECT 
@@ -10078,7 +10430,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetReportDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetReportDocument` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
 SET @Count = (SELECT COUNT(P.PropertyID) FROM 												
@@ -10137,7 +10489,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetReportPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_PropertyID` INT, IN `_PaymentFromDate` VARCHAR(20), IN `_PaymentToDate` VARCHAR(20), IN `_DType` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetReportPayment` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_PropertyID` INT, IN `_PaymentFromDate` VARCHAR(20), IN `_PaymentToDate` VARCHAR(20), IN `_DType` VARCHAR(20))  NO SQL BEGIN
 
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
 IF(_PropertyID = -1) THEN SET _PropertyID =NULL; END IF;
@@ -10256,7 +10608,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRequirenmentvalue` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Requirenemnt` VARCHAR(50), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRequirenmentvalue` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Requirenemnt` VARCHAR(50), IN `_Status` INT)  NO SQL BEGIN
 IF(_Requirenemnt = '') THEN SET _Requirenemnt = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -10293,7 +10645,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetResponse` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetResponse` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Type` ENUM('Customer','Visitor'))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 
 IF(@cnt > 0) THEN 
@@ -10343,7 +10695,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoleByProject` (IN `_UserID` INT, IN `_RoleID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleByProject` (IN `_UserID` INT, IN `_RoleID` INT)  NO SQL BEGIN 
 IF(_UserID = -1 ) THEN SET _UserID = NULL; END IF; 
 IF(_RoleID = -1 OR _RoleID = -2 ) THEN SET _RoleID = NULL; END IF; 
 IF(_RoleID IS NULL) THEN 
@@ -10377,7 +10729,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoleListing` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pRoleID` INT, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleListing` (IN `PageSize` INT, IN `CurrentPage` INT, IN `pRoleID` INT, IN `status_search` INT(1))  NO SQL BEGIN
 IF(pRoleID = -1) THEN SET pRoleID = NULL; END IF;
 IF(PageSize = -1) THEN
   SELECT 
@@ -10419,7 +10771,7 @@ IF(PageSize = -1) THEN
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoleMappingByID` (IN `RID` INT, IN `MID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleMappingByID` (IN `RID` INT, IN `MID` INT)  NO SQL BEGIN
 IF RID = 0 OR RID = -1 OR RID = -2 THEN 
   SELECT RID AS RoleID,MID AS ModuleID,1 AS is_insert,1 AS  is_view,1 AS  is_edit, 1 AS is_status,1 AS is_export;
 ELSE
@@ -10427,7 +10779,7 @@ SELECT RoleID, ModuleID, is_insert, is_view, is_edit, is_status, is_export FROM 
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoleModuleByID` (IN `_RoleID` INT, IN `_ModuleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleModuleByID` (IN `_RoleID` INT, IN `_ModuleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 IF _RoleID = -1 OR _RoleID = -2 THEN 
 	SELECT 
 		0 AS RoleMapID,
@@ -10481,7 +10833,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoleProjectByRoleID` (IN `_RoleID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoleProjectByRoleID` (IN `_RoleID` INT)  NO SQL BEGIN
 SET @Count = (SELECT Count(RoleProjectID) FROM sssm_roleproject WHERE RoleID = _RoleID);
 IF(@Count > 0) THEN 
 	SELECT 
@@ -10498,7 +10850,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `vRoleName` VARCHAR(150), IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRoles` (IN `PageSize` INT, IN `CurrentPage` INT, IN `vRoleName` VARCHAR(150), IN `status_search` INT(1))  NO SQL BEGIN
 IF(vRoleName = '') THEN SET vRoleName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -10537,11 +10889,11 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRolesByID` (IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRolesByID` (IN `ID` INT)  NO SQL BEGIN
 SELECT RoleID,RoleName,Description,Status FROM sssm_roles WHERE RoleID = ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID` INT, IN `pType` ENUM('Web','Mobile'))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID` INT, IN `pType` ENUM('Web','Mobile'))  NO SQL BEGIN 
   IF(ID = -2 OR ID = -1) THEN 
         SET @cnt = (SELECT COUNT(ModuleID) FROM sssm_module WHERE Type = pType);
         IF(@cnt > 0) THEN
@@ -10580,11 +10932,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRolesMappingByID` (IN `ID`
    END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetRole_ComboBox` ()  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetRole_ComboBox` ()  NO SQL BEGIN 
   SELECT RoleID,RoleName FROM sssm_roles WHERE Status = 1; 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSection` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_SectionID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetSection` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_SectionID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_SectionID = -1) THEN SET _SectionID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -10628,13 +10980,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSectionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetSectionByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT SectionID, PageID , Content, SequenceNo , Status 
 from sssm_sections
 where SectionID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSMSTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(250) CHARSET utf8, IN `status_search` INT(2))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetSMSTemplate` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_Title` VARCHAR(250) CHARSET utf8, IN `status_search` INT(2))  NO SQL BEGIN
 IF(_Title = '') THEN SET _Title =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -10677,13 +11029,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSMSTemplateByID` (IN `_ID` INT(11))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetSMSTemplateByID` (IN `_ID` INT(11))  NO SQL BEGIN
 SELECT  SMSID , Title, Message, SMSKeys,Status 
 from sssm_smstemplate
 where SMSID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetState` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_StateName` VARCHAR(250) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetState` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_StateName` VARCHAR(250) CHARSET utf8, IN `status_search` INT(1))  NO SQL BEGIN
 IF(_StateName = '') THEN SET _StateName =NULL; END IF; 
 IF(status_search = -1 ) THEN SET status_search =NULL; END IF; 
 
@@ -10734,11 +11086,11 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetStateByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetStateByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT StateID,StateName,CountryID,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate,Status FROM sssm_state WHERE StateID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetStateOnly_ComboBox` (IN `_CID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetStateOnly_ComboBox` (IN `_CID` INT)  NO SQL BEGIN
 IF(_CID = -1) THEN SET _CID = NULL; END IF;
 SELECT s.StateID,s.StateName FROM sssm_state s 
 LEFT JOIN sssm_country c ON c.CountryID = s.CountryID
@@ -10747,7 +11099,7 @@ c.CountryID = IFNULL(_CID,c.CountryID) AND
 s.Status = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSubModules` (IN `iParentID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetSubModules` (IN `iParentID` INT)  NO SQL BEGIN
   SELECT
             ModuleID,
             ModuleName 
@@ -10760,7 +11112,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetSubModules` (IN `iParentID
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetTemplate` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetTemplate` (IN `_ID` INT)  NO SQL BEGIN
 	SET @cnt = (SELECT COUNT(EmailTemplateID) FROM sssm_emailtemplate WHERE EmailTemplateID = _ID);
 IF(@cnt > 0) THEN 
 	SELECT IFNULL(EmailTemplateID,0) AS EmailTemplateID,
@@ -10774,7 +11126,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetTestimonial` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_TestimonialID` INT, IN `Status_search` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetTestimonial` (IN `PageSize` INT, IN `CurrentPage` INT, IN `_TestimonialID` INT, IN `Status_search` INT)  NO SQL BEGIN
 IF(_TestimonialID = -1) THEN SET _TestimonialID =NULL; END IF; 
 IF(Status_search = -1 ) THEN SET Status_search =NULL; END IF; 
 
@@ -10816,13 +11168,13 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetTestimonialByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetTestimonialByID` (IN `_ID` INT)  NO SQL BEGIN
 SELECT *
 from sssm_testimonial
 where TestimonialID = _ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetTotalPaymentReport` (IN `_ProjectID` INT, IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetTotalPaymentReport` (IN `_ProjectID` INT, IN `_PageSize` INT, IN `_CurrentPage` INT)  NO SQL BEGIN
 IF(_ProjectID = -1) THEN SET _ProjectID = NULL; END IF;
 SET @cnt = (SELECT COUNT(C.CustomerPropertyID) FROM sssm_customerproperty C
 INNER JOIN sssm_property P ON P.PropertyID=C.PropertyID
@@ -10853,7 +11205,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetUser_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetUser_ComboBox` ()  NO SQL BEGIN
 SELECT 
 	IFNULL(U.UserID,0) AS UserID,
 	IFNULL(U.FirstName,'') AS FirstName,
@@ -10866,7 +11218,7 @@ WHERE
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVendor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVendor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(250), IN `_Status` INT)  NO SQL BEGIN
 IF(_Name = '') THEN SET _Name = NULL; END IF; 
 IF(_EmailID = '') THEN SET _EmailID = NULL; END IF;
 IF(_Status = -1) THEN SET _Status = NULL; END IF;  
@@ -10929,7 +11281,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVendorByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVendorByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(V.UserID) FROM ss_vendor V WHERE V.UserID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -10958,7 +11310,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_CategoryID` INT)  NO SQL BEGIN
 	SELECT 
     	IFNULL(V.VendorID,0) AS VendorID,
         CONCAT(V.FirstName," ",V.LastName)AS VendorName 
@@ -10968,7 +11320,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVendor_Combo_Box` (IN `_Ca
     ;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT)  NO SQL BEGIN
       SET @Count=1;
             
 IF(_PageSize = -1 ) THEN 
@@ -11004,7 +11356,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitFromToDateDetails` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT, IN `_Source` TEXT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitFromToDateDetails` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_FromDate` DATE, IN `_EndDate` DATE, IN `_ProjectID` INT, IN `_Source` TEXT)  NO SQL BEGIN
 IF(_ProjectID=-1) THEN SET _ProjectID=NULL; END IF;
 IF(_Source='All') THEN SET _Source=NULL; END IF;
 
@@ -11048,7 +11400,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11138,7 +11490,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorByChannelPartner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ChannelPartner` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByChannelPartner` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ChannelPartner` VARCHAR(150), IN `_Status` INT)  NO SQL BEGIN
 IF(_ChannelPartner = '') THEN SET _ChannelPartner = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -11208,7 +11560,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11304,7 +11656,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorByID` (IN `_VisitorID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorByID` (IN `_VisitorID` INT)  NO SQL BEGIN 
 SET @Count = (SELECT COUNT(VisitorID) FROM sssm_visitor WHERE VisitorID = _VisitorID);
 IF(@Count > 0) THEN
   SELECT 
@@ -11341,7 +11693,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorFollowup` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Status` INT, IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorFollowup` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_ActionType` ENUM('SMS','Mail','Call','All'), IN `_Status` INT, IN `_ID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID =NULL; END IF;
 IF(_ActionType = 'All') THEN SET _ActionType =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF;
@@ -11415,7 +11767,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorLeadTypeByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorLeadTypeByFromToDate` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Profession` VARCHAR(50), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_LeadType` VARCHAR(50), IN `_ProjectID` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
@@ -11509,7 +11861,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminder` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -11581,7 +11933,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderAction` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID = NULL; END IF;
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminderaction VRA 
     INNER JOIN sssm_visitorreminder AS VR ON (VR.VisitorReminderID = VRA.VisitorReminderID)
@@ -11649,7 +12001,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderActionByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderActionID) FROM sssm_visitorreminderaction WHERE VisitorReminderActionID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -11677,7 +12029,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminderByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VisitorReminderID) FROM sssm_visitorreminder WHERE VisitorReminderID = _ID);
 IF(@cnt > 0) THEN
     SELECT 
@@ -11702,7 +12054,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_FromDate` DATE, IN `_EndDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -11782,7 +12134,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorReminderReport_01062020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorReminderReport_01062020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ReminderBy` INT, IN `_ReminderDate` DATE)  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(VR.VisitorReminderID) FROM sssm_visitorreminder AS VR 
     INNER JOIN sssm_visitor AS V ON (V.VisitorID = VR.VisitorID)
     INNER JOIN sssm_admindetails AS A ON (A.UserID = V.EmployeeID)
@@ -11854,7 +12206,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorSites` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorSites` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_VisitorID` INT, IN `_Status` INT)  NO SQL BEGIN
 IF(_VisitorID = '') THEN SET _VisitorID = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -11917,7 +12269,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorSitesByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorSitesByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.VisitorSitesID) 
               FROM 
                 ss_visitorsites U 
@@ -11957,7 +12309,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorWithoutFilter` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT, IN `_EntryFromDate` VARCHAR(20), IN `_EntryToDate` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorWithoutFilter` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT, IN `_EntryFromDate` VARCHAR(20), IN `_EntryToDate` VARCHAR(20))  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -12036,7 +12388,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitorWithoutFilterOLD` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitorWithoutFilterOLD` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Status` INT, IN `_Name` VARCHAR(50), IN `_Mobile` VARCHAR(13), IN `_ProjectID` INT)  NO SQL BEGIN
 
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
@@ -12112,7 +12464,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitor_27102020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Profession` ENUM('Business','Job','All'), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_RoleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor_27102020` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_EmployeeID` INT, IN `_Name` VARCHAR(100), IN `_EmailID` VARCHAR(150), IN `_MobileNo` VARCHAR(15), IN `_Profession` ENUM('Business','Job','All'), IN `_DesignationID` INT, IN `_Requirement` VARCHAR(100), IN `_Status` INT, IN `_RoleID` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_EmployeeID = -1) THEN SET _EmployeeID =NULL; END IF;
 IF(_Name = '') THEN SET _Name =NULL; END IF;
 IF(_EmailID = '') THEN SET _EmailID =NULL; END IF;
@@ -12347,7 +12699,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetVisitor_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetVisitor_ComboBox` ()  NO SQL BEGIN
 
 SELECT IFNULL(V.VisitorID,0) AS VisitorID,
        IFNULL(V.FirstName,'') AS FirstName,
@@ -12356,7 +12708,7 @@ FROM sssm_visitor V;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_GetWingsByPrefix` (IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_GetWingsByPrefix` (IN `_PrefixLen` INT, IN `_ProjectID` INT)  NO SQL BEGIN
 SET @Count  = (SELECT COUNT(DISTINCT SUBSTR(PropertyNo,1,_PrefixLen)) FROM sssm_property WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	IF (_PrefixLen=0) THEN
@@ -12371,13 +12723,13 @@ IF(@Count > 0)THEN
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_pagename_ComboBox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_pagename_ComboBox` ()  NO SQL BEGIN
 
 SELECT PageID , PageName from sssm_pagemaster;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_ReportRole` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_A_ReportRole` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 SET @RoleProjectID = (SELECT RoleProjectID FROM sssm_roleproject WHERE RoleID = _RoleID AND ProjectID = 0);
@@ -12500,7 +12852,7 @@ SELECT
   IFNULL(@TotalRefund,0) AS TotalRefund;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_SetCurrentMotivationalQuote` (IN `_ID` INT, IN `_IsCurrent` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_SetCurrentMotivationalQuote` (IN `_ID` INT, IN `_IsCurrent` INT)  NO SQL BEGIN
 IF(_IsCurrent = 1) THEN
 	UPDATE sssm_motivationalquote 
 		SET 
@@ -12521,7 +12873,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_SetUserNotificationSetting` (IN `_UserID` INT, IN `_IsPush` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_VisitorReminder` INT, IN `_Customer` INT, IN `_CustomerReminder` INT, IN `_CustomerProperty` INT, IN `_Payment` INT, IN `_Document` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_SetUserNotificationSetting` (IN `_UserID` INT, IN `_IsPush` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_VisitorReminder` INT, IN `_Customer` INT, IN `_CustomerReminder` INT, IN `_CustomerProperty` INT, IN `_Payment` INT, IN `_Document` INT)  NO SQL BEGIN
   SET @TimeZone = (SELECT TimeZone FROM sssm_config Limit 1);
   IF(IFNULL(@TimeZone,'') = '') THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -12576,7 +12928,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_SetUserNotificationSetting` (
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_UpdateAssignBy` (IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_UpdateAssignBy` (IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12605,21 +12957,21 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_UpdateChallanImage` (IN `_GoodsReceivedNoteID` INT, IN `_ChallanPhotoURL` VARCHAR(150))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_UpdateChallanImage` (IN `_GoodsReceivedNoteID` INT, IN `_ChallanPhotoURL` VARCHAR(150))  NO SQL BEGIN
 	UPDATE ss_goodsreceivednote SET 
     	ChallanPhotoURL = IFNULL(_ChallanPhotoURL,'')
     WHERE GoodsReceivedNoteID=_GoodsReceivedNoteID;
     SELECT _GoodsReceivedNoteID AS ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_UpdateInvoiceImage` (IN `_GoodsReceivedNoteID` INT, IN `_InvoiceImageURL` VARCHAR(150))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_UpdateInvoiceImage` (IN `_GoodsReceivedNoteID` INT, IN `_InvoiceImageURL` VARCHAR(150))  NO SQL BEGIN
 	UPDATE ss_goodsreceivednote SET 
     	InvoiceImageURL = IFNULL(_InvoiceImageURL,'')
     WHERE GoodsReceivedNoteID=_GoodsReceivedNoteID;
     SELECT _GoodsReceivedNoteID AS ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_A_UpdateVisitorReminder` (IN `_VisitorID` INT, IN `_Date` DATETIME, IN `_Message` TEXT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_PastDate` DATETIME)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_UpdateVisitorReminder` (IN `_VisitorID` INT, IN `_Date` DATETIME, IN `_Message` TEXT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_PastDate` DATETIME)  NO SQL BEGIN
 DECLARE flag INT;
 
 DECLARE EXIT handler for sqlexception
@@ -12668,7 +13020,13 @@ END IF;
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_A_username_ComboBox` ()  NO SQL BEGIN
+
+SELECT UserID , FirstName, LastName, DisplayName  from sssm_user where Status = 1;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_EditBrand` (IN `_BrandName` VARCHAR(100), IN `_LogoFilePath` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12698,7 +13056,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditCategory` (IN `_CategoryName` VARCHAR(100), IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_EditCategory` (IN `_CategoryName` VARCHAR(100), IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12730,7 +13088,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditFeedback` (IN `_Feedback` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_EditFeedback` (IN `_Feedback` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12759,7 +13117,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditGoods` (IN `_GoodsName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_EditGoods` (IN `_GoodsName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15), IN `_CategoryID` INT)  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12789,7 +13147,36 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditSkill` (IN `_SkillName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+DECLARE flag INT;
+DECLARE EXIT handler for sqlexception
+    BEGIN
+        ROLLBACK;
+        GET DIAGNOSTICS CONDITION 1 @sqlstate = RETURNED_SQLSTATE, @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT; 
+        SET @full_error = CONCAT("ERROR ", @errno, " (", @sqlstate, "): ", @text);
+        SELECT "Edit Skill" AS Method , @full_error AS Message;
+    END;
+    START TRANSACTION;
+    SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
+    IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
+
+    SET flag = (SELECT count(SkillID) from  ss_skill WHERE  SkillID = _ID);
+
+    IF(flag > 0) THEN
+      UPDATE  ss_skill SET 
+        SkillName = IFNULL(_SkillName, ''),
+        ModifiedBy = IFNULL(_ModifiedBy,0),         
+        Status = IFNULL(_Status, 0),
+        ModifiedDate = CONVERT_TZ(NOW(),@@session.time_zone,@TimeZone)
+      WHERE SkillID = _ID;
+
+      SET @ID=(SELECT Fn_A_AddActivityLog('EditSkill',CONCAT(' has updated Skill ',_SkillName),_UserType,_IPAddress,_ModifiedBy));
+      SELECT _ID AS ID;
+    END IF;
+COMMIT;
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_EditSubCategory` (IN `_SubCategoryName` VARCHAR(100), IN `_CategoryID` INT, IN `_MetaKeyword` VARCHAR(255), IN `_MetaDescription` VARCHAR(255), IN `_Title` VARCHAR(255), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12822,7 +13209,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_EditUOM` (IN `_UOMName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_EditUOM` (IN `_UOMName` VARCHAR(100), IN `_ModifiedBy` INT, IN `_Status` INT, IN `_ID` INT, IN `_UserType` VARCHAR(50), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -12851,7 +13238,7 @@ DECLARE EXIT handler for sqlexception
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetAnniversaryUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetAnniversaryUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_AnniversaryDate` INT, IN `_AnniversaryMonth` INT)  NO SQL BEGIN
 IF(_AnniversaryDate = -1) THEN SET _AnniversaryDate = NULL; END IF;
 IF(_AnniversaryMonth = -1) THEN SET _AnniversaryMonth = NULL; END IF;
 
@@ -12897,7 +13284,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetBirthdayUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BirthDate` INT, IN `_BirthMonth` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetBirthdayUpcoming` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BirthDate` INT, IN `_BirthMonth` INT)  NO SQL BEGIN
 IF(_BirthDate = -1) THEN SET _BirthDate = NULL; END IF;
 IF(_BirthMonth = -1) THEN SET _BirthMonth = NULL; END IF;
 
@@ -12945,7 +13332,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetBrand` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BrandName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetBrand` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_BrandName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_BrandName = '') THEN SET _BrandName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -12982,7 +13369,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetBrandByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetBrandByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.BrandID) FROM brands C WHERE BrandID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -12997,7 +13384,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_CategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_CategoryName = '') THEN SET _CategoryName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13037,7 +13424,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.CategoryID) FROM ss_category C WHERE CategoryID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13055,7 +13442,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetFeedback` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Feedback` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetFeedback` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Feedback` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_Feedback = '') THEN SET _Feedback = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13091,7 +13478,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetFeedbackByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetFeedbackByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.FeedbackID) 
               FROM 
                 ss_feedback U WHERE FeedbackID = _ID);
@@ -13107,7 +13494,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetGoods` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_GoodsName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetGoods` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_GoodsName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_GoodsName = '') THEN SET _GoodsName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13147,7 +13534,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetGoodsByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetGoodsByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(G.GoodsID) FROM ss_goods G WHERE GoodsID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13165,7 +13552,57 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSubCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SubCategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSkill` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SkillName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+IF(_SkillName = '') THEN SET _SkillName = NULL; END IF;
+IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
+
+SET @Count = (SELECT 
+                COUNT(C.SkillID) 
+              FROM 
+                ss_skill C
+              WHERE 
+                C.SkillName LIKE CONCAT('%',IFNULL(_SkillName,C.SkillName),'%') AND
+                C.Status = IFNULL(_Status,C.Status)
+              );
+IF(_PageSize = -1 ) THEN 
+	SET _PageSize = @Count*10; 
+	SET _CurrentPage = 1; 
+END IF; 
+IF(@Count > 0) THEN
+  SET @rownum:=0;
+  SELECT AA.*,@rownum AS rowcount FROM (
+    SELECT V.*, @rownum := @rownum + 1 AS Rno FROM ( 
+      SELECT 
+        IFNULL(C.SkillID,0) AS SkillID, 
+        IFNULL(C.SkillName,'') AS SkillName,
+        IFNULL(C.Status,0) AS Status
+      FROM ss_skill C
+      WHERE 
+        C.SkillName LIKE CONCAT('%',IFNULL(_SkillName,C.SkillName),'%') AND
+        C.Status = IFNULL(_Status,C.Status)
+      ORDER BY C.SkillID
+    ) V  ORDER BY V.SkillID          
+  ) AA WHERE Rno BETWEEN (((_CurrentPage*_PageSize) - _PageSize)+1) AND (_CurrentPage*_PageSize);
+ELSE 
+    SELECT Fn_M_getErrorMessage('category_listing_not_found') AS Message;
+END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSkillByID` (IN `_ID` INT)  NO SQL BEGIN
+SET @Count = (SELECT COUNT(C.SkillID) FROM ss_skill C WHERE SkillID = _ID);
+IF(@Count > 0) THEN
+  SELECT 
+    IFNULL(C.SkillID,0) AS SkillID, 
+    IFNULL(C.SkillName,'') AS SkillName,
+    IFNULL(C.Status,0) AS Status
+  FROM ss_skill C WHERE C.SkillID = _ID;
+ELSE
+  SELECT Fn_M_getErrorMessage('category_list_found') AS Message;
+END IF;
+
+END$$
+
+CREATE DEFINER=`` PROCEDURE `usp_GetSubCategory` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_SubCategoryName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_SubCategoryName = '') THEN SET _SubCategoryName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13205,7 +13642,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetSubCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetSubCategoryByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(C.SubCategoryID) FROM ss_subcategory C WHERE SubCategoryID = _ID);
 IF(@Count > 0) THEN
   SELECT 
@@ -13223,7 +13660,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetUOM` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UOMName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetUOM` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_UOMName` VARCHAR(100), IN `_Status` INT)  NO SQL BEGIN
 IF(_UOMName = '') THEN SET _UOMName = NULL; END IF;
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
@@ -13259,7 +13696,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetUOMByID` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetUOMByID` (IN `_ID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(U.UOMID) 
               FROM 
                 ss_uom U WHERE UOMID = _ID);
@@ -13275,7 +13712,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_GetUserFeedbackByID` (IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_UserID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_GetUserFeedbackByID` (IN `_VisitorID` INT, IN `_OpportunityID` INT, IN `_UserID` INT)  NO SQL BEGIN
 IF(_VisitorID = -1) THEN SET _VisitorID = NULL; END IF;
 IF(_UserID = -1) THEN SET _UserID = NULL; END IF;
 IF(_OpportunityID = -1) THEN SET _OpportunityID = NULL; END IF;
@@ -13315,7 +13752,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_MA_Dashboard` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_EmployeeID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_MA_Dashboard` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_EmployeeID` INT)  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 IF(_EmployeeID = -1 OR _EmployeeID = -2) THEN SET _EmployeeID = NULL; END IF;
@@ -13666,7 +14103,7 @@ SELECT
   @TotalSubCat AS TotalSubCat;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_MA_DashboardReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE, IN `_EmployeeID` INT)  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_MA_DashboardReport` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_ReportType` VARCHAR(50), IN `_FilterType` VARCHAR(50), IN `_CustomStartDate` DATE, IN `_CustomEndDate` DATE, IN `_EmployeeID` INT)  NO SQL BEGIN 
 SET @TMPRoleID = _RoleID;
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
@@ -14273,7 +14710,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_MA_Dashboard_301018` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
+CREATE DEFINER=`` PROCEDURE `usp_MA_Dashboard_301018` (IN `_RoleID` INT, IN `_ProjectID` INT, IN `_DType` VARCHAR(50), IN `_FilterType` VARCHAR(50))  NO SQL BEGIN 
 IF(_RoleID = -1 OR _RoleID = -2) THEN SET _RoleID = NULL; END IF;
 IF(_ProjectID = -1 OR _ProjectID = -2) THEN SET _ProjectID = NULL; END IF;
 IF(_FilterType = "Daily")THEN
@@ -14543,7 +14980,7 @@ SELECT
   @IsHold AS IsHold;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Message` TEXT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_AddCustomerReminder` (IN `_CustomerPropertyID` INT, IN `_Amount` INT, IN `_ReminderDate` DATETIME, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15), IN `_Message` TEXT)  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -14587,7 +15024,7 @@ SELECT @LAST_ID AS ID, Fn_A_AddCustomerProcess(@CustomerID,'Customer', CONCAT(@a
  COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_AddReminderResponse` (IN `_ID` INT, IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_AddReminderResponse` (IN `_ID` INT, IN `_Response` TEXT, IN `_ResponseBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
 DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -14651,7 +15088,7 @@ IF(@ActionUser = "Customer") THEN
 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ChangePassword` (IN `_UserID` INT, IN `OldPassword` VARCHAR(250), IN `NewPassword` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_ChangePassword` (IN `_UserID` INT, IN `OldPassword` VARCHAR(250), IN `NewPassword` VARCHAR(250))  NO SQL BEGIN
   DECLARE row_count INT DEFAULT 0;
   SET @res = (SELECT  COUNT(A.UserID) FROM sssm_admindetails A WHERE A.UserID = _UserID);
   IF(@res > 0) THEN 
@@ -14692,7 +15129,7 @@ IF(@Resultdelete > 0) THEN
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ChangePropertyStatus` (IN `_Type` VARCHAR(20), IN `_CustomerPropertyID` INT, IN `_UserID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_ChangePropertyStatus` (IN `_Type` VARCHAR(20), IN `_CustomerPropertyID` INT, IN `_UserID` INT)  NO SQL BEGIN
 
 SET @EmployeeName = (SELECT CONCAT(A.FirstName,' ',A.LastName) FROM sssm_admindetails A WHERE A.UserID=_UserID LIMIT 1);
 
@@ -14828,7 +15265,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11), IN `StatusFeild` VARCHAR(100))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_ChangeStatus` (IN `TableName` VARCHAR(100), IN `FieldName` VARCHAR(100), IN `ID` INT(11), IN `NewStatus` INT(11), IN `ModifiedBy` INT(11), IN `StatusFeild` VARCHAR(100))  NO SQL BEGIN
 
 DECLARE OldStatus int(11);
 SET @table_name = TableName;
@@ -14845,7 +15282,7 @@ SELECT '0' AS Status;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_CheckLogin` (IN `_EmailID` VARCHAR(100), IN `_Password` VARCHAR(100), IN `_Path` VARCHAR(255), IN `_NotificationToken` TEXT, IN `_DeviceID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSName` VARCHAR(20), IN `_DeviceType` ENUM('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_CheckLogin` (IN `_EmailID` VARCHAR(100), IN `_Password` VARCHAR(100), IN `_Path` VARCHAR(255), IN `_NotificationToken` TEXT, IN `_DeviceID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSName` VARCHAR(20), IN `_DeviceType` ENUM('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS','IOS','Android'))  NO SQL BEGIN
 
 SET @ResultCount = (SELECT COUNT(U.UserID) FROM sssm_admindetails U WHERE (U.EmailID = _EmailID OR U.MobileNo = _EmailID) AND U.Status != 0 );
 IF(@ResultCount > 0) THEN
@@ -14903,7 +15340,7 @@ IF(@PendingCount = 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_CheckPassCode` (IN `_UserID` INT, IN `_PassCode` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_CheckPassCode` (IN `_UserID` INT, IN `_PassCode` INT)  NO SQL BEGIN
 
 SET @ResultCount = (SELECT COUNT(U.UserID) FROM sssm_admindetails U WHERE U.UserID = _UserID AND U.Status != 0 );
 IF(@ResultCount > 0) THEN
@@ -14939,7 +15376,7 @@ IF(@PendingCount = 0) THEN
   END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN `_VisitorID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN `_VisitorID` INT, IN `_UserID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(15))  NO SQL BEGIN
     DECLARE EXIT handler for sqlexception
     BEGIN
         ROLLBACK;
@@ -15037,7 +15474,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ConvertVisitorToCustomer` (IN
                 END IF;                 END IF;                 END IF;                 COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_DeleteField` (IN `TableName` VARCHAR(50), IN `FieldName` VARCHAR(50), IN `ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_DeleteField` (IN `TableName` VARCHAR(50), IN `FieldName` VARCHAR(50), IN `ID` INT)  NO SQL BEGIN
 
 SET @table_name = TableName;
 SET @field_name = FieldName;
@@ -15050,7 +15487,7 @@ EXECUTE stmt;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_ForgotPassword` (IN `_EmailID` VARCHAR(255))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_ForgotPassword` (IN `_EmailID` VARCHAR(255))  NO SQL BEGIN
 SET @CNT = (SELECT COUNT(EmailID) FROM sssm_admindetails WHERE (EmailID = _EmailID OR MobileNo = _EmailID) AND Status = 1);
 IF(@CNT > 0) THEN 
 
@@ -15073,7 +15510,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetChanelPartners` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetChanelPartners` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(ChanelPartnerID) FROM sssm_chanelpartner WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -15088,7 +15525,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCity` (IN `_StateID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCity` (IN `_StateID` INT)  NO SQL BEGIN
 IF(_StateID = -1) THEN SET _StateID = NULL; END IF;
 SET @count = (SELECT COUNT(CT.CityID) FROM sssm_cities CT
                 INNER JOIN sssm_state S ON (S.StateID = CT.StateID)
@@ -15114,7 +15551,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCMSPage` (IN `CMS_ID` INT, IN `CMS_PAGE` VARCHAR(50))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCMSPage` (IN `CMS_ID` INT, IN `CMS_PAGE` VARCHAR(50))  NO SQL BEGIN
 
 DECLARE Flag INT DEFAULT 0;
 SET Flag = (SELECT COUNT(c.CMSID) FROM sssm_cms c 
@@ -15139,7 +15576,7 @@ SET Flag = (SELECT COUNT(c.CMSID) FROM sssm_cms c
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetConfig` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetConfig` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(C.ConfigID) FROM sssm_config C);
 IF(@count > 0) THEN 
   SELECT 
@@ -15165,7 +15602,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCountry` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCountry` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(CountryID) FROM sssm_country WHERE Status = 1);
 IF(@count > 0) THEN 
 
@@ -15181,7 +15618,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCurrentMotivationalQuote` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCurrentMotivationalQuote` ()  NO SQL BEGIN
 SET @flag = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE IsCurrent = 1);
     IF(@flag > 0) THEN 
         SELECT 
@@ -15198,7 +15635,7 @@ SET @flag = (SELECT COUNT(MotivationalQuoteID) FROM sssm_motivationalquote WHERE
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCustomerDocumentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerDocumentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertydocument AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -15253,7 +15690,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCustomerDocumentByCPropertyImage` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerDocumentByCPropertyImage` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyDocumentID) FROM sssm_customerpropertyimage AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -15308,7 +15745,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCustomerPayment` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerPayment` (IN `_CustomerPropertyID` INT)  NO SQL BEGIN
 
 SET @cnt = (SELECT COUNT(CP.CustomerPaymentID) FROM sssm_customerpayment AS CP
               INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
@@ -15350,7 +15787,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCustomerPaymentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerPaymentByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Status` INT)  NO SQL BEGIN
 IF(_Status = -1 ) THEN SET _Status =NULL; END IF; 
 
 SET @cnt = (SELECT COUNT(CP.CustomerPaymentID) FROM sssm_customerpayment AS CP
@@ -15432,7 +15869,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_getCustomerRemainder` (IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_getCustomerRemainder` (IN `_Path` VARCHAR(250))  NO SQL BEGIN
 
   SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
   IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -15517,7 +15954,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetCustomerVideoByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetCustomerVideoByCProperty` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(CP.CustomerPropertyVideoID) FROM sssm_customerpropertyvideo AS CP
 INNER JOIN sssm_customerproperty CPR ON (CPR.CustomerPropertyID = CP.CustomerPropertyID)
 INNER JOIN sssm_property PT ON (PT.PropertyID = CPR.PropertyID)
@@ -15573,7 +16010,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_getDashboardCount` (IN `_ID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_getDashboardCount` (IN `_ID` INT)  NO SQL BEGIN
     IF(_ID = -1) THEN SET _ID = NULL; END IF;
 
     SET @TotalProperty = (SELECT COUNT(P.PropertyID) FROM sssm_property P WHERE P.Status=1 AND P.ProjectID = IFNULL(_ID,P.ProjectID));
@@ -15593,7 +16030,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_getDashboardCount` (IN `_ID` 
         @PendingVideoProperty AS PendingVideoProperty; 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetDesignation` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetDesignation` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(DesignationID) FROM sssm_designation WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -15608,7 +16045,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_getDeviceByEmployee` (IN `_UserID` INT, IN `_Type` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_getDeviceByEmployee` (IN `_UserID` INT, IN `_Type` VARCHAR(50), IN `_ProjectID` INT)  NO SQL BEGIN
 IF(_UserID = -1) THEN SET _UserID =NULL; END IF;
 IF(_Type = -1) THEN SET _Type =NULL; END IF;
 IF(_ProjectID = -1) THEN SET _ProjectID =NULL; END IF;
@@ -15684,7 +16121,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO SQL BEGIN
 	SET @Count=(SELECT COUNT(A.UserID) FROM sssm_admindetails A WHERE A.Status=1);
     IF(@Count>0) THEN
     	SELECT 
@@ -15696,7 +16133,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetEmployeeCombobox` ()  NO S
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetGoodbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetGoodbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
 IF(_CategoryID=0) THEN SET _CategoryID=0; END IF;
  
 SET @Count=(SELECT COUNT(GoodsID) FROM ss_goods WHERE CategoryID=_CategoryID AND Status=1);
@@ -15713,7 +16150,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetGroup` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetGroup` ()  NO SQL BEGIN
 SET @count = (SELECT COUNT(GroupID) FROM sssm_group WHERE Status = 1);
 IF(@count > 0) THEN 
   SELECT 
@@ -15728,7 +16165,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetInwardItem_List` (IN `_GoodsReceivedNoteID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardItem_List` (IN `_GoodsReceivedNoteID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedItemID) FROM ss_goodreceiveditems G
                 WHERE  G.Status=1  AND G.GoodsReceivedNoteID=_GoodsReceivedNoteID
             );
@@ -15755,7 +16192,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardMaster_List` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150))  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G
                 WHERE  G.Status=1  
             );
@@ -15793,7 +16230,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetInwardMaster_ListbyVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150), IN `_VendorID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetInwardMaster_ListbyVendorID` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_Path` VARCHAR(150), IN `_VendorID` INT)  NO SQL BEGIN
 	SET @Count=( SELECT  COUNT(G.GoodsReceivedNoteID) FROM ss_goodsreceivednote G
                 WHERE  G.Status=1   AND G.VendorID=_VendorID
             );
@@ -15831,7 +16268,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetNotification` (IN `_PageSize` INT, IN `_CurrentPage` INT, IN `_ID` INT, IN `_Path` VARCHAR(250))  NO SQL BEGIN
 SET @cnt = (SELECT COUNT(NotificationID) FROM sssm_notification WHERE UserID = _ID);
 
 IF(@cnt > 0) THEN 
@@ -15884,11 +16321,11 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetNotificationCount` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetNotificationCount` ()  NO SQL BEGIN
 SELECT COUNT(NotificationID) as NotificationCount FROM sssm_notification WHERE IsRead <> 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetPropertyByCustomer` (IN `_CustomerID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetPropertyByCustomer` (IN `_CustomerID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(P.PropertyID) FROM 
     sssm_property P
     INNER JOIN sssm_customerproperty CP ON CP.PropertyID = P.PropertyID
@@ -15912,7 +16349,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetPropertyMileStoneByProperty` (IN `_PropertyID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetPropertyMileStoneByProperty` (IN `_PropertyID` INT)  NO SQL BEGIN
 SET @Count = (SELECT COUNT(PMS.ProjectMileStoneID) FROM 
     sssm_projectmilestone PMS
     INNER JOIN sssm_project PO ON PO.ProjectID = PMS.ProjectID
@@ -15941,7 +16378,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetRoleMappingByID` (IN `RID` INT, IN `PID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetRoleMappingByID` (IN `RID` INT, IN `PID` INT)  NO SQL BEGIN
 SET PID = IF(PID=-1,NULL,PID);
 IF RID = -1 OR RID = -2 THEN 
   SELECT RID AS RoleID,
@@ -16007,7 +16444,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetState` (IN `_CountryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetState` (IN `_CountryID` INT)  NO SQL BEGIN
 SET @count = (SELECT COUNT(S.StateID) FROM sssm_state S
                 INNER JOIN sssm_country C ON (S.CountryID = C.CountryID)
               WHERE S.Status = 1 AND C.Status = 1 AND S.CountryID = IFNULL(_CountryID,S.CountryID));
@@ -16026,7 +16463,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_GetVendorbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_GetVendorbyCategoryID` (IN `_CategoryID` INT)  NO SQL BEGIN
 IF(_CategoryID=0) THEN SET _CategoryID=0; END IF;
  
 SET @Count=(SELECT COUNT(VendorID) FROM ss_vendor WHERE  CategoryID=_CategoryID);
@@ -16043,7 +16480,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_getVisitorRemainder` ()  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_getVisitorRemainder` ()  NO SQL BEGIN
 
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -16104,7 +16541,7 @@ IF(@cnt > 0) THEN
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_M_SignUp` (IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(13), IN `_Password` VARCHAR(50), IN `_path` VARCHAR(250), IN `_NotificationToken` TEXT, IN `_DeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), IN `_DeviceUID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSVersion` VARCHAR(20))  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_M_SignUp` (IN `_FirstName` VARCHAR(150), IN `_LastName` VARCHAR(150), IN `_EmailID` VARCHAR(250), IN `_MobileNo` VARCHAR(13), IN `_Password` VARCHAR(50), IN `_path` VARCHAR(250), IN `_NotificationToken` TEXT, IN `_DeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), IN `_DeviceUID` VARCHAR(50), IN `_DeviceName` VARCHAR(50), IN `_OSVersion` VARCHAR(20))  NO SQL BEGIN
 
 DECLARE ResultId INT DEFAULT 0;
 DECLARE user_Id INT DEFAULT 0;
@@ -16207,7 +16644,7 @@ SET EmailExistStatus = (SELECT COUNT(t.UserID) FROM sssm_admindetails t WHERE (t
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_W_GetEmailTemplateDetailByID` (IN `emailtemplet_id` INT)  NO SQL BEGIN
+CREATE DEFINER=`` PROCEDURE `usp_W_GetEmailTemplateDetailByID` (IN `emailtemplet_id` INT)  NO SQL BEGIN
 SELECT EmailTemplateID , EmailTemplateTitle, EmailSubject, Content, Status from  sssm_emailtemplate
  where EmailTemplateID = emailtemplet_id;
 END$$
@@ -16215,7 +16652,7 @@ END$$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_errorlog(
@@ -16240,7 +16677,7 @@ INSERT INTO sssm_errorlog(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_AddActivityLog` (`_Method` VARCHAR(150) CHARSET utf8, `_Activity` TEXT CHARSET utf8, `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), `_IPAddress` VARCHAR(16), `_CreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_AddActivityLog` (`_Method` VARCHAR(150) CHARSET utf8, `_Activity` TEXT CHARSET utf8, `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), `_IPAddress` VARCHAR(16), `_CreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(@TimeZone = "") THEN SET @TimeZone = "+00:00"; END IF;
@@ -16276,7 +16713,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_AddCustomerProcess` (`_ID` INT, `_CustomerType` ENUM('Customer','Visitor'), `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_AddCustomerProcess` (`_ID` INT, `_CustomerType` ENUM('Customer','Visitor'), `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
 
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 
@@ -16299,7 +16736,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_AddErrorlog` (`pMethodName` VARCHAR(200) CHARSET utf8, `pErrorMessage` TEXT CHARSET utf8, `pUserType` VARCHAR(30), `pUserAgent` TEXT, `pUserID` INT, `pIPAddress` VARCHAR(16), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 INSERT INTO sssm_errorlog(
@@ -16324,7 +16761,7 @@ INSERT INTO sssm_errorlog(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_AddNotification` (`_UserID` INT, `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_AddNotification` (`_UserID` INT, `_Discription` TEXT, `_CreatedBy` INT(11), `_ActionID` INT, `_ActionType` VARCHAR(50)) RETURNS INT(11) NO SQL BEGIN
 
 SET  @TimeZone = (SELECT IF(IFNULL(TimeZone,'')='','+00:00',TimeZone)  FROM sssm_config Limit 1);
 
@@ -16345,7 +16782,7 @@ RETURN 1;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_AddUser` (`pEmailID` VARCHAR(100), `pPassword` VARCHAR(100), `pMobileNo` VARCHAR(15), `pUserType` ENUM('Admin','Employee','Customer','Visitor'), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_AddUser` (`pEmailID` VARCHAR(100), `pPassword` VARCHAR(100), `pMobileNo` VARCHAR(15), `pUserType` ENUM('Admin','Employee','Customer','Visitor'), `pCreatedBy` INT) RETURNS INT(11) NO SQL BEGIN
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
 INSERT INTO sssm_user(
@@ -16366,17 +16803,17 @@ INSERT INTO sssm_user(
 RETURN 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_Date,"%d-%m-%Y"));
 RETURN  @DateFormated;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_DateTime,"%d-%m-%Y %H:%i:%s"));
 RETURN  @DateFormated;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
@@ -16390,7 +16827,7 @@ END IF;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @details = (SELECT 
   GROUP_CONCAT(CONCAT(PJ.Title,"-",PT.PropertyNo,IF(CP.IsCancelled=1,"(Cancelled)",IF(CP.IsHold,"(Hold)",''))))
  FROM
@@ -16404,7 +16841,7 @@ GROUP BY CP.CustomerID);
 RETURN IFNULL(@details,'');
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_A_TotremPayByCustomer` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_A_TotremPayByCustomer` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND CustomerPaymentID != CPID);
 IF(@Amount > @Pay) THEN
@@ -16414,12 +16851,12 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetCustomerIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetCustomerIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @CustomerID = (SELECT IFNULL(CustomerID,0) AS CustomerID FROM sssm_customer WHERE VisitorID = _ID);
 RETURN @CustomerID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE DEFINER=`` FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
   SELECT Message
@@ -16431,7 +16868,7 @@ IF(IFNULL(ErrorMessage,'')='') THEN SET ErrorMessage = _MessageKey; END IF;
 RETURN ErrorMessage;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(GSTAmount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND AmountType IN (0,2));
@@ -16446,7 +16883,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Item = (SELECT GROUP_CONCAT(G.GoodsName,' ',GI.Qty,' ',U.UOMName,' * ',GI.Rate,' = ',GI.FinalPrice ) AS Item  FROM ss_goodreceiveditems GI  
 INNER JOIN ss_goods G  ON G.GoodsID=GI.GoodsID
 INNER JOIN ss_uom U ON U.UOMID=GI.UOMID
@@ -16454,7 +16891,7 @@ where GI.GoodsReceivedNoteID=_ID);
 RETURN @Item;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetLastPayInstalmentNo` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetLastPayInstalmentNo` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @instalmentno = (SELECT 
 	IFNULL(PMS.InstalmentNo,0) AS InstalmentNo
 FROM 
@@ -16467,7 +16904,7 @@ ORDER BY PMS.InstalmentNo DESC LIMIT 1);
 RETURN @instalmentno;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 	IF(_Type="AddVisitor") THEN 
 		RETURN "Add Visitor";
 	ELSEIF(_Type="VisitorReminder") THEN
@@ -16492,7 +16929,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetNotificationTitle` (`_Type` TE
 	END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,'') AS Feedback
@@ -16517,7 +16954,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectGalleryID) FROM sssm_projectgallery WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	SET @Image = (SELECT ImagePath FROM sssm_projectgallery WHERE ProjectID = _ProjectID ORDER BY ProjectGalleryID LIMIT 1);
@@ -16527,7 +16964,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetRefundAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetRefundAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(RefundAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(RefundAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND AmountType IN (0,1));
@@ -16542,7 +16979,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetRefundGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetRefundGSTAmount` (`_ID` INT, `_Flag` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_Flag = 1) THEN
   SET @Amount = (SELECT IFNULL(RefundGSTAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
   SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND AmountType IN (0,2));
@@ -16557,7 +16994,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetRemainingGSTAmount` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetRemainingGSTAmount` (`_ID` INT, `CPID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(GSTAmount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(GSTAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID AND CustomerPaymentID != CPID);
 IF(@Amount > @Pay) THEN
@@ -16567,7 +17004,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetRemainingRefund` (`_ID` INT, `_RID` INT, `_IsAmount` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetRemainingRefund` (`_ID` INT, `_RID` INT, `_IsAmount` INT) RETURNS DOUBLE NO SQL BEGIN
 IF(_IsAmount = 1) THEN 
  SET @Amount = (SELECT IFNULL(RefundAmount,0) FROM sssm_cancelproperty WHERE  CustomerPropertyID = _ID);
  SET @Pay = (SELECT IFNULL(SUM(RefundAmount),0) FROM sssm_refund WHERE CustomerPropertyID = _ID AND RefundID != _RID);
@@ -16587,7 +17024,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetReportFeedbackData` (`_ID` INT, `_Type` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetReportFeedbackData` (`_ID` INT, `_Type` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE) RETURNS INT(11) NO SQL BEGIN
 SET @Item = (SELECT COUNT(U.UserFeedbackID)
 FROM ss_userfeedback U 
 WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND 
@@ -16595,7 +17032,7 @@ WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND
 RETURN @Item;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 DECLARE Data TEXT;
 SET @Count = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 IF(@Count > 0) THEN 
@@ -16621,7 +17058,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetRoleProjectByModule` (`_RoleID` INT, `_ProjectID` INT, `_ModuleID` INT, `_Action` VARCHAR(20)) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetRoleProjectByModule` (`_RoleID` INT, `_ProjectID` INT, `_ModuleID` INT, `_Action` VARCHAR(20)) RETURNS INT(11) NO SQL BEGIN
 IF(_RoleID = -1 OR _RoleID = -2 )THEN
 	RETURN 1;
 END IF;
@@ -16640,19 +17077,19 @@ END IF;
 RETURN @Flag;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetSitesCountIDByReport` (`_Source` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE, `_ProjectID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetSitesCountIDByReport` (`_Source` VARCHAR(50), `_FromDate` DATE, `_EndDate` DATE, `_ProjectID` INT) RETURNS INT(11) NO SQL BEGIN
 IF(_ProjectID=-1) THEN SET _ProjectID=NULL; END IF;
 SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_visitorsites WHERE VisitSource=_Source  AND _FromDate <= InquiryDate AND 
           _EndDate >= InquiryDate AND ProjectID = IFNULL(_ProjectID,ProjectID));
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetSitesCountIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetSitesCountIDByVisitorID` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_visitorsites WHERE VisitorID = _ID);
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type = "Requirenment") THEN
 SET @Data = (SELECT IFNULL(GROUP_CONCAT(V.Requirement),'') AS Requirement FROM ss_visitorsites V WHERE V.VisitorID= _ID);
 ELSEIF(_Type = "LeadType") THEN
@@ -16665,14 +17102,14 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetVisitorDataInquiryDate` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS DATE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetVisitorDataInquiryDate` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS DATE NO SQL BEGIN
 IF(_Type = "InquiryDate") THEN
 SET @Data = (SELECT IFNULL(V.InquiryDate,'') AS InquiryDate FROM ss_visitorsites V WHERE V.VisitorID= _ID ORDER BY V.VisitorSitesID DESC LIMIT 1);
 END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,NULL) AS Feedback
@@ -16691,7 +17128,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_GetVisitorNextReminderStatus` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_GetVisitorNextReminderStatus` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET  @TimeZone = (SELECT TimeZone  FROM sssm_config Limit 1);
 IF(IFNULL(@TimeZone,'') = "") THEN SET @TimeZone = "+00:00"; END IF;
 
@@ -16715,13 +17152,13 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Date = (SELECT PurchaseDate FROM sssm_customerproperty WHERE 
              CustomerID = _CustomerID ORDER BY PurchaseDate DESC LIMIT 1);
              RETURN IFNULL(@Date,'');
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_AddDevice` (`pDeviceName` VARCHAR(100), `pDeviceUID` VARCHAR(50), `pOSVersion` VARCHAR(10), `pDeviceTokenID` TEXT, `pDeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), `pUserID` INT(11)) RETURNS INT(11) NO SQL BEGIN 
+CREATE DEFINER=`` FUNCTION `Fn_M_AddDevice` (`pDeviceName` VARCHAR(100), `pDeviceUID` VARCHAR(50), `pOSVersion` VARCHAR(10), `pDeviceTokenID` TEXT, `pDeviceType` ENUM('Admin Web','Employee Web','Company Web','Mentor Web','Candidate Web','Admin Android','Employee Android','Company Android','Mentor Android','Candidate Android','Admin IOS','Employee IOS','Company IOS','Mentor IOS','Candidate IOS'), `pUserID` INT(11)) RETURNS INT(11) NO SQL BEGIN 
 
   DECLARE User_Type VARCHAR(50) DEFAULT 0;
   
@@ -16770,7 +17207,7 @@ END IF;
 RETURN 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Document = (SELECT 
 GROUP_CONCAT(CONCAT(CPD.Title,'~',CPD.DocumentUrl)) 
 FROM sssm_customerpropertydocument CPD
@@ -16779,7 +17216,7 @@ WHERE CP.CustomerPropertyID = _ID);
 RETURN IFNULL(@Document,'');
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE DEFINER=`` FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
@@ -16794,7 +17231,7 @@ RETURN ErrorMessage;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 DECLARE Data Text;
 IF(_ActionType = "AddVisitor") THEN 
   SET @Count = (SELECT COUNT(V.VisitorID) FROM sssm_visitor V
@@ -17116,7 +17553,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_IsVisitIdle` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_M_IsVisitIdle` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(VisitorID) FROM sssm_visitorreminder WHERE VisitorID = _VisitorID AND NoIdle = 1);
 IF(@COUNT > 0) THEN 
 	RETURN 1;
@@ -17125,7 +17562,7 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_M_IsVisitorConvert` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_M_IsVisitorConvert` (`_VisitorID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @COUNT = (SELECT COUNT(VisitorID) FROM sssm_customer WHERE VisitorID = _VisitorID);
 IF(@COUNT > 0) THEN 
 	RETURN 1;
@@ -17134,17 +17571,17 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_TotnoOfPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_TotnoOfPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Tot = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
 RETURN IFNULL(@Tot,0);
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_TotnoOfPayment` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_TotnoOfPayment` (`_ID` INT) RETURNS INT(11) NO SQL BEGIN
 SET @Count = (SELECT COUNT(CustomerPaymentID) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
 RETURN @Count;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `Fn_TotremPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
+CREATE DEFINER=`` FUNCTION `Fn_TotremPayByCustomer` (`_ID` INT) RETURNS DOUBLE NO SQL BEGIN
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT Fn_TotnoOfPayByCustomer(_ID));
 IF(@Amount > @Pay) THEN
@@ -17521,7 +17958,15 @@ INSERT INTO `sssm_activitylog` (`ActivityLogID`, `MethodName`, `ActivityDescript
 (297, 'AddCategory', 'Dj Parth Parth has added Category.', 'Admin Web', 2, '::1', 2, '2025-01-03 16:28:10', NULL, NULL, 1),
 (298, 'AddCategory', 'Dj Parth Parth has added Category.', 'Admin Web', 2, '::1', 2, '2025-01-03 16:28:21', NULL, NULL, 1),
 (299, 'AddCategory', 'Dj Parth Parth has added Category.', 'Admin Web', 2, '::1', 2, '2025-01-03 16:28:31', NULL, NULL, 1),
-(300, 'AddCategory', 'Dj Parth Parth has added Category.', 'Admin Web', 2, '::1', 2, '2025-01-03 16:28:43', NULL, NULL, 1);
+(300, 'AddCategory', 'Dj Parth Parth has added Category.', 'Admin Web', 2, '::1', 2, '2025-01-03 16:28:43', NULL, NULL, 1),
+(301, 'AddGallery', 'Dj Parth Parth has added new Gallery.', 'Admin Web', 2, '::1', 2, '2025-01-08 13:50:39', NULL, NULL, 1),
+(302, 'EditGallery', 'Dj Parth Parth has updated Gallery Drum Masters', 'Admin Web', 2, '::1', 2, '2025-01-08 13:59:14', NULL, NULL, 1),
+(303, 'AddSkill', 'Dj Parth Parth has added Skill.', 'Admin Web', 2, '::1', 2, '2025-01-08 14:07:02', NULL, NULL, 1),
+(304, 'EditSkill', 'Dj Parth Parth has updated Skill Slkill ps', 'Admin Web', 2, '::1', 2, '2025-01-08 14:07:12', NULL, NULL, 1),
+(305, 'AddArtist', 'Dj Parth Parth has added new artist.', 'Admin Web', 2, '::1', 2, '2025-01-08 15:47:08', NULL, NULL, 1),
+(306, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-08 15:52:16', NULL, NULL, 1),
+(307, 'AddArtist', 'Dj Parth Parth has added new artist.', 'Admin Web', 2, '::1', 2, '2025-01-08 18:10:18', NULL, NULL, 1),
+(308, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-08 18:18:51', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -18325,8 +18770,7 @@ INSERT INTO `sssm_cities` (`CityID`, `CityName`, `StateID`, `CreatedBy`, `Create
 (634, 'nhij', 233, 1, '2017-12-22 15:03:43', NULL, NULL, 1),
 (635, 'Udaipur', 33, 1, '2017-12-22 15:03:43', 1, '2017-12-01 14:57:04', 1),
 (636, 'Jaipur', 33, 1, '2017-12-22 15:03:43', NULL, NULL, 1),
-(637, 'Testing', 12, 1, '2017-12-22 15:03:43', NULL, NULL, 1),
-(638, 'AAA', 660, 1, '2017-12-22 15:03:43', 8, '2018-01-16 17:24:04', 1);
+(637, 'Testing', 12, 1, '2017-12-22 15:03:43', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -18436,7 +18880,6 @@ INSERT INTO `sssm_country` (`CountryID`, `CountryName`, `CreatedBy`, `CreatedDat
 (22, 'Belize', 1, '2016-03-01 18:55:49', 1, '2016-03-01 18:55:49', 1),
 (23, 'Benin', 1, '2016-03-01 18:55:49', 23, '2016-07-27 15:12:23', 0),
 (24, 'Bermuda', 1, '2016-03-01 18:55:49', 1, '2016-03-01 18:55:49', 1),
-(25, 'Afghanistan121', 1, '2016-03-01 18:55:49', 23, '2016-08-09 08:01:58', 1),
 (26, 'Bolivia', 1, '2016-03-01 18:55:49', 23, '2016-07-27 15:12:24', 0),
 (27, 'Qwewe', 1, '2016-03-01 18:55:49', 23, '2016-08-09 10:19:29', 1),
 (28, 'Botswana', 1, '2016-03-01 18:55:49', 1, '2016-03-01 18:55:49', 1),
@@ -18661,14 +19104,10 @@ INSERT INTO `sssm_country` (`CountryID`, `CountryName`, `CreatedBy`, `CreatedDat
 (320, 'USA', 1, '2016-04-08 14:53:43', 1, '2016-04-19 12:32:32', 1),
 (326, 'Testing', 1, '2017-11-30 15:46:13', NULL, NULL, 1),
 (327, 'TestingDone', 1, '2017-11-30 15:56:08', 1, '2017-11-30 15:58:04', 1),
-(328, 'AAAAA', 1, '2017-11-30 16:08:12', 1, '2017-11-30 17:23:47', 1),
-(329, 'aaa', 1, '2017-11-30 16:12:27', 1, '2017-12-22 14:44:59', 1),
 (330, 'asasas', 1, '2017-12-01 11:18:53', NULL, NULL, 1),
 (331, 'America', 1, '2017-12-01 14:47:39', 1, '2017-12-06 16:54:51', 1),
 (332, 'test', 1, '2017-12-01 17:16:29', NULL, NULL, 1),
-(333, 'aaaa', 1, '2017-12-22 14:44:52', 1, '2017-12-22 14:45:06', 0),
-(334, 'asdasd', 1, '2018-01-11 17:24:04', NULL, NULL, 1),
-(335, 'aaaaaatest', 1, '2018-01-11 17:24:20', NULL, NULL, 1);
+(334, 'asdasd', 1, '2018-01-11 17:24:04', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -19082,7 +19521,13 @@ INSERT INTO `sssm_errorlog` (`ErrorLogID`, `MethodName`, `ErrorMessage`, `UserTy
 (54, 'Testimonial-&gt;edit', 'Incorrect number of arguments for PROCEDURE uniquehr.usp_A_AddTestimonial; expected 9, got 10', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/127.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2024-08-11 14:46:19', NULL, NULL, 1),
 (55, 'Blog-&gt;add', 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;s how we see the world.&#039;,&#039;Hugh Macleod&#039;,&#039;2021-02-17&#039;,&#039;&lt;div class=\\&quot;row justif...&#039; at line 1', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-03 15:04:54', NULL, NULL, 1),
 (56, 'Blog-&gt;add', 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;s how we see the world.&#039;,&#039;Hugh Macleod&#039;,&#039;2022-12-14&#039;,&#039;&lt;div class=\\&quot;row justif...&#039; at line 1', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-03 15:05:13', NULL, NULL, 1),
-(57, 'Blog-&gt;add', 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;m not into Music, but I like Corporate Events. I wear the same shoes every da...&#039; at line 1', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-03 15:38:23', NULL, NULL, 1);
+(57, 'Blog-&gt;add', 'You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;m not into Music, but I like Corporate Events. I wear the same shoes every da...&#039; at line 1', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-03 15:38:23', NULL, NULL, 1),
+(58, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;SkillName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 14:00:47', NULL, NULL, 1),
+(59, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;SkillName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 14:00:52', NULL, NULL, 1),
+(60, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;FirstName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 15:34:31', NULL, NULL, 1),
+(61, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;FirstName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 15:34:39', NULL, NULL, 1),
+(62, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;FirstName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 15:35:38', NULL, NULL, 1),
+(63, 'Admin_Controller-&gt;CheckDuplicate', 'Unknown column &#039;FirstName&#039; in &#039;field list&#039;', 'Admin', '{&quot;ip_address&quot;:&quot;::1&quot;,&quot;User_detail&quot;:&quot;Mozilla\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\/537.36 (KHTML, like Gecko) Chrome\\/131.0.0.0 Safari\\/537.36&quot;,&quot;Query_string&quot;:&quot;&quot;,&quot;Real_ip&quot;:null}', 2, '::1', 2, '2025-01-08 15:36:58', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -21403,18 +21848,7 @@ INSERT INTO `sssm_state` (`StateID`, `StateName`, `CountryID`, `CreatedBy`, `Cre
 (647, 'Prey Veaeng', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1),
 (648, 'Rotanak Kiri', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1),
 (649, 'Siem Reab', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1),
-(650, 'Stueng Traeng', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1),
-(651, 'Svay Rieng', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1);
-INSERT INTO `sssm_state` (`StateID`, `StateName`, `CountryID`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(652, 'Testing', 1, 328, '2017-11-30 17:12:00', 1, '2017-11-30 17:12:10', 0),
-(653, 'Test', 12, 328, '2017-11-30 17:20:00', 1, '2017-12-01 10:14:10', 1),
-(654, 'AAABBB', 11, 328, '2017-12-01 10:15:50', 1, '2017-12-01 10:16:03', 1),
-(655, 'A2221', 1, 16, '2017-12-01 10:16:23', 1, '2017-12-22 14:54:24', 1),
-(656, 'ABA', 21, 1, '2017-12-01 10:17:12', 1, '2017-12-01 10:34:04', 0),
-(657, 'adadaaaaa', 328, 1, '2017-12-01 11:19:33', 1, '2017-12-01 11:19:58', 1),
-(658, 'Newewe', 2, 1, '2017-12-01 11:56:17', NULL, NULL, 1),
-(659, 'Thik', 329, 1, '2017-12-06 17:20:49', NULL, NULL, 1),
-(660, 'AAA', 329, 1, '2017-12-22 14:54:35', NULL, NULL, 1);
+(650, 'Stueng Traeng', 36, 1, '2016-03-01 00:00:00', 1, '2016-03-01 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -21452,30 +21886,40 @@ INSERT INTO `sssm_testimonial` (`TestimonialID`, `Image`, `Author`, `Designation
 
 CREATE TABLE `sssm_user` (
   `UserID` int(11) NOT NULL,
-  `RoleID` int(11) NOT NULL DEFAULT 0,
-  `EmailID` varchar(100) NOT NULL,
-  `Password` varchar(100) DEFAULT NULL,
-  `MobileNo` varchar(13) NOT NULL,
-  `UserType` enum('Admin','Employee','Customer','Visitor','ChanelPartners','Vendor') NOT NULL,
-  `RegistrationType` enum('Regular','Facebook','Google','LinkedIn','Twitter','Pinterest') NOT NULL DEFAULT 'Regular',
-  `FacebookID` varchar(50) DEFAULT NULL,
-  `GooglePlusID` varchar(50) DEFAULT NULL,
-  `LinkedInID` varchar(50) DEFAULT NULL,
-  `TwitterID` varchar(50) DEFAULT NULL,
-  `PinterestID` varchar(50) DEFAULT NULL,
+  `ArtistCategoryID` int(11) NOT NULL DEFAULT 0,
+  `FirstName` varchar(100) NOT NULL,
+  `LastName` varchar(100) DEFAULT NULL,
+  `DisplayName` varchar(100) NOT NULL,
+  `EmailID` varchar(250) NOT NULL,
+  `Password` varchar(100) NOT NULL,
+  `MobileNo` varchar(15) DEFAULT NULL,
+  `Address` varchar(100) DEFAULT NULL,
+  `CountryID` int(11) NOT NULL DEFAULT 0,
+  `StateID` int(11) NOT NULL DEFAULT 0,
+  `CityID` int(11) NOT NULL DEFAULT 0,
+  `Rating` varchar(100) NOT NULL,
+  `Experience` varchar(100) NOT NULL,
+  `Languages` varchar(100) NOT NULL,
+  `IsOpenToTravel` tinyint(1) DEFAULT 0,
+  `Skills` varchar(200) NOT NULL,
+  `VideoFileURL` varchar(300) NOT NULL,
+  `AboutArtist` varchar(500) NOT NULL,
+  `UserType` enum('Admin','User') DEFAULT 'User',
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_user`
 --
 
-INSERT INTO `sssm_user` (`UserID`, `RoleID`, `EmailID`, `Password`, `MobileNo`, `UserType`, `RegistrationType`, `FacebookID`, `GooglePlusID`, `LinkedInID`, `TwitterID`, `PinterestID`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(14, 0, 'vendor@gmail.com', NULL, '9825098250', 'Vendor', 'Regular', NULL, NULL, NULL, NULL, NULL, 1, '2019-02-11 15:29:18', 2, '2019-03-08 17:32:09', 1);
+INSERT INTO `sssm_user` (`UserID`, `ArtistCategoryID`, `FirstName`, `LastName`, `DisplayName`, `EmailID`, `Password`, `MobileNo`, `Address`, `CountryID`, `StateID`, `CityID`, `Rating`, `Experience`, `Languages`, `IsOpenToTravel`, `Skills`, `VideoFileURL`, `AboutArtist`, `UserType`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(1, 1, 'Sam', 'Patel', 'Sam Patel', 'sam@gmail.com', '132456', '1324657985', 'Test', 0, 0, 0, '', '', '', 0, '', '', '', 'User', 0, '2025-01-08 13:00:55', NULL, NULL, 1),
+(2, 0, 'Test', 'Test', 'jkklk', 'admin@example.com', 'admin123', '9865254585', 'Test', 0, 0, 0, '5.00', '4', 'English', 1, 'Test, jsjs, djd', '20250108111400_.mp4', 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-08 15:52:16', 1),
+(3, 11, 'parth', 'thakkar', 'ravi', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 1, 42, 6, '3.00', '6', 'hindi', 0, 'Test, jsjs, djd', '20250108134018_.mp4', 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-08 18:18:51', 1);
 
 -- --------------------------------------------------------
 
@@ -21621,6 +22065,31 @@ CREATE TABLE `sssm_visitorreminderaction` (
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ss_artistgallery`
+--
+
+CREATE TABLE `ss_artistgallery` (
+  `ArtistGalleryID` int(11) NOT NULL,
+  `Title` varchar(200) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `DocumentURL` varchar(250) DEFAULT NULL,
+  `CreatedBy` int(11) NOT NULL,
+  `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
+  `ModifiedBy` int(11) DEFAULT NULL,
+  `ModifiedDate` datetime DEFAULT NULL,
+  `Status` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `ss_artistgallery`
+--
+
+INSERT INTO `ss_artistgallery` (`ArtistGalleryID`, `Title`, `UserID`, `DocumentURL`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(1, 'Drum Masters', 1, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1);
 
 -- --------------------------------------------------------
 
@@ -22737,6 +23206,29 @@ INSERT INTO `ss_opportunityreminder` (`OpportunityReminderID`, `OpportunityID`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ss_skill`
+--
+
+CREATE TABLE `ss_skill` (
+  `SkillID` int(11) NOT NULL,
+  `SkillName` varchar(100) NOT NULL,
+  `CreatedBy` int(11) NOT NULL,
+  `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
+  `ModifiedBy` int(11) DEFAULT NULL,
+  `ModifiedDate` datetime DEFAULT NULL,
+  `Status` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `ss_skill`
+--
+
+INSERT INTO `ss_skill` (`SkillID`, `SkillName`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(1, 'Slkill ps', 2, '2025-01-08 14:07:02', 2, '2025-01-08 14:07:12', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ss_subcategory`
 --
 
@@ -23187,8 +23679,7 @@ ALTER TABLE `sssm_testimonial`
 -- Indexes for table `sssm_user`
 --
 ALTER TABLE `sssm_user`
-  ADD PRIMARY KEY (`UserID`),
-  ADD KEY `UserID` (`UserID`);
+  ADD PRIMARY KEY (`UserID`);
 
 --
 -- Indexes for table `sssm_usersetting`
@@ -23224,6 +23715,12 @@ ALTER TABLE `sssm_visitorreminder`
 --
 ALTER TABLE `sssm_visitorreminderaction`
   ADD PRIMARY KEY (`VisitorReminderActionID`);
+
+--
+-- Indexes for table `ss_artistgallery`
+--
+ALTER TABLE `ss_artistgallery`
+  ADD PRIMARY KEY (`ArtistGalleryID`);
 
 --
 -- Indexes for table `ss_banner`
@@ -23283,6 +23780,12 @@ ALTER TABLE `ss_opportunityreminder`
   ADD KEY `OpportunityReminderID` (`OpportunityReminderID`);
 
 --
+-- Indexes for table `ss_skill`
+--
+ALTER TABLE `ss_skill`
+  ADD PRIMARY KEY (`SkillID`);
+
+--
 -- Indexes for table `ss_subcategory`
 --
 ALTER TABLE `ss_subcategory`
@@ -23330,7 +23833,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `sssm_activitylog`
 --
 ALTER TABLE `sssm_activitylog`
-  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=301;
+  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309;
 
 --
 -- AUTO_INCREMENT for table `sssm_admindetails`
@@ -23456,7 +23959,7 @@ ALTER TABLE `sssm_emailtemplate`
 -- AUTO_INCREMENT for table `sssm_errorlog`
 --
 ALTER TABLE `sssm_errorlog`
-  MODIFY `ErrorLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `ErrorLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `sssm_familymembers`
@@ -23606,7 +24109,7 @@ ALTER TABLE `sssm_testimonial`
 -- AUTO_INCREMENT for table `sssm_user`
 --
 ALTER TABLE `sssm_user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sssm_usersetting`
@@ -23637,6 +24140,12 @@ ALTER TABLE `sssm_visitorreminder`
 --
 ALTER TABLE `sssm_visitorreminderaction`
   MODIFY `VisitorReminderActionID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ss_artistgallery`
+--
+ALTER TABLE `ss_artistgallery`
+  MODIFY `ArtistGalleryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ss_banner`
@@ -23691,6 +24200,12 @@ ALTER TABLE `ss_opportunity`
 --
 ALTER TABLE `ss_opportunityreminder`
   MODIFY `OpportunityReminderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ss_skill`
+--
+ALTER TABLE `ss_skill`
+  MODIFY `SkillID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ss_subcategory`

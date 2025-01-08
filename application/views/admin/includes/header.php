@@ -134,6 +134,15 @@
                                                     Sub Categories
                                                 </a>
                                             </li>
+                                            <li><a class="wrap_content_header" href="<?php echo $this->config->item('base_url'); ?>admin/masters/skill">
+                                                    Skills
+                                                </a>
+                                            </li>
+
+                                            <li><a class="wrap_content_header" href="<?php echo $this->config->item('base_url'); ?>admin/masters/gallery">
+                                                    Artist Gallery
+                                                </a>
+                                            </li>
 
                                             <li class=""> <a class="wrap_content_header" href="<?php echo $this->config->item('base_url'); ?>admin/masters/pagemaster">Page Master</a></li>
                                             <li><a class="wrap_content_header" href="<?php echo $this->config->item('base_url'); ?>admin/masters/cms">
