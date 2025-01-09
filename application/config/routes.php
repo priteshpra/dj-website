@@ -80,6 +80,7 @@ $route['privacy']  = 'privacy';
 $route['home']  = 'home/index';
 $route['(:any)']  = 'home/page';
 $route['blog/(:any)']  = 'blogs/detail/$1';
+$route['artist/(:any)']  = 'artists/detail/$1';
 
 
 $route['/(:any)']  = 'services/page';

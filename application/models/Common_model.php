@@ -386,6 +386,16 @@ class Common_model extends CI_Model
         return $cms;
     }
 
+    public function getArtistData($id)
+    {
+        $query = $this->db->query("SELECT c.*,s.*
+                                FROM sssm_user C
+                                LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
+                                WHERE C.Status = 1 AND s.SubCategoryID = $id");
+        $cms = $query->result();
+        return $cms;
+    }
+
     public function getPageIdData($page)
     {
 
@@ -442,5 +452,23 @@ class Common_model extends CI_Model
                                 WHERE Status = 1 ORDER BY JobPostingID DESC LIMIT 10 ");
         $catData = $query->result();
         return $catData;
+    }
+
+    public function getArtistDatabyName($name)
+    {
+        $query = $this->db->query("SELECT c.*
+                                FROM sssm_user C
+                                WHERE C.Status = 1 AND LOWER(REPLACE(c.DisplayName,' ', '-')) = '$name'");
+        $cms = $query->result();
+        return $cms;
+    }
+
+    public function getArtistGallery($id)
+    {
+        $query = $this->db->query("SELECT c.*
+                                FROM ss_artistgallery C
+                                WHERE C.Status = 1 AND C.UserID = $id");
+        $cms = $query->result();
+        return $cms;
     }
 }

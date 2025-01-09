@@ -12,8 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="msapplication-tap-highlight" content="no">
-  <meta name="description" content="Shreeya CRM">
-  <meta name="keywords" content="Shreeya CRM">
+  <meta name="description" content="DJ-Parth">
+  <meta name="keywords" content="DJ-Parth">
   <title>Login</title>
 
   <!-- Favicons-->

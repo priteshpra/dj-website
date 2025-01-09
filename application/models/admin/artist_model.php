@@ -61,7 +61,8 @@ class Artist_model extends CI_Model
             '" . $array['CreatedBy'] . "', 
             '" . $array['UserType'] . "', 
             '" . $array['IPAddress'] . "',
-             '" . $array['ArtistCategoryID'] . "'
+            '" . $array['ArtistCategoryID'] . "',
+            '" . $array['Image'] . "'
             )";
         $query = $this->db->query($sql);
         $query->next_result();
@@ -101,7 +102,8 @@ class Artist_model extends CI_Model
             '" . $array['ID'] . "', 
             '" . $array['UserType'] . "', 
             '" . $array['IPAddress'] . "',
-            '" . $array['ArtistCategoryID'] . "'
+            '" . $array['ArtistCategoryID'] . "',
+            '" . $array['Image'] . "'
             )";
 
         $query = $this->db->query($sql);

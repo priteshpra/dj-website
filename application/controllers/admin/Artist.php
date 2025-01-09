@@ -72,7 +72,20 @@ class Artist extends Admin_Controller
                     'allowed_types' => PROJECT_VIDEO_ALLOWED_TYPES
                 );
 
+                $configPic = array(
+                    "max_width" => ARTIST_MAX_WIDTH,
+                    "max_height" => ARTIST_MAX_HEIGHT,
+                    'max_size' => ARTIST_MAX_SIZE,
+                    'path' => ARTIST_UPLOAD_PATH,
+                    'allowed_types' => ARTIST_ALLOWED_TYPES,
+                    'tpath' => ARTIST_THUMB_UPLOAD_PATH,
+                    'twidth' => ARTIST_THUMB_MAX_WIDTH,
+                    'theight' => ARTIST_THUMB_MAX_HEIGHT
+                );
+
                 $data = $this->input->post();
+                $data['Image'] = FileUploadURL("Image", "editImageURL", $configPic, '', $url);
+
                 $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
                 $res = $this->artist_model->Insert($data);
                 if (@$res->ID) {
@@ -135,7 +148,18 @@ class Artist extends Admin_Controller
                     'allowed_types' => PROJECT_VIDEO_ALLOWED_TYPES
                 );
 
+                $configImag = array(
+                    "max_width" => ARTIST_MAX_WIDTH,
+                    "max_height" => ARTIST_MAX_HEIGHT,
+                    'max_size' => ARTIST_MAX_SIZE,
+                    'path' => ARTIST_UPLOAD_PATH,
+                    'allowed_types' => ARTIST_ALLOWED_TYPES,
+                    'tpath' => ARTIST_THUMB_UPLOAD_PATH,
+                    'twidth' => ARTIST_THUMB_MAX_WIDTH,
+                    'theight' => ARTIST_THUMB_MAX_HEIGHT
+                );
                 $data = $this->input->post();
+                $data['Image'] = FileUploadURL("Image", "editImageURL", $configImag, '', $url);
                 $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
                 $data['ID'] = $ID;
                 $res = $this->artist_model->Update($data);

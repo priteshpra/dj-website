@@ -182,7 +182,7 @@ define('DEFAULT_ADMIN_EMAIL',                'shripa.saggisoftsolutions@gmail.co
 define('DEFAULT_ADMIN_EMAIL_PASSWORD',        'Shripa@321');
 define('DEFAULT_FROM_NAME',                    'info');
 define('DEFAULT_EMAIL_IMAGE',                'assets/front/images/email/');
-define('DEFAULT_WEBSITE_TITLE',                'Shreeya CRM');
+define('DEFAULT_WEBSITE_TITLE',                'DJ-Parth');
 
 define('ROLEACTIONS', serialize(array('is_insert', 'is_view', 'is_edit', 'is_status', 'is_export', 'is_sms', 'is_mail', 'is_call', 'is_push', 'is_response', 'is_convert', 'is_price', 'is_ats', 'is_sd', 'is_verify', 'is_cancel')));
 
@@ -261,6 +261,15 @@ define('GALLERY_UPLOAD_PATH',        './assets/uploads/gallery/');
 define('GALLERY_THUMB_UPLOAD_PATH',    './assets/uploads/gallery/thumbnail/');
 define('GALLERY_THUMB_MAX_WIDTH',    250);
 define('GALLERY_THUMB_MAX_HEIGHT',    250);
+
+define('ARTIST_MAX_HEIGHT',        -1);
+define('ARTIST_MAX_WIDTH',            -1);
+define('ARTIST_MAX_SIZE',            102400);
+define('ARTIST_ALLOWED_TYPES',        'gif|jpg|png|jpeg');
+define('ARTIST_UPLOAD_PATH',        './assets/uploads/artist/');
+define('ARTIST_THUMB_UPLOAD_PATH',    './assets/uploads/artist/thumbnail/');
+define('ARTIST_THUMB_MAX_WIDTH',    250);
+define('ARTIST_THUMB_MAX_HEIGHT',    250);
 
 define('BLOG_ID', 5);
 define('ABOUT_ID', 3);

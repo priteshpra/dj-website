@@ -117,9 +117,15 @@ class Home extends CI_Controller
 
         $data['metaKey'] = $this->common_model->getMenusMetaKey(ucfirst($pageName));
         $data['brandList'] = $this->brand_model->ListData(100, 1);
-        // echo "<pre>";
-        // print_r($data['metaKey']);
-        // die;
+
+        $query = $this->db->query("SELECT C.PageID,C.SubCategoryID
+                                FROM sssm_pagemaster C
+                                WHERE C.Status = 1 AND C.PageID = $page_id");
+        $ArtistcatID = $query->result();
+
+        $ArtistcatID = isset($ArtistcatID[0]) ? $ArtistcatID[0]->SubCategoryID : 0;
+        $data['artistData'] = $this->common_model->getArtistData($ArtistcatID);
+
         $data['blog'] = $this->common_model->getBlogsData();
         $data['banner'] = $banner = $this->common_model->getBannerData($page_id);
         $data['testimonial'] = $this->testimonial_model->listData(15, 1);

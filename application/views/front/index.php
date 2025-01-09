@@ -465,6 +465,50 @@
         </div>
     </section>
     <!-- Blog End -->
+<?php } else if ($page_id == 26 || $page_id == 27 || $page_id == 28 || $page_id == 29) { ?>
+    <!-- Artist Page -->
+    <!-- start portfolio section -->
+    <section class="wow animate__fadeIn no-padding-bottom">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-5 col-md-6 col-sm-8 margin-eight-bottom md-margin-40px-bottom sm-margin-30px-bottom text-center">
+                    <div class="alt-font text-medium-gray margin-15px-bottom text-uppercase text-small">Book an Artist</div>
+                    <h5 class="alt-font text-extra-dark-gray font-weight-600 mb-0">Discover and Book the Perfect Artist for an Event</h5>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 filter-content overflow-hidden">
+                    <ul class="hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium">
+                        <li class="grid-sizer"></li>
+                        <!-- start portfolio item -->
+                        <?php if ($artistData) {
+                            foreach ($artistData as $key => $value) { ?>
+                                <li class="grid-item wow animate__fadeInUp">
+                                    <a href="<?php echo base_url('/artist/' . strtolower(str_replace(' ', '-', $value->DisplayName))) ?>">
+                                        <figure>
+                                            <div class="portfolio-img"><img src="assets/front/images/portfolio-item181.jpg" alt="" /></div>
+                                            <figcaption>
+                                                <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                                    <div class="portfolio-hover-box align-middle">
+                                                        <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray"><?php echo $value->FirstName . ' ' . $value->LastName ?></span>
+                                                            <p class="text-medium-gray text-uppercase text-extra-small"><?php echo $value->Skills ?></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                        <?php }
+                        } ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end portfolio section -->
 <?php } else { ?>
 
     <?php echo isset($cms[0]) ? $cms[0]->Content : ''; ?>
