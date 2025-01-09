@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 05:53 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Jan 09, 2025 at 10:21 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -354,7 +354,7 @@ SELECT @LAST_ID AS ID;
 COMMIT;
 END$$
 
-CREATE PROCEDURE `usp_A_AddArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_AddArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_CreatedBy` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS','Employee Web','Employee Android','Employee IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT, IN `_Image` VARCHAR(256))  NO SQL BEGIN
 DECLARE admin_name VARCHAR(50);
 DECLARE EXIT handler for sqlexception
   BEGIN
@@ -388,7 +388,8 @@ INSERT INTO sssm_user (
         Status,
         CreatedDate,
         CreatedBy,
-        ArtistCategoryID
+        ArtistCategoryID,
+        Image
     )
     VALUES (
        IFNULL(_FirstName, ''),
@@ -411,7 +412,8 @@ INSERT INTO sssm_user (
         IFNULL(_Status, 0),
         CONVERT_TZ(NOW(), @@session.time_zone, @TimeZone),
         IFNULL(_CreatedBy, 0),
-         IFNULL(_ArtistCategoryID, 0)
+         IFNULL(_ArtistCategoryID, 0),
+        IFNULL(_Image, '')
     );
 
 
@@ -4267,7 +4269,7 @@ ELSE
 END IF;
 END$$
 
-CREATE PROCEDURE `usp_A_EditArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_ModifiedBy` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT)  NO SQL BEGIN
+CREATE PROCEDURE `usp_A_EditArtist` (IN `_FirstName` VARCHAR(200), IN `_LastName` VARCHAR(200), IN `_DisplayName` VARCHAR(200), IN `_EmailID` VARCHAR(200), IN `_Password` VARCHAR(200), IN `_MobileNo` VARCHAR(20), IN `_Address` TEXT, IN `_CountryID` INT, IN `_StateID` INT, IN `_CityID` INT, IN `_Rating` DECIMAL(10,2), IN `_Experience` VARCHAR(200), IN `_Languages` TEXT, IN `_IsOpenToTravel` TINYINT(1), IN `_Skills` TEXT, IN `_AboutArtist` TEXT, IN `_VideoFileURL` VARCHAR(200), IN `_Status` INT, IN `_ModifiedBy` INT, IN `_ID` INT, IN `_UserType` ENUM('Admin Web','Admin Android','Admin IOS'), IN `_IPAddress` VARCHAR(16), IN `_ArtistCategoryID` INT, IN `_Image` VARCHAR(256))  NO SQL BEGIN
 DECLARE flag INT;
 DECLARE EXIT handler for sqlexception
     BEGIN
@@ -4303,7 +4305,8 @@ UPDATE  sssm_user SET
     Status = IFNULL(_Status, 0), 
     ModifiedDate = CONVERT_TZ(NOW(), @@session.time_zone, @TimeZone), 
     ModifiedBy = IFNULL(_ModifiedBy, 0),
-    ArtistCategoryID = IFNULL(_ArtistCategoryID, 0)
+    ArtistCategoryID = IFNULL(_ArtistCategoryID, 0),
+Image = IFNULL(_Image,'')
     WHERE UserID = _ID;
 
 
@@ -11182,6 +11185,7 @@ WHERE P.ProjectID=IFNULL(_ProjectID,P.ProjectID)
 );
 
 IF(@cnt > 0) THEN 
+
 IF(_PageSize = -1) THEN
    SELECT C.CustomerPropertyID,P.PropertyNo,C.Amount,Fn_TotnoOfPayByCustomer(C.CustomerPropertyID)AS TotalPayByCustomer,C.GSTAmount,Fn_GetGSTAmount(C.CustomerPropertyID,0) AS TotalGstpsyByCustomer,Fn_TotremPayByCustomer(C.CustomerPropertyID) AS RemainingAmountPayment, (Fn_GetGSTAmount(C.CustomerPropertyID,1)) AS RemainingGSTPayment FROM sssm_customerproperty C
 INNER JOIN sssm_property P ON P.PropertyID=C.PropertyID
@@ -16803,17 +16807,17 @@ INSERT INTO sssm_user(
 RETURN 1;
 END$$
 
-CREATE FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_Date,"%d-%m-%Y"));
 RETURN  @DateFormated;
 END$$
 
-CREATE FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_DateTime,"%d-%m-%Y %H:%i:%s"));
 RETURN  @DateFormated;
 END$$
 
-CREATE FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
@@ -16827,7 +16831,7 @@ END IF;
 
 END$$
 
-CREATE FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @details = (SELECT 
   GROUP_CONCAT(CONCAT(PJ.Title,"-",PT.PropertyNo,IF(CP.IsCancelled=1,"(Cancelled)",IF(CP.IsHold,"(Hold)",''))))
  FROM
@@ -16856,7 +16860,7 @@ SET @CustomerID = (SELECT IFNULL(CustomerID,0) AS CustomerID FROM sssm_customer 
 RETURN @CustomerID;
 END$$
 
-CREATE FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN 
+CREATE FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
   SELECT Message
@@ -16883,7 +16887,7 @@ ELSE
 END IF;
 END$$
 
-CREATE FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Item = (SELECT GROUP_CONCAT(G.GoodsName,' ',GI.Qty,' ',U.UOMName,' * ',GI.Rate,' = ',GI.FinalPrice ) AS Item  FROM ss_goodreceiveditems GI  
 INNER JOIN ss_goods G  ON G.GoodsID=GI.GoodsID
 INNER JOIN ss_uom U ON U.UOMID=GI.UOMID
@@ -16904,7 +16908,7 @@ ORDER BY PMS.InstalmentNo DESC LIMIT 1);
 RETURN @instalmentno;
 END$$
 
-CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 	IF(_Type="AddVisitor") THEN 
 		RETURN "Add Visitor";
 	ELSEIF(_Type="VisitorReminder") THEN
@@ -16929,7 +16933,7 @@ CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET ut
 	END IF;
 END$$
 
-CREATE FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,'') AS Feedback
@@ -16954,7 +16958,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectGalleryID) FROM sssm_projectgallery WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	SET @Image = (SELECT ImagePath FROM sssm_projectgallery WHERE ProjectID = _ProjectID ORDER BY ProjectGalleryID LIMIT 1);
@@ -17032,7 +17036,7 @@ WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND
 RETURN @Item;
 END$$
 
-CREATE FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 DECLARE Data TEXT;
 SET @Count = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 IF(@Count > 0) THEN 
@@ -17089,7 +17093,7 @@ SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_v
 RETURN @Count;
 END$$
 
-CREATE FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type = "Requirenment") THEN
 SET @Data = (SELECT IFNULL(GROUP_CONCAT(V.Requirement),'') AS Requirement FROM ss_visitorsites V WHERE V.VisitorID= _ID);
 ELSEIF(_Type = "LeadType") THEN
@@ -17109,7 +17113,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,NULL) AS Feedback
@@ -17152,7 +17156,7 @@ ELSE
 END IF;
 END$$
 
-CREATE FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Date = (SELECT PurchaseDate FROM sssm_customerproperty WHERE 
              CustomerID = _CustomerID ORDER BY PurchaseDate DESC LIMIT 1);
              RETURN IFNULL(@Date,'');
@@ -17207,7 +17211,7 @@ END IF;
 RETURN 1;
 END$$
 
-CREATE FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 SET @Document = (SELECT 
 GROUP_CONCAT(CONCAT(CPD.Title,'~',CPD.DocumentUrl)) 
 FROM sssm_customerpropertydocument CPD
@@ -17216,7 +17220,7 @@ WHERE CP.CustomerPropertyID = _ID);
 RETURN IFNULL(@Document,'');
 END$$
 
-CREATE FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN 
+CREATE FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
@@ -17231,7 +17235,7 @@ RETURN ErrorMessage;
 
 END$$
 
-CREATE FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
 DECLARE Data Text;
 IF(_ActionType = "AddVisitor") THEN 
   SET @Count = (SELECT COUNT(V.VisitorID) FROM sssm_visitor V
@@ -17608,7 +17612,7 @@ CREATE TABLE `brands` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `brands`
@@ -17652,7 +17656,7 @@ CREATE TABLE `sssm_activitylog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_activitylog`
@@ -18015,7 +18019,7 @@ CREATE TABLE `sssm_admindetails` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_admindetails`
@@ -18041,7 +18045,7 @@ CREATE TABLE `sssm_blastmessages` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -18061,7 +18065,7 @@ CREATE TABLE `sssm_blogs` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sssm_blogs`
@@ -18100,7 +18104,7 @@ CREATE TABLE `sssm_cancelproperty` (
   `IsDealClosed` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -18131,7 +18135,7 @@ CREATE TABLE `sssm_chanelpartner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -18148,7 +18152,7 @@ CREATE TABLE `sssm_cities` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_cities`
@@ -18809,7 +18813,7 @@ CREATE TABLE `sssm_cms` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_cms`
@@ -18857,7 +18861,7 @@ CREATE TABLE `sssm_config` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_config`
@@ -18880,7 +18884,7 @@ CREATE TABLE `sssm_country` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_country`
@@ -19163,7 +19167,7 @@ CREATE TABLE `sssm_customer` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_customer`
@@ -19199,7 +19203,7 @@ CREATE TABLE `sssm_customerpayment` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_customerpayment`
@@ -19226,7 +19230,7 @@ CREATE TABLE `sssm_customerprocess` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_customerprocess`
@@ -19288,7 +19292,7 @@ CREATE TABLE `sssm_customerproperty` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_customerproperty`
@@ -19313,7 +19317,7 @@ CREATE TABLE `sssm_customerpropertydocument` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_customerpropertydocument`
@@ -19339,7 +19343,7 @@ CREATE TABLE `sssm_customerpropertyimage` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -19357,7 +19361,7 @@ CREATE TABLE `sssm_customerpropertyvideo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -19376,7 +19380,7 @@ CREATE TABLE `sssm_customerreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -19392,7 +19396,7 @@ CREATE TABLE `sssm_designation` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_designation`
@@ -19429,7 +19433,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `DeviceName` varchar(100) DEFAULT NULL,
   `DeviceOS` varchar(40) DEFAULT NULL,
   `OSVersion` varchar(40) DEFAULT NULL,
-  `DeviceTokenID` text CHARACTER SET utf8 DEFAULT NULL,
+  `DeviceTokenID` text CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `DeviceType` enum('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS') NOT NULL,
   `UserType` varchar(20) NOT NULL,
   `UserID` int(11) NOT NULL,
@@ -19438,7 +19442,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -19456,7 +19460,7 @@ CREATE TABLE `sssm_emailtemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_emailtemplate`
@@ -19489,7 +19493,7 @@ CREATE TABLE `sssm_errorlog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_errorlog`
@@ -19581,7 +19585,7 @@ CREATE TABLE `sssm_familymembers` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime NOT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -19597,7 +19601,7 @@ CREATE TABLE `sssm_group` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_group`
@@ -19626,7 +19630,7 @@ CREATE TABLE `sssm_jobpost` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sssm_jobpost`
@@ -19649,7 +19653,7 @@ CREATE TABLE `sssm_messages` (
   `MessageKey` varchar(150) NOT NULL,
   `Message` varchar(250) NOT NULL,
   `ErrorCode` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_messages`
@@ -20202,7 +20206,7 @@ CREATE TABLE `sssm_module` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_module`
@@ -20290,7 +20294,7 @@ CREATE TABLE `sssm_motivationalquote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20307,7 +20311,7 @@ CREATE TABLE `sssm_notification` (
   `IsRead` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_notification`
@@ -20337,7 +20341,7 @@ CREATE TABLE `sssm_pagemaster` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_pagemaster`
@@ -20384,7 +20388,7 @@ CREATE TABLE `sssm_project` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_project`
@@ -20409,7 +20413,7 @@ CREATE TABLE `sssm_projectgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20428,7 +20432,7 @@ CREATE TABLE `sssm_projectmilestone` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20445,7 +20449,7 @@ CREATE TABLE `sssm_projectwiserule` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20467,7 +20471,7 @@ CREATE TABLE `sssm_property` (
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1,
   `IsCommercial` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_property`
@@ -20736,7 +20740,7 @@ CREATE TABLE `sssm_propertyimagetitle` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_propertyimagetitle`
@@ -20771,7 +20775,7 @@ CREATE TABLE `sssm_refund` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20794,7 +20798,7 @@ CREATE TABLE `sssm_reminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL COMMENT 'responded by ',
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20813,7 +20817,7 @@ CREATE TABLE `sssm_response` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -20846,7 +20850,7 @@ CREATE TABLE `sssm_rolemap` (
   `ModifiedDate` datetime DEFAULT NULL,
   `ModifiedBy` int(11) DEFAULT NULL,
   `Status` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_rolemap`
@@ -21119,7 +21123,7 @@ CREATE TABLE `sssm_roleproject` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_roleproject`
@@ -21149,7 +21153,7 @@ CREATE TABLE `sssm_roles` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_roles`
@@ -21176,7 +21180,7 @@ CREATE TABLE `sssm_sections` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sssm_sections`
@@ -21202,7 +21206,7 @@ CREATE TABLE `sssm_smstemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_smstemplate`
@@ -21232,7 +21236,7 @@ CREATE TABLE `sssm_state` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `sssm_state`
@@ -21906,7 +21910,7 @@ CREATE TABLE `sssm_testimonial` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sssm_testimonial`
@@ -21942,6 +21946,7 @@ CREATE TABLE `sssm_user` (
   `IsOpenToTravel` tinyint(1) DEFAULT 0,
   `Skills` varchar(200) NOT NULL,
   `VideoFileURL` varchar(300) NOT NULL,
+  `Image` varchar(255) DEFAULT NULL,
   `AboutArtist` varchar(500) NOT NULL,
   `UserType` enum('Admin','User') DEFAULT 'User',
   `CreatedBy` int(11) NOT NULL,
@@ -21949,16 +21954,16 @@ CREATE TABLE `sssm_user` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_user`
 --
 
-INSERT INTO `sssm_user` (`UserID`, `ArtistCategoryID`, `FirstName`, `LastName`, `DisplayName`, `EmailID`, `Password`, `MobileNo`, `Address`, `CountryID`, `StateID`, `CityID`, `Rating`, `Experience`, `Languages`, `IsOpenToTravel`, `Skills`, `VideoFileURL`, `AboutArtist`, `UserType`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(1, 1, 'Sam', 'Patel', 'Sam Patel', 'sam@gmail.com', '132456', '1324657985', 'Test', 0, 0, 0, '', '', '', 0, '', '', '', 'User', 0, '2025-01-08 13:00:55', NULL, NULL, 1),
-(2, 0, 'Test', 'Test', 'jkklk', 'admin@example.com', 'admin123', '9865254585', 'Test', 0, 0, 0, '5.00', '4', 'English', 1, 'Test, jsjs, djd', '20250108111400_.mp4', 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-08 15:52:16', 1),
-(3, 11, 'parth', 'thakkar', 'ravi', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 1, 42, 6, '3.00', '6', 'hindi', 0, 'Test, jsjs, djd', '20250108134018_.mp4', 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-08 18:18:51', 1);
+INSERT INTO `sssm_user` (`UserID`, `ArtistCategoryID`, `FirstName`, `LastName`, `DisplayName`, `EmailID`, `Password`, `MobileNo`, `Address`, `CountryID`, `StateID`, `CityID`, `Rating`, `Experience`, `Languages`, `IsOpenToTravel`, `Skills`, `VideoFileURL`, `Image`, `AboutArtist`, `UserType`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
+(1, 12, 'Sam', 'Patel', 'Sam Patel', 'sam@gmail.com', '132456', '1324657985', 'Test', 0, 0, 0, '', '', '', 0, '', '', NULL, '', 'User', 0, '2025-01-08 13:00:55', NULL, NULL, 1),
+(2, 12, 'Test', 'Test', 'jkklk', 'admin@example.com', 'admin123', '9865254585', 'Test', 0, 0, 0, '5.00', '4', 'English', 1, 'Test, jsjs, djd', '20250108111400_.mp4', NULL, 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-08 15:52:16', 1),
+(3, 11, 'parth', 'thakkar', 'ravi', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 1, 42, 6, '3.00', '6', 'hindi', 0, 'Test, jsjs, djd', '20250108134018_.mp4', NULL, 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-08 18:18:51', 1);
 
 -- --------------------------------------------------------
 
@@ -21981,7 +21986,7 @@ CREATE TABLE `sssm_usersetting` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_usersetting`
@@ -22026,7 +22031,7 @@ CREATE TABLE `sssm_visitor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_visitor`
@@ -22055,7 +22060,7 @@ CREATE TABLE `sssm_visitorfollowup` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -22075,7 +22080,7 @@ CREATE TABLE `sssm_visitorreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `sssm_visitorreminder`
@@ -22103,7 +22108,7 @@ CREATE TABLE `sssm_visitorreminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -22121,14 +22126,19 @@ CREATE TABLE `ss_artistgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_artistgallery`
 --
 
 INSERT INTO `ss_artistgallery` (`ArtistGalleryID`, `Title`, `UserID`, `DocumentURL`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(1, 'Drum Masters', 1, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1);
+(1, 'Drum Masters', 1, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(2, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(3, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(4, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(5, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(6, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1);
 
 -- --------------------------------------------------------
 
@@ -22150,7 +22160,7 @@ CREATE TABLE `ss_banner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ss_banner`
@@ -22186,7 +22196,7 @@ CREATE TABLE `ss_category` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `ss_category`
@@ -22214,7 +22224,7 @@ CREATE TABLE `ss_feedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_feedback`
@@ -22260,7 +22270,7 @@ CREATE TABLE `ss_goodreceiveditems` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -22277,7 +22287,7 @@ CREATE TABLE `ss_goods` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_goods`
@@ -22304,7 +22314,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `VendorID` int(11) NOT NULL,
   `CategoryID` int(11) NOT NULL,
   `ChallanNo` varchar(50) DEFAULT NULL,
-  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 DEFAULT NULL,
+  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 COLLATE utf16_general_ci DEFAULT NULL,
   `ChallanDate` date DEFAULT NULL,
   `InvoiceImageURL` varchar(150) DEFAULT NULL,
   `TotalPrice` varchar(10) DEFAULT NULL,
@@ -22313,7 +22323,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -22333,7 +22343,7 @@ CREATE TABLE `ss_misscallapi` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -22373,7 +22383,7 @@ CREATE TABLE `ss_opportunity` (
   `Status` int(11) NOT NULL DEFAULT 1,
   `RefName` varchar(50) DEFAULT NULL,
   `RefMobileNo` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_opportunity`
@@ -23241,7 +23251,7 @@ CREATE TABLE `ss_opportunityreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_opportunityreminder`
@@ -23264,7 +23274,7 @@ CREATE TABLE `ss_skill` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_skill`
@@ -23291,7 +23301,7 @@ CREATE TABLE `ss_subcategory` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ss_subcategory`
@@ -23321,7 +23331,7 @@ CREATE TABLE `ss_uom` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `ss_uom`
@@ -23360,7 +23370,7 @@ CREATE TABLE `ss_userfeedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -23384,7 +23394,7 @@ CREATE TABLE `ss_vendor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -23419,7 +23429,7 @@ CREATE TABLE `ss_visitorsites` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -24192,7 +24202,7 @@ ALTER TABLE `sssm_visitorreminderaction`
 -- AUTO_INCREMENT for table `ss_artistgallery`
 --
 ALTER TABLE `ss_artistgallery`
-  MODIFY `ArtistGalleryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ArtistGalleryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `ss_banner`
