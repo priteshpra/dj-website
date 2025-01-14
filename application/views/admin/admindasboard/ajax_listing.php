@@ -53,20 +53,20 @@ if ($FilterType == "Daily") {
 </div>
 
 
-<!-- <div class="col s12 m6 l4">
+<div class="col s12 m6 l4">
     <div class="card">
         <div class="card-content  indigo white-text">
-            <p class="card-stats-title"><i class="mdi-notification-sync"></i>Total Job Posting</p>
-            <h4 class="card-stats-number"><?php echo ($Dashboard['TotalJobs']['Count'] == -1) ? 0 : $Dashboard['TotalJobs']['Count']; ?></h4>
+            <p class="card-stats-title"><i class="mdi-notification-sync"></i>Total Artist</p>
+            <h4 class="card-stats-number"><?php echo ($Dashboard['TotalArtist']['Count'] == -1) ? 0 : $Dashboard['TotalArtist']['Count']; ?></h4>
             <p class="card-stats-compare"><span class="green-text text-lighten-5"><?php echo $Str; ?></span>
             </p>
         </div>
         <div class="card-action  indigo darken-1 darken-2">
         </div>
     </div>
-</div> -->
+</div>
 
-<div class="col s12 m6 l4">
+<!-- <div class="col s12 m6 l4">
     <div class="card">
         <div class="card-content  grey white-text">
             <p class="card-stats-title"><i class="mdi-notification-sync"></i>Total Sub Category</p>
@@ -75,7 +75,19 @@ if ($FilterType == "Daily") {
             </p>
         </div>
         <div class="card-action  grey darken-1 darken-2">
-            <!-- <div class="center"><a class="moreinfo" data-type="Refund" data-Filter="<?php echo $FilterType; ?>" href="<?php echo base_url('admin/report/CustomerProperty/'); ?>">More Info</a></div> -->
+        </div>
+    </div>
+</div> -->
+
+<div class="col s12 m6 l4">
+    <div class="card">
+        <div class="card-content  grey white-text">
+            <p class="card-stats-title"><i class="mdi-notification-sync"></i>Total Testimonial</p>
+            <h4 class="card-stats-number"><?php echo ($Dashboard['TotalTestimonial']['Count'] == -1) ? 0 : $Dashboard['TotalTestimonial']['Count']; ?></h4>
+            <p class="card-stats-compare"><span class="green-text text-lighten-5"><?php echo $Str; ?></span>
+            </p>
+        </div>
+        <div class="card-action  grey darken-1 darken-2">
         </div>
     </div>
 </div>

@@ -248,13 +248,17 @@ class Common_model extends CI_Model
         WHERE DATE_FORMAT(CreatedDate,'%Y-%m-%d') BETWEEN '$StartDate'  AND '$EndDate'");
         $result['TotalBlogs'] = $query3->row_array();
 
-        $query4 = $this->db->query("SELECT COUNT(JobPostingID) as Count FROM sssm_jobpost 
-        WHERE DATE_FORMAT(PublishedDate,'%Y-%m-%d') BETWEEN '$StartDate'  AND '$EndDate'");
-        $result['TotalJobs'] = $query4->row_array();
+        $query4 = $this->db->query("SELECT COUNT(UserID) as Count FROM sssm_user 
+        WHERE DATE_FORMAT(CreatedDate,'%Y-%m-%d') BETWEEN '$StartDate'  AND '$EndDate'");
+        $result['TotalArtist'] = $query4->row_array();
 
         $query5 = $this->db->query("SELECT COUNT(SubCategoryID) as Count FROM ss_subcategory 
         WHERE DATE_FORMAT(CreatedDate,'%Y-%m-%d') BETWEEN '$StartDate'  AND '$EndDate'");
         $result['TotalSubCat'] = $query5->row_array();
+
+        $query6 = $this->db->query("SELECT COUNT(TestimonialID) as Count FROM sssm_testimonial 
+        WHERE DATE_FORMAT(CreatedDate,'%Y-%m-%d') BETWEEN '$StartDate'  AND '$EndDate'");
+        $result['TotalTestimonial'] = $query6->row_array();
 
 
         $result['FromDate'] = $StartDate;

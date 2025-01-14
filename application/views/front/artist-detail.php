@@ -38,15 +38,15 @@
         data-slider-options='{ "loop": true, "effect":"fade", "slidesPerView": "1", "allowTouchMove":true, "autoplay": { "delay": 5000, "disableOnInteraction": false }, "keyboard": { "enabled": true, "onlyInViewport": true }, "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" }, "pagination": { "el": ".swiper-pagination-01", "clickable": true } }'>
         <div class="swiper-wrapper">
             <!-- start slider item -->
-            <div class="swiper-slide cover-background" style="background-image:url('assets/front/images/01 aboutslider.jpg');">
+            <div class="swiper-slide cover-background" style="background-image:url('../assets/front/images/01 aboutslider.jpg');">
             </div>
             <!-- end slider item -->
             <!-- start slider item -->
-            <div class="swiper-slide cover-background" style="background-image:url('assets/front/images/02 aboutslider.jpg');">
+            <div class="swiper-slide cover-background" style="background-image:url('../assets/front/images/02 aboutslider.jpg');">
             </div>
             <!-- end slider item -->
             <!-- start slider item -->
-            <div class="swiper-slide cover-background" style="background-image:url('assets/front/images/03 slider.jpg');"></div>
+            <div class="swiper-slide cover-background" style="background-image:url('../assets/front/images/03 slider.jpg');"></div>
             <!-- end slider item -->
         </div>
         <!-- <div class="swiper-pagination swiper-pagination-01 swiper-pagination-white"></div> -->
@@ -69,7 +69,7 @@
         <div class="row align-items-center">
             <!-- Artist Profile Picture -->
             <div class="col-md-5 text-center sm-margin-30px-bottom">
-                <img src="assets/uploads/artist/<?php echo $artist[0]->Image ?>" alt="Artist Name" class="rounded-circle w-75">
+                <img src="../assets/uploads/artist/<?php echo $artist[0]->Image ?>" alt="Artist Name" class="rounded-circle w-75">
             </div>
             <!-- Artist Information -->
             <div class="col-md-7">
@@ -80,8 +80,8 @@
                 <p><strong>Location:</strong> <?php echo $artist[0]->Address ?></p>
                 <p><strong>Skills:</strong> <?php echo $artist[0]->Skills ?></p>
                 <p><strong>Open To Travel:</strong> <?php echo ($artist[0]->IsOpenToTravel == 0) ? 'No' : 'Yes' ?></p>
-                <a href="#booking-section" class="btn btn-medium btn-deep-pink text-white margin-20px-top">Book
-                    Now</a>
+                <a href="<?php echo base_url('contact') ?>" class="btn btn-medium btn-deep-pink text-white margin-20px-top">Book
+                    Now</a> <!-- href="#booking-section" -->
             </div>
         </div>
     </div>
@@ -125,7 +125,7 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-12">
-                <h3 class="alt-font text-extra-dark-gray font-weight-600">Video Gallery</h3>
+                <h3 class="alt-font text-extra-dark-gray font-weight-600">Artist Video</h3>
                 <p class="text-medium-gray">Watch performances and more</p>
             </div>
         </div>
@@ -133,8 +133,8 @@
         <div class="row margin-50px-top">
             <div class="col-12">
                 <div class="ratio ratio-16x9" id="main-video-container">
-                    <iframe id="main-video" src="../assets/uploads/video/<?php echo $artist[0]->VideoFileURL ?>" title="Main Video"
-                        allowfullscreen></iframe>
+                    <iframe id="main-video" src="<?php echo $artist[0]->VideoFileURL ?>?rel=0&modestbranding=1&showinfo=0"
+                        title="Main Video" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -171,7 +171,7 @@
 
 
 <!-- Start Booking Section -->
-<section id="booking-section" class="booking bg-extra-dark-gray padding-80px-tb sm-padding-50px-tb">
+<!-- <section id="booking-section" class="booking bg-extra-dark-gray padding-80px-tb sm-padding-50px-tb">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 text-center margin-40px-bottom">
@@ -205,7 +205,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <!-- End Booking Section -->
 
 <!-- Artist End -->

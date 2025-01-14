@@ -86,7 +86,7 @@ class Artist extends Admin_Controller
                 $data = $this->input->post();
                 $data['Image'] = FileUploadURL("Image", "editImageURL", $configPic, '', $url);
 
-                $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
+                // $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
                 $res = $this->artist_model->Insert($data);
                 if (@$res->ID) {
                     redirect(site_url('admin/artist'));
@@ -160,7 +160,7 @@ class Artist extends Admin_Controller
                 );
                 $data = $this->input->post();
                 $data['Image'] = FileUploadURL("Image", "editImageURL", $configImag, '', $url);
-                $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
+                // $data['FilePath'] = FileUploadURL("FilePath", "editImageURL", $config, '', $url);
                 $data['ID'] = $ID;
                 $res = $this->artist_model->Update($data);
                 if (@$res->ID) {
@@ -184,7 +184,7 @@ class Artist extends Admin_Controller
         $data['page_name'] = 'edit/' . $ID;
         $data['loading_button'] = getLoadingButton();
         $data['country'] = getCountryCombobox($data['data']->CountryID);
-        $data['state'] = getStateCombobox($data['data']->StateID);
+        $data['state'] = getStateCombobox($data['data']->StateID, $data['data']->CountryID);
         $data['city'] = getCityCombobox($data['data']->CityID);
         $data['artistcategory'] = getArtistCatCombobox($data['data']->ArtistCategoryID);
         $this->load->view('admin/artist/add_edit', $data);

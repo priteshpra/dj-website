@@ -488,7 +488,7 @@
                                 <li class="grid-item wow animate__fadeInUp">
                                     <a href="<?php echo base_url('/artist/' . strtolower(str_replace(' ', '-', $value->DisplayName))) ?>">
                                         <figure>
-                                            <div class="portfolio-img"><img src="assets/front/images/portfolio-item181.jpg" alt="" /></div>
+                                            <div class="portfolio-img"><img src="assets/uploads/artist/<?php echo $value->Image ?>" alt="" /></div>
                                             <figcaption>
                                                 <div class="portfolio-hover-main text-center last-paragraph-no-margin">
                                                     <div class="portfolio-hover-box align-middle">

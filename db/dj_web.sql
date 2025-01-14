@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 10:21 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jan 14, 2025 at 11:24 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -2763,6 +2763,7 @@ IF(@Count > 0) THEN
         SELECT Fn_M_getErrorMessage('old_new_status_are_same_not_updated') AS Message;
     ELSE
         UPDATE sssm_visitor
+
         SET 
             IsIdle = _IsIdle
         WHERE 
@@ -16807,17 +16808,17 @@ INSERT INTO sssm_user(
 RETURN 1;
 END$$
 
-CREATE FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateFormat` (`_Date` DATE) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_Date,"%d-%m-%Y"));
 RETURN  @DateFormated;
 END$$
 
-CREATE FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_ChangeDateTimeFormat` (`_DateTime` DATETIME) RETURNS VARCHAR(20) CHARSET utf8 NO SQL BEGIN
 SET @DateFormated = (SELECT DATE_FORMAT(_DateTime,"%d-%m-%Y %H:%i:%s"));
 RETURN  @DateFormated;
 END$$
 
-CREATE FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_DuePaymentFlag` (`_ID` INT, `_Percentate` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 
 SET @Amount = (SELECT IFNULL(Amount,0) FROM sssm_customerproperty WHERE  CustomerPropertyID = _ID);
 SET @Pay = (SELECT IFNULL(SUM(PaymentAmount),0) FROM sssm_customerpayment WHERE CustomerPropertyID = _ID);
@@ -16831,7 +16832,7 @@ END IF;
 
 END$$
 
-CREATE FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_A_GetPropertyDetails` (`_CustomerID` INT, `_ProjectIDS` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @details = (SELECT 
   GROUP_CONCAT(CONCAT(PJ.Title,"-",PT.PropertyNo,IF(CP.IsCancelled=1,"(Cancelled)",IF(CP.IsHold,"(Hold)",''))))
  FROM
@@ -16860,7 +16861,7 @@ SET @CustomerID = (SELECT IFNULL(CustomerID,0) AS CustomerID FROM sssm_customer 
 RETURN @CustomerID;
 END$$
 
-CREATE FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE FUNCTION `Fn_GetErrorMessage` (`_MessageKey` VARCHAR(250)) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
   SELECT Message
@@ -16887,7 +16888,7 @@ ELSE
 END IF;
 END$$
 
-CREATE FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetInwardItem` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @Item = (SELECT GROUP_CONCAT(G.GoodsName,' ',GI.Qty,' ',U.UOMName,' * ',GI.Rate,' = ',GI.FinalPrice ) AS Item  FROM ss_goodreceiveditems GI  
 INNER JOIN ss_goods G  ON G.GoodsID=GI.GoodsID
 INNER JOIN ss_uom U ON U.UOMID=GI.UOMID
@@ -16908,7 +16909,7 @@ ORDER BY PMS.InstalmentNo DESC LIMIT 1);
 RETURN @instalmentno;
 END$$
 
-CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 	IF(_Type="AddVisitor") THEN 
 		RETURN "Add Visitor";
 	ELSEIF(_Type="VisitorReminder") THEN
@@ -16933,7 +16934,7 @@ CREATE FUNCTION `Fn_GetNotificationTitle` (`_Type` TEXT) RETURNS TEXT CHARSET ut
 	END IF;
 END$$
 
-CREATE FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetOpportunityLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,'') AS Feedback
@@ -16958,7 +16959,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetPropertyPic` (`_ProjectID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
 SET @Count = (SELECT COUNT(ProjectGalleryID) FROM sssm_projectgallery WHERE ProjectID = _ProjectID);
 IF(@Count > 0)THEN
 	SET @Image = (SELECT ImagePath FROM sssm_projectgallery WHERE ProjectID = _ProjectID ORDER BY ProjectGalleryID LIMIT 1);
@@ -17036,7 +17037,7 @@ WHERE U.FeedbackID=_ID AND U.Type=_Type AND _FromDate <= U.FeedbackDate AND
 RETURN @Item;
 END$$
 
-CREATE FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetResponseData` (`_ID` INT, `_Type` ENUM('Customer','Visitor')) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 DECLARE Data TEXT;
 SET @Count = (SELECT COUNT(ResponseID) FROM sssm_response WHERE ReminderID = _ID AND ReminderType = _Type);
 IF(@Count > 0) THEN 
@@ -17093,7 +17094,7 @@ SET @Count = (SELECT IFNULL(COUNT(VisitorSitesID),0) AS VisitorSitesID FROM ss_v
 RETURN @Count;
 END$$
 
-CREATE FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type = "Requirenment") THEN
 SET @Data = (SELECT IFNULL(GROUP_CONCAT(V.Requirement),'') AS Requirement FROM ss_visitorsites V WHERE V.VisitorID= _ID);
 ELSEIF(_Type = "LeadType") THEN
@@ -17113,7 +17114,7 @@ END IF;
 RETURN @Data;
 END$$
 
-CREATE FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_GetVisitorLastReminderData` (`_ID` INT, `_Type` VARCHAR(100)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 IF(_Type='Message') THEN
     SET @Data = (SELECT  
                  	IFNULL(F.Feedback,NULL) AS Feedback
@@ -17156,7 +17157,7 @@ ELSE
 END IF;
 END$$
 
-CREATE FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_LatestPurchaseDateByCustomerID` (`_CustomerID` INT) RETURNS VARCHAR(250) CHARSET utf8 NO SQL BEGIN
 SET @Date = (SELECT PurchaseDate FROM sssm_customerproperty WHERE 
              CustomerID = _CustomerID ORDER BY PurchaseDate DESC LIMIT 1);
              RETURN IFNULL(@Date,'');
@@ -17211,7 +17212,7 @@ END IF;
 RETURN 1;
 END$$
 
-CREATE FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetDocumentNameByID` (`_ID` INT) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 SET @Document = (SELECT 
 GROUP_CONCAT(CONCAT(CPD.Title,'~',CPD.DocumentUrl)) 
 FROM sssm_customerpropertydocument CPD
@@ -17220,7 +17221,7 @@ WHERE CP.CustomerPropertyID = _ID);
 RETURN IFNULL(@Document,'');
 END$$
 
-CREATE FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN 
+CREATE FUNCTION `Fn_M_getErrorMessage` (`iMessageKey` VARCHAR(150)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN 
 
 DECLARE ErrorMessage varchar(250) DEFAULT 0;
 
@@ -17235,7 +17236,7 @@ RETURN ErrorMessage;
 
 END$$
 
-CREATE FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci NO SQL BEGIN
+CREATE FUNCTION `Fn_M_GetNotificationRelatedData` (`_ID` INT, `_ActionType` VARCHAR(50), `_Path` VARCHAR(250)) RETURNS TEXT CHARSET utf8 NO SQL BEGIN
 DECLARE Data Text;
 IF(_ActionType = "AddVisitor") THEN 
   SET @Count = (SELECT COUNT(V.VisitorID) FROM sssm_visitor V
@@ -17612,7 +17613,7 @@ CREATE TABLE `brands` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `brands`
@@ -17656,7 +17657,7 @@ CREATE TABLE `sssm_activitylog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_activitylog`
@@ -17991,7 +17992,14 @@ INSERT INTO `sssm_activitylog` (`ActivityLogID`, `MethodName`, `ActivityDescript
 (326, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:04', NULL, NULL, 1),
 (327, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:23', NULL, NULL, 1),
 (328, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:37', NULL, NULL, 1),
-(329, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:57', NULL, NULL, 1);
+(329, 'AddCMS', 'Dj Parth Parth has added new CMS.', 'Admin Web', 2, '::1', 2, '2025-01-08 22:02:57', NULL, NULL, 1),
+(330, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-14 13:58:18', NULL, NULL, 1),
+(331, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-14 14:01:22', NULL, NULL, 1),
+(332, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-14 14:04:52', NULL, NULL, 1),
+(333, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-14 14:06:52', NULL, NULL, 1),
+(334, 'EditArtist', 'Dj Parth Parth has updated Artist.', 'Admin Web', 2, '::1', 2, '2025-01-14 14:36:43', NULL, NULL, 1),
+(335, 'EditGallery', 'Dj Parth Parth has updated Gallery Drum Masters', 'Admin Web', 2, '::1', 2, '2025-01-14 15:01:43', NULL, NULL, 1),
+(336, 'EditGallery', 'Dj Parth Parth has updated Gallery Drum Masters', 'Admin Web', 2, '::1', 2, '2025-01-14 15:01:54', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -18019,7 +18027,7 @@ CREATE TABLE `sssm_admindetails` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_admindetails`
@@ -18045,7 +18053,7 @@ CREATE TABLE `sssm_blastmessages` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18065,7 +18073,7 @@ CREATE TABLE `sssm_blogs` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_blogs`
@@ -18074,13 +18082,13 @@ CREATE TABLE `sssm_blogs` (
 INSERT INTO `sssm_blogs` (`BlogID`, `BlogTitle`, `AuthorName`, `PublishedDate`, `ShortContent`, `Content`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
 (7, 'The Rise of AI-Generated Music: Revolutionizing the DJ Industry', ' Vithoba Pagdiyal', '2024-07-25', 'Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years.', '<div class=\"row justify-content-center\">\n<div class=\"col-lg-10\">\n<h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5>\n<p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p>\n<p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p>\n</div>\n</div>\n<div class=\"row justify-content-center\">\n<div class=\"col-lg-10\">\n<h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5>\n<p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p>\n<p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p>\n<p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p>\n<p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p>\n</div>\n</div>', 2, '2025-01-03 15:02:25', 0, NULL, 1),
 (8, 'Color does not add a pleasant quality to Corporate Events - it reinforces it.', 'Herman Miller ', '2024-01-17', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:03:35', 0, NULL, 1),
-(9, 'I like Corporate Events, I like details, to me it is just another form of self-expression.', 'Jeremy Dupont', '2022-12-14', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:04:15', 0, NULL, 1),
+(9, 'I like Corporate Events, I like details to me it is just another form of self-expression.', 'Jeremy Dupont', '2022-12-14', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:04:15', 0, NULL, 1),
 (10, 'Classical Corporate Events is a mirror of the human mind. Its how we see the world.', 'Hugh Macleod', '2023-05-16', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:05:36', 0, NULL, 1),
-(11, 'Art has to move you and Corporate Events does not, unless its a good Corporate Events for a bus.', 'Jennifer Freeman', '2021-04-14', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:36:01', 0, NULL, 1),
+(11, 'Art has to move you and Corporate Events does not unless its a good Corporate Events for a bus.', 'Jennifer Freeman', '2021-04-14', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:36:01', 0, NULL, 1),
 (12, 'I like the body. I like to Corporate Events everything to do with the body.', 'Willie Clark ', '2021-12-29', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:36:47', 0, NULL, 1),
-(13, 'Delay always breeds danger; and to protract a great Corporate Events is often to ruin it.', 'Bill Gardner ', '2024-02-20', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:37:16', 0, NULL, 1),
+(13, 'Delay always breeds danger and to protract a great Corporate Events is often to ruin it.', 'Bill Gardner ', '2024-02-20', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:37:16', 0, NULL, 1),
 (14, 'Recognizing the need is the primary condition for Corporate Events.', 'John Doe ', '2022-01-19', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:37:47', 0, NULL, 1),
-(15, 'Im not into Music, but I like Corporate Events. I wear the same shoes every day.', 'John Carpenter ', '2022-03-15', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:38:41', 0, NULL, 1),
+(15, 'Im not into Music but I like Corporate Events. I wear the same shoes every day.', 'John Carpenter ', '2022-03-15', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:38:41', 0, NULL, 1),
 (16, 'I Corporate Events my start-up ventures around my own personal beliefs and values.', 'Isaac Tobin ', '2025-01-14', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum standard dummy...', '<div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\">The <strong>Rise of AI-Generated Music:</strong> Revolutionizing the DJ Industry</h5> <p class=\"text-medium line-height-28 sm-line-height-26\">Artificial intelligence (AI) has been transforming various industries, and music is no exception. AI-generated music, also known as algorithmic music, has gained significant attention in recent years. As a DJ, it\'s essential to stay updated on this trending topic and explore its implications on the industry.</p> <p>AI-generated music uses machine learning algorithms to create music compositions. These algorithms analyze patterns and structures in existing music to generate new, unique tracks. AI music generation tools, such as Amper Music and AIVA, allow users to create custom tracks within minutes.</p> </div> </div> <div class=\"row justify-content-center\"> <div class=\"col-lg-10\"> <h5 class=\"alt-font text-extra-dark-gray\"><strong>Impact on the DJ Industry</strong></h5> <p class=\"text-medium line-height-28 sm-line-height-26\">1. Increased creativity: AI-generated music can provide unique and inspiring tracks for DJs to incorporate into their sets.</p> <p>2. Efficient production: AI algorithms can produce high-quality tracks quickly, reducing production time for DJs.</p> <p>3. New revenue streams: AI-generated music can create new opportunities for DJs to monetize their music.</p> <p>The rise of AI-generated music presents both opportunities and challenges for the DJ industry. As DJs, we must adapt to these changes and explore ways to integrate AI-generated music into our craft. By embracing this technology, we can unlock new creative possibilities and enhance the music experience.</p> </div> </div>', 2, '2025-01-03 15:39:27', 0, NULL, 1);
 
 -- --------------------------------------------------------
@@ -18104,7 +18112,7 @@ CREATE TABLE `sssm_cancelproperty` (
   `IsDealClosed` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18135,7 +18143,7 @@ CREATE TABLE `sssm_chanelpartner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -18152,7 +18160,7 @@ CREATE TABLE `sssm_cities` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_cities`
@@ -18813,7 +18821,7 @@ CREATE TABLE `sssm_cms` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_cms`
@@ -18861,7 +18869,7 @@ CREATE TABLE `sssm_config` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_config`
@@ -18884,7 +18892,7 @@ CREATE TABLE `sssm_country` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_country`
@@ -19167,7 +19175,7 @@ CREATE TABLE `sssm_customer` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customer`
@@ -19203,7 +19211,7 @@ CREATE TABLE `sssm_customerpayment` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerpayment`
@@ -19230,7 +19238,7 @@ CREATE TABLE `sssm_customerprocess` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerprocess`
@@ -19292,7 +19300,7 @@ CREATE TABLE `sssm_customerproperty` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerproperty`
@@ -19317,7 +19325,7 @@ CREATE TABLE `sssm_customerpropertydocument` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_customerpropertydocument`
@@ -19343,7 +19351,7 @@ CREATE TABLE `sssm_customerpropertyimage` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19361,7 +19369,7 @@ CREATE TABLE `sssm_customerpropertyvideo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19380,7 +19388,7 @@ CREATE TABLE `sssm_customerreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19396,7 +19404,7 @@ CREATE TABLE `sssm_designation` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_designation`
@@ -19433,7 +19441,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `DeviceName` varchar(100) DEFAULT NULL,
   `DeviceOS` varchar(40) DEFAULT NULL,
   `OSVersion` varchar(40) DEFAULT NULL,
-  `DeviceTokenID` text CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `DeviceTokenID` text CHARACTER SET utf8 DEFAULT NULL,
   `DeviceType` enum('Admin Web','Employee Web','Admin Android','Employee Android','Admin IOS','Employee IOS') NOT NULL,
   `UserType` varchar(20) NOT NULL,
   `UserID` int(11) NOT NULL,
@@ -19442,7 +19450,7 @@ CREATE TABLE `sssm_deviceinfo` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -19460,7 +19468,7 @@ CREATE TABLE `sssm_emailtemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_emailtemplate`
@@ -19493,7 +19501,7 @@ CREATE TABLE `sssm_errorlog` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_errorlog`
@@ -19585,7 +19593,7 @@ CREATE TABLE `sssm_familymembers` (
   `ModifiedBy` int(11) NOT NULL,
   `ModifiedDate` datetime NOT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -19601,7 +19609,7 @@ CREATE TABLE `sssm_group` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_group`
@@ -19630,7 +19638,7 @@ CREATE TABLE `sssm_jobpost` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_jobpost`
@@ -19653,7 +19661,7 @@ CREATE TABLE `sssm_messages` (
   `MessageKey` varchar(150) NOT NULL,
   `Message` varchar(250) NOT NULL,
   `ErrorCode` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_messages`
@@ -20206,7 +20214,7 @@ CREATE TABLE `sssm_module` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_module`
@@ -20294,7 +20302,7 @@ CREATE TABLE `sssm_motivationalquote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20311,7 +20319,7 @@ CREATE TABLE `sssm_notification` (
   `IsRead` int(11) NOT NULL DEFAULT 0,
   `CreatedBy` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_notification`
@@ -20341,7 +20349,7 @@ CREATE TABLE `sssm_pagemaster` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_pagemaster`
@@ -20388,7 +20396,7 @@ CREATE TABLE `sssm_project` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_project`
@@ -20413,7 +20421,7 @@ CREATE TABLE `sssm_projectgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20432,7 +20440,7 @@ CREATE TABLE `sssm_projectmilestone` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20449,7 +20457,7 @@ CREATE TABLE `sssm_projectwiserule` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20471,7 +20479,7 @@ CREATE TABLE `sssm_property` (
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1,
   `IsCommercial` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_property`
@@ -20740,7 +20748,7 @@ CREATE TABLE `sssm_propertyimagetitle` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_propertyimagetitle`
@@ -20775,7 +20783,7 @@ CREATE TABLE `sssm_refund` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20798,7 +20806,7 @@ CREATE TABLE `sssm_reminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL COMMENT 'responded by ',
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20817,7 +20825,7 @@ CREATE TABLE `sssm_response` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -20850,7 +20858,7 @@ CREATE TABLE `sssm_rolemap` (
   `ModifiedDate` datetime DEFAULT NULL,
   `ModifiedBy` int(11) DEFAULT NULL,
   `Status` int(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_rolemap`
@@ -21123,7 +21131,7 @@ CREATE TABLE `sssm_roleproject` (
   `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_roleproject`
@@ -21153,7 +21161,7 @@ CREATE TABLE `sssm_roles` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_roles`
@@ -21180,7 +21188,7 @@ CREATE TABLE `sssm_sections` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_sections`
@@ -21206,7 +21214,7 @@ CREATE TABLE `sssm_smstemplate` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_smstemplate`
@@ -21236,7 +21244,7 @@ CREATE TABLE `sssm_state` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `sssm_state`
@@ -21910,7 +21918,7 @@ CREATE TABLE `sssm_testimonial` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sssm_testimonial`
@@ -21954,16 +21962,29 @@ CREATE TABLE `sssm_user` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_user`
 --
 
 INSERT INTO `sssm_user` (`UserID`, `ArtistCategoryID`, `FirstName`, `LastName`, `DisplayName`, `EmailID`, `Password`, `MobileNo`, `Address`, `CountryID`, `StateID`, `CityID`, `Rating`, `Experience`, `Languages`, `IsOpenToTravel`, `Skills`, `VideoFileURL`, `Image`, `AboutArtist`, `UserType`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(1, 12, 'Sam', 'Patel', 'Sam Patel', 'sam@gmail.com', '132456', '1324657985', 'Test', 0, 0, 0, '', '', '', 0, '', '', NULL, '', 'User', 0, '2025-01-08 13:00:55', NULL, NULL, 1),
-(2, 12, 'Test', 'Test', 'jkklk', 'admin@example.com', 'admin123', '9865254585', 'Test', 0, 0, 0, '5.00', '4', 'English', 1, 'Test, jsjs, djd', '20250108111400_.mp4', NULL, 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-08 15:52:16', 1),
-(3, 11, 'parth', 'thakkar', 'ravi', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 1, 42, 6, '3.00', '6', 'hindi', 0, 'Test, jsjs, djd', '20250108134018_.mp4', NULL, 'EnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglishEnglish', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-08 18:18:51', 1);
+(1, 13, 'DJ', 'Mohsick', 'DJ Mohsick', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:36:43', 1),
+(2, 12, 'Dj', 'Paroma', 'DJ Paroma', 'admin@example.com', 'admin123', '9865254585', 'Test', 101, 10, 316, '5.00', '4', 'English, Hindi', 1, 'DJ, Disco, House, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Elevate your event to new heights with DJ Paroma, the dynamic force behind unforgettable parties! Wi', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-14 14:04:52', 1),
+(3, 11, 'Dj', 'Ankit', 'DJ Ankit', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 101, 11, 6, '3.00', '6', 'Hindi, English', 0, 'DJ, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093652_.jpg', 'Get ready to groove to the electrifying beats of DJ Ankit, the master of musical vibes! With a passi', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-14 14:06:52', 1),
+(4, 11, 'Dj', 'Raman', 'DJ Raman', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 101, 11, 6, '3.00', '6', 'Hindi, English', 0, 'DJ, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093452_.jpg', 'Get ready to groove to the electrifying beats of DJ Ankit, the master of musical vibes! With a passi', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-14 14:06:52', 1),
+(5, 11, 'Dj', 'Pankaj', 'DJ Pankaj', 'admin@example.com', 'admin123', '9865254575', 'Gdf Dfg', 101, 11, 6, '3.00', '6', 'Hindi, English', 0, 'DJ, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093652_.jpg', 'Get ready to groove to the electrifying beats of DJ Ankit, the master of musical vibes! With a passi', 'User', 2, '2025-01-08 18:10:18', 2, '2025-01-14 14:06:52', 1),
+(6, 12, 'Dj', 'Milan', 'DJ Milan', 'admin@example.com', 'admin123', '9865254585', 'Test', 101, 10, 316, '5.00', '4', 'English, Hindi', 1, 'DJ, Disco, House, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093652_.jpg', 'Elevate your event to new heights with DJ Paroma, the dynamic force behind unforgettable parties! Wi', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-14 14:04:52', 1),
+(7, 12, 'Dj', 'Sohi', 'DJ Sohi', 'admin@example.com', 'admin123', '9865254585', 'Test', 101, 10, 316, '5.00', '4', 'English, Hindi', 1, 'DJ, Disco, House, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Elevate your event to new heights with DJ Paroma, the dynamic force behind unforgettable parties! Wi', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-14 14:04:52', 1),
+(8, 13, 'DJ\r\n', 'Rakeh', 'DJ Rakeh', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093652_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:01:22', 1),
+(9, 13, 'DJ\r\n', 'Laxman', 'DJ Laxman', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:01:22', 1),
+(10, 14, 'DJ\r\n', 'Laxman', 'DJ Laxman', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:01:22', 1),
+(11, 14, 'DJ\r\n', 'Rakeh', 'DJ Rakeh', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:01:22', 1),
+(12, 14, 'Dj', 'Paroma', 'DJ Paroma', 'admin@example.com', 'admin123', '9865254585', 'Test', 101, 10, 316, '5.00', '4', 'English, Hindi', 1, 'DJ, Disco, House, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093452_.jpg', 'Elevate your event to new heights with DJ Paroma, the dynamic force behind unforgettable parties! Wi', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-14 14:04:52', 1),
+(13, 13, 'DJ', 'Sandeep', 'DJ Sandeep', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093652_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:36:43', 1),
+(14, 12, 'Dj', 'Sharma', 'DJ Sharma', 'admin@example.com', 'admin123', '9865254585', 'Test', 101, 10, 316, '5.00', '4', 'English, Hindi', 1, 'DJ, Disco, House, Bollywood', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114093452_.jpg', 'Elevate your event to new heights with DJ Paroma, the dynamic force behind unforgettable parties! Wi', 'User', 2, '2025-01-08 15:47:08', 2, '2025-01-14 14:04:52', 1),
+(15, 14, 'DJ\r\n', 'Laxman', 'DJ Laxman', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:01:22', 1),
+(16, 11, 'DJ', 'Sandeep', 'DJ Sandeep', 'mohsick@gmail.com', '132456', '1324657985', 'Test', 101, 10, 457, '5.00', '15', 'Hindi English', 0, 'DJ, Bollywood, Disco, House', 'https://www.youtube.com/embed/mJpZs2Zr1yM', '20250114092817_.jpg', 'Get ready to experience the ultimate fusion of music and magic with DJ Mohsin! With his unmatched ta', 'User', 0, '2025-01-08 13:00:55', 2, '2025-01-14 14:36:43', 1);
 
 -- --------------------------------------------------------
 
@@ -21986,7 +22007,7 @@ CREATE TABLE `sssm_usersetting` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_usersetting`
@@ -22031,7 +22052,7 @@ CREATE TABLE `sssm_visitor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_visitor`
@@ -22060,7 +22081,7 @@ CREATE TABLE `sssm_visitorfollowup` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22080,7 +22101,7 @@ CREATE TABLE `sssm_visitorreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sssm_visitorreminder`
@@ -22108,7 +22129,7 @@ CREATE TABLE `sssm_visitorreminderaction` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22126,19 +22147,48 @@ CREATE TABLE `ss_artistgallery` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_artistgallery`
 --
 
 INSERT INTO `ss_artistgallery` (`ArtistGalleryID`, `Title`, `UserID`, `DocumentURL`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate`, `Status`) VALUES
-(1, 'Drum Masters', 1, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
-(2, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
-(3, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
-(4, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
-(5, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
-(6, 'Drum Masters', 3, '20250108092038_.png', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1);
+(1, 'Drum Masters', 1, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-14 15:01:43', 1),
+(2, 'Drum Masters', 1, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-14 15:01:54', 1),
+(3, 'Drum Masters', 3, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(4, 'Drum Masters', 3, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(5, 'Drum Masters', 3, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(6, 'Drum Masters', 3, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(7, 'Drum Masters', 2, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(8, 'Drum Masters', 2, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(9, 'Drum Masters', 4, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(10, 'Drum Masters', 4, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(11, 'Drum Masters', 5, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(12, 'Drum Masters', 5, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(13, 'Drum Masters', 2, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(14, 'Drum Masters', 5, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(15, 'Drum Masters', 4, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(16, 'Drum Masters', 1, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(17, 'Drum Masters', 1, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(18, 'Drum Masters', 6, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(19, 'Drum Masters', 6, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(20, 'Drum Masters', 6, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(21, 'Drum Masters', 7, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(22, 'Drum Masters', 7, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(23, 'Drum Masters', 7, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(24, 'Drum Masters', 8, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(25, 'Drum Masters', 8, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(26, 'Drum Masters', 8, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(27, 'Drum Masters', 9, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(28, 'Drum Masters', 9, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(29, 'Drum Masters', 9, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(30, 'Drum Masters', 10, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(31, 'Drum Masters', 10, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(32, 'Drum Masters', 10, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(33, 'Drum Masters', 11, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(34, 'Drum Masters', 11, '20250114103142_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1),
+(35, 'Drum Masters', 11, '20250114103154_.jpg', 2, '2025-01-08 13:50:39', 2, '2025-01-08 13:59:14', 1);
 
 -- --------------------------------------------------------
 
@@ -22160,7 +22210,7 @@ CREATE TABLE `ss_banner` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` tinyint(11) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `ss_banner`
@@ -22196,7 +22246,7 @@ CREATE TABLE `ss_category` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ss_category`
@@ -22224,7 +22274,7 @@ CREATE TABLE `ss_feedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_feedback`
@@ -22270,7 +22320,7 @@ CREATE TABLE `ss_goodreceiveditems` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22287,7 +22337,7 @@ CREATE TABLE `ss_goods` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_goods`
@@ -22314,7 +22364,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `VendorID` int(11) NOT NULL,
   `CategoryID` int(11) NOT NULL,
   `ChallanNo` varchar(50) DEFAULT NULL,
-  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 COLLATE utf16_general_ci DEFAULT NULL,
+  `ChallanPhotoURL` varchar(200) CHARACTER SET utf16 DEFAULT NULL,
   `ChallanDate` date DEFAULT NULL,
   `InvoiceImageURL` varchar(150) DEFAULT NULL,
   `TotalPrice` varchar(10) DEFAULT NULL,
@@ -22323,7 +22373,7 @@ CREATE TABLE `ss_goodsreceivednote` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22343,7 +22393,7 @@ CREATE TABLE `ss_misscallapi` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -22383,7 +22433,7 @@ CREATE TABLE `ss_opportunity` (
   `Status` int(11) NOT NULL DEFAULT 1,
   `RefName` varchar(50) DEFAULT NULL,
   `RefMobileNo` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_opportunity`
@@ -23251,7 +23301,7 @@ CREATE TABLE `ss_opportunityreminder` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_opportunityreminder`
@@ -23274,7 +23324,7 @@ CREATE TABLE `ss_skill` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_skill`
@@ -23301,7 +23351,7 @@ CREATE TABLE `ss_subcategory` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `ss_subcategory`
@@ -23331,7 +23381,7 @@ CREATE TABLE `ss_uom` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ss_uom`
@@ -23370,7 +23420,7 @@ CREATE TABLE `ss_userfeedback` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -23394,7 +23444,7 @@ CREATE TABLE `ss_vendor` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -23429,7 +23479,7 @@ CREATE TABLE `ss_visitorsites` (
   `ModifiedBy` int(11) DEFAULT NULL,
   `ModifiedDate` datetime DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
@@ -23890,7 +23940,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `sssm_activitylog`
 --
 ALTER TABLE `sssm_activitylog`
-  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
+  MODIFY `ActivityLogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=337;
 
 --
 -- AUTO_INCREMENT for table `sssm_admindetails`
@@ -24166,7 +24216,7 @@ ALTER TABLE `sssm_testimonial`
 -- AUTO_INCREMENT for table `sssm_user`
 --
 ALTER TABLE `sssm_user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `sssm_usersetting`
@@ -24202,7 +24252,7 @@ ALTER TABLE `sssm_visitorreminderaction`
 -- AUTO_INCREMENT for table `ss_artistgallery`
 --
 ALTER TABLE `ss_artistgallery`
-  MODIFY `ArtistGalleryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ArtistGalleryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `ss_banner`

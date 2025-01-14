@@ -275,5 +275,5 @@ define('BLOG_ID', 5);
 define('ABOUT_ID', 3);
 define('PRIVACY_ID', 6);
 
-define('HR_MAIL', 'info@unique-hr.com');
+define('HR_MAIL', 'info@dj-web.com');
 // define('HR_MAIL', 'priteshp.sandvirp@gmail.com');

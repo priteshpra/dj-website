@@ -67,7 +67,7 @@
                 </div>
                 <div class="input-field col s12 m6">
                     <a class="tooltipped a-tooltipped" data-position="left" data-delay="50" data-tooltip="<?php echo label('msg_lbl_please_enter_brand'); ?>"><i class="<?php echo INFO_ICON_CLASS; ?>"></i></a>
-                    <input id="Languages" name="Languages" type="text" class="empty_validation_class LetterOnly" value="<?php echo @$data->Languages; ?>" maxlength="100" />
+                    <input id="Languages" name="Languages" type="text" class="empty_validation_class " value="<?php echo @$data->Languages; ?>" maxlength="100" />
                     <label for="Languages">Languages</label>
                 </div>
                 <div class="input-field col s12 m6">
@@ -77,13 +77,43 @@
                 </div>
                 <div class="input-field col s12 m6">
                     <a class="tooltipped a-tooltipped" data-position="left" data-delay="50" data-tooltip="<?php echo label('msg_lbl_please_enter_brand'); ?>"><i class="<?php echo INFO_ICON_CLASS; ?>"></i></a>
-                    <input id="AboutArtist" name="AboutArtist" type="text" class="empty_validation_class" value="<?php echo @$data->AboutArtist; ?>" maxlength="100" />
+                    <!-- <input id="AboutArtist" name="AboutArtist" type="text" class="empty_validation_class" value="<?php echo @$data->AboutArtist; ?>" maxlength="100" /> -->
+                    <textarea name="AboutArtist" id="AboutArtist" class="materialize-textarea"><?php echo @$data->AboutArtist; ?></textarea>
                     <label for="AboutArtist">About Artist</label>
                 </div>
                 <div class="clearfix"></div>
                 <?php
-                if (isset($data->FilePath) && $data->FilePath != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . JOBPOST_UPLOAD_PATH . $data->FilePath))) {
-                    $path = base_url() . JOBPOST_UPLOAD_PATH . $data->FilePath;
+                if (isset($data->VideoFileURL) && $data->VideoFileURL != "") {
+                    $paths = $data->VideoFileURL;
+                    $crosss = "";
+                } else {
+                    $crosss = "hide";
+                    $paths =  $this->config->item('admin_assets') . 'img/noimage.gif';
+                }
+
+                ?>
+
+                <div class="m-t-20">
+
+                    <label class="imageview-label">Artist Video, Enter only embeded video url</label>
+                    <div class="row">
+                        <!-- <div class="input-field m-t-0 col s12 m2 imageview1">
+                            <img width="150" id="ImagePreivew" src='<?php echo $paths; ?>'>
+                            <a id="webviewcross" class="cross1 <?= $crosss ?>" data-img="ImagePreivew" data-file="userfile" data-edit="editImageURL"><i id="cal" class="fa fa-times" aria-hidden="true"></i></a>
+                        </div> -->
+                        <div class="file-field input-fieldcol col s12 m12 m-t-12">
+                            <!-- <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURLll" name="editImageURL" value="<?php echo @$data->VideoFileURL; ?>" readonly /> -->
+                            <div class="btns">
+                                <span>Video URL</span>
+                                <input accept="video/*" type="text" name="FilePath" value="<?php echo @$data->VideoFileURL; ?>" id="FilePath" class="" data-cross="webviewcross" data-img="ImagePreivew" data-edit="editImageURL" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php
+                if (isset($data->Image) && $data->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . BANNER_UPLOAD_PATH . $data->Image))) {
+                    $path = base_url() . BANNER_UPLOAD_PATH . $data->Image;
                     $cross = "";
                 } else {
                     $cross = "hide";
@@ -91,20 +121,19 @@
                 }
 
                 ?>
-
                 <div class="m-t-20">
 
-                    <label class="imageview-label">Artist Video, Enter only .mp4 and .MP4 formats</label>
+                    <label class="imageview-label">Website Artist, Enter only .jpg and .png formats and img size 150 * 150</label>
                     <div class="row">
                         <div class="input-field m-t-0 col s12 m2 imageview1">
                             <img width="150" id="ImagePreivew" src='<?php echo $path; ?>'>
                             <a id="webviewcross" class="cross1 <?= $cross ?>" data-img="ImagePreivew" data-file="userfile" data-edit="editImageURL"><i id="cal" class="fa fa-times" aria-hidden="true"></i></a>
                         </div>
                         <div class="file-field input-fieldcol col s12 m10 m-t-10">
-                            <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURL" name="editImageURL" value="<?php echo @$data->VideoFileURL; ?>" readonly />
+                            <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURL" name="editImageURL" value="<?php echo @$data->Image; ?>" readonly />
                             <div class="btn">
                                 <span>File</span>
-                                <input accept="video/*" type="file" name="FilePath" id="FilePath" class="" data-cross="webviewcross" data-img="ImagePreivew" data-edit="editImageURL" />
+                                <input accept="image/*" type="file" name="Image" id="Image" class="images" data-cross="webviewcross" data-img="ImagePreivew" data-edit="editImageURL" />
                             </div>
                         </div>
                     </div>
@@ -130,36 +159,6 @@
 
                     <label for="Status"><?php echo label('msg_lbl_status'); ?></label>
                 </div>
-
-                <?php
-                if (isset($data->Image) && $data->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . BANNER_UPLOAD_PATH . $data->Image))) {
-                    $path = base_url() . BANNER_UPLOAD_PATH . $data->Image;
-                    $cross = "";
-                } else {
-                    $cross = "hide";
-                    $path =  $this->config->item('admin_assets') . 'img/noimage.gif';
-                }
-
-                ?>
-
-                <div class="m-t-20">
-
-                    <label class="imageview-label">Website Artist, Enter only .jpg and .png formats and img size 150 * 150</label>
-                    <div class="row">
-                        <div class="input-field m-t-0 col s12 m2 imageview1">
-                            <img width="150" id="ImagePreivew" src='<?php echo $path; ?>'>
-                            <a id="webviewcross" class="cross1 <?= $cross ?>" data-img="ImagePreivew" data-file="userfile" data-edit="editImageURL"><i id="cal" class="fa fa-times" aria-hidden="true"></i></a>
-                        </div>
-                        <div class="file-field input-fieldcol col s12 m10 m-t-10">
-                            <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURL" name="editImageURL" value="<?php echo @$data->ImageURL; ?>" readonly />
-                            <div class="btn">
-                                <span>File</span>
-                                <input accept="image/*" type="file" name="Image" id="Image" class="images" data-cross="webviewcross" data-img="ImagePreivew" data-edit="editImageURL" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
 
                 <div class="input-field col s12 m6">
                     <button class="btn waves-effect waves-light right" id="button_submit" name="button_submit" type="button"><?php echo label('msg_lbl_submit'); ?></button>
