@@ -78,7 +78,24 @@
                 <p class="text-medium"><?php echo $artist[0]->AboutArtist ?></p>
                 <p><strong>Email-Id:</strong> <?php echo $artist[0]->EmailID ?></p>
                 <p><strong>Location:</strong> <?php echo $artist[0]->Address ?></p>
-                <p><strong>Skills:</strong> <?php echo $artist[0]->Skills ?></p>
+                <?php
+                $skills = $artist[0]->Skills;
+                $skillsArray = isset($skills) ? explode(',', $skills) : '';
+
+                $colors = ['red', 'blue', 'green', 'orange', 'purple']; // Define an array of colors
+                $colorIndex = 0; // To cycle through colors
+                $coloredSkills = '';
+
+                foreach ($skillsArray as $skill) {
+                    $color = $colors[$colorIndex % count($colors)]; // Get a color, cycling if necessary
+                    $coloredSkills .= '<span style="color:' . $color . '; ">' . trim($skill) . '</span>, ';
+                    $colorIndex++;
+                }
+
+                // Remove the last comma and space
+                $coloredSkills = rtrim($coloredSkills, ', ');
+                ?>
+                <p><strong>Skills:</strong> <?php echo $coloredSkills ?></p>
                 <p><strong>Open To Travel:</strong> <?php echo ($artist[0]->IsOpenToTravel == 0) ? 'No' : 'Yes' ?></p>
                 <a href="<?php echo base_url('contact') ?>" class="btn btn-medium btn-deep-pink text-white margin-20px-top">Book
                     Now</a> <!-- href="#booking-section" -->
