@@ -18,6 +18,7 @@
            <ul class="small-icon mb-0">
              <li><a class="facebook text-white-2" href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a></li>
              <li><a class="instagram text-white-2" href="https://instagram.com/" target="_blank"><i class="fa-brands fa-instagram me-0" aria-hidden="true"></i></a></li>
+             <li><a href="https://api.whatsapp.com/send?phone=+7984008988&text=Hello" target="_blank" class="whatsapp-icon text-white-2"> <i class="fa-brands fa-whatsapp"></i></a></li>
            </ul>
          </div>
        </div>

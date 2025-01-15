@@ -25,6 +25,7 @@ class Home extends CI_Controller
         // echo "<pre>";
         // print_r($data['home']);
         // die;
+        $data['artistData'] = $this->common_model->getArtistData(0);
         $data['recaptcha_html'] = $this->recaptcha->getRecaptchaHtml();
         $data['menu'] = $menu = $this->common_model->getMenus();
         $data['jobPost'] = $this->common_model->getJobData();

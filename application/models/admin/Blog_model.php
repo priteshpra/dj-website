@@ -40,6 +40,7 @@ class Blog_model extends CI_Model
         $query = $this->db->query("call usp_A_AddBlogs('" .
             $array['PageID'] . "','" .
             $array['BlogTitle'] . "','" .
+            $array['Image'] . "','" .
             $array['AuthorName'] . "','" .
             date('Y-m-d', strtotime($array['PublishedDate'])) . "','" .
             addslashes($array['Content']) . "','" .
@@ -65,6 +66,7 @@ class Blog_model extends CI_Model
         $sql = "call usp_A_EditBlogs('" .
             $array['PageID'] . "','" .
             $array['BlogTitle'] . "','" .
+            $array['Image'] . "','" .
             $array['AuthorName'] . "','" .
             date('Y-m-d', strtotime($array['PublishedDate'])) . "','" .
             addslashes($array['Content']) . "','" .

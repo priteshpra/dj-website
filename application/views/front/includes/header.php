@@ -61,7 +61,7 @@
                                         $class = '';
                                         $Url = '/' . strtolower($value->CategoryName);
                                         if ($key == 2 || $key == 3) {
-                                            $Url = 'javascript:void(0);';
+                                            $Url = '#';
                                             $class = 'dropdown simple-dropdown';
                                         }
                                     }
@@ -113,7 +113,7 @@
                     <div class="header-social-icon d-none d-md-inline-block no-border-left no-padding-left no-margin-left">
                         <a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
                         <a href="https://instagram.com/" title="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://api.whatsapp.com/send?phone=+0000000000&text=Hello" target="_blank" class="whatsapp-icon "> <i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://api.whatsapp.com/send?phone=+7984008988&text=Hello" target="_blank" class="whatsapp-icon "> <i class="fa-brands fa-whatsapp"></i></a>
                     </div>
                 </div>
             </div>

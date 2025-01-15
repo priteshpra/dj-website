@@ -392,11 +392,20 @@ class Common_model extends CI_Model
 
     public function getArtistData($id)
     {
-        $query = $this->db->query("SELECT c.*,s.*
-                                FROM sssm_user C
-                                LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
-                                WHERE C.Status = 1 AND s.SubCategoryID = $id");
-        $cms = $query->result();
+        if ($id == 0) {
+            $query = $this->db->query("SELECT c.*,s.*
+            FROM sssm_user c
+            LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
+            WHERE c.Status = 1");
+            $cms = $query->result();
+        } else {
+
+            $query = $this->db->query("SELECT c.*,s.*
+                                    FROM sssm_user c
+                                    LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
+                                    WHERE c.Status = 1 AND s.SubCategoryID = $id");
+            $cms = $query->result();
+        }
         return $cms;
     }
 
@@ -460,16 +469,16 @@ class Common_model extends CI_Model
 
     public function getArtistDatabyName($name)
     {
-        $query = $this->db->query("SELECT c.*
+        $query = $this->db->query("SELECT C.*
                                 FROM sssm_user C
-                                WHERE C.Status = 1 AND LOWER(REPLACE(c.DisplayName,' ', '-')) = '$name'");
+                                WHERE C.Status = 1 AND LOWER(REPLACE(C.DisplayName,' ', '-')) = '$name'");
         $cms = $query->result();
         return $cms;
     }
 
     public function getArtistGallery($id)
     {
-        $query = $this->db->query("SELECT c.*
+        $query = $this->db->query("SELECT C.*
                                 FROM ss_artistgallery C
                                 WHERE C.Status = 1 AND C.UserID = $id");
         $cms = $query->result();

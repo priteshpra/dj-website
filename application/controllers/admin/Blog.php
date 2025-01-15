@@ -63,9 +63,23 @@ class Blog extends Admin_Controller
                 $this->form_validation->set_rules('Content', 'Content', 'trim|required');
 
                 if ($this->form_validation->run() == TRUE) {
+                    $url = site_url("admin/blog/add");
+                    $configPic = array(
+                        "max_width" => BLOG_MAX_WIDTH,
+                        "max_height" => BLOG_MAX_HEIGHT,
+                        'max_size' => BLOG_MAX_SIZE,
+                        'path' => BLOG_UPLOAD_PATH,
+                        'allowed_types' => BLOG_ALLOWED_TYPES,
+                        'tpath' => BLOG_THUMB_UPLOAD_PATH,
+                        'twidth' => BLOG_THUMB_MAX_WIDTH,
+                        'theight' => BLOG_THUMB_MAX_HEIGHT
+                    );
+
+                    $data = $this->input->post();
+                    $data['Image'] = FileUploadURL("Image", "editImageURL", $configPic, '', $url);
 
 
-                    $res = $this->blog_model->insert($this->input->post());
+                    $res = $this->blog_model->insert($data);
 
                     if (@$res->ID) {
                         redirect($this->config->item('base_url') . 'admin/blog');
@@ -119,7 +133,20 @@ class Blog extends Admin_Controller
                 $this->form_validation->set_rules('Content', 'Content', 'trim|required');
 
                 if ($this->form_validation->run() == TRUE) {
+                    $url = site_url("admin/blog/edit" . $ID);
+                    $configImag = array(
+                        "max_width" => BLOG_MAX_WIDTH,
+                        "max_height" => BLOG_MAX_HEIGHT,
+                        'max_size' => BLOG_MAX_SIZE,
+                        'path' => BLOG_UPLOAD_PATH,
+                        'allowed_types' => BLOG_ALLOWED_TYPES,
+                        'tpath' => BLOG_THUMB_UPLOAD_PATH,
+                        'twidth' => BLOG_THUMB_MAX_WIDTH,
+                        'theight' => BLOG_THUMB_MAX_HEIGHT
+                    );
                     $data = $this->input->post();
+                    $data['Image'] = FileUploadURL("Image", "editImageURL", $configImag, '', $url);
+
                     $data['ID'] = $ID;
                     $res = $this->blog_model->update($data);
                     if (@$res->ID) {

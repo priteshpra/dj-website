@@ -25,8 +25,8 @@
             <textarea name="Content" id="Content" class="materialize-textarea"><?php echo @$cms->Content; ?></textarea>
           </div>
           <?php
-          if (isset($data->Image) && $data->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . TESTIMONIAL_UPLOAD_PATH . $data->Image))) {
-            $path = base_url() . TESTIMONIAL_UPLOAD_PATH . $data->Image;
+          if (isset($cms->Image) && $cms->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . TESTIMONIAL_UPLOAD_PATH . $cms->Image))) {
+            $path = base_url() . TESTIMONIAL_UPLOAD_PATH . $cms->Image;
             $cross = "";
           } else {
             $cross = "hide";
@@ -44,7 +44,7 @@
                 <a id="webviewcross" class="cross1 <?= $cross ?>" data-img="ImagePreivew" data-file="userfile" data-edit="editImageURL"><i id="cal" class="fa fa-times" aria-hidden="true"></i></a>
               </div>
               <div class="file-field input-fieldcol col s12 m10 m-t-10">
-                <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURL" name="editImageURL" value="<?php echo @$data->Image; ?>" readonly />
+                <input tabindex="999" class="file-path validate empty_validation_class" type="text" id="editImageURL" name="editImageURL" value="<?php echo @$cms->Image; ?>" readonly />
                 <div class="btn">
                   <span>File</span>
                   <input accept="image/*" type="file" name="Image" id="Image" class="images" data-cross="webviewcross" data-img="ImagePreivew" data-edit="editImageURL" />

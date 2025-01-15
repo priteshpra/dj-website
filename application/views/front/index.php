@@ -118,142 +118,26 @@
                     <ul class="hover-option7 portfolio-wrapper grid grid-loading grid-4col xl-grid-4col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-medium">
                         <li class="grid-sizer"></li>
                         <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item181.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Naked Soap</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
+                        <?php if ($artistData) {
+                            foreach ($artistData as $key => $value) { ?>
+                                <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.2s">
+                                    <a href="<?php echo base_url('/artist/' . strtolower(str_replace(' ', '-', $value->DisplayName))) ?>">
+                                        <figure>
+                                            <div class="portfolio-img"><img src="assets/uploads/artist/<?php echo $value->Image ?>" alt="" /></div>
+                                            <figcaption>
+                                                <div class="portfolio-hover-main text-center last-paragraph-no-margin">
+                                                    <div class="portfolio-hover-box align-middle">
+                                                        <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray" <?php echo $value->FirstName . ' ' . $value->LastName ?></span>
+                                                                <p class="text-medium-gray text-uppercase text-extra-small"><?php echo $value->Skills ?></p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.2s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item182.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Berlin Design</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Brochure</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.4s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item183.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Abstract Comics</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.6s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item184.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Teabag Collection</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio-item item -->
-                        <li class="grid-item wow animate__fadeInUp">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item185.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Herbal Beauty Salon</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.2s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item186.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Tailoring Interior</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Brochure</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.4s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item187.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Pixflow Studio</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Branding and Identity</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item --> <!-- start portfolio item -->
-                        <li class="grid-item wow animate__fadeInUp" data-wow-delay="0.6s">
-                            <a href="artist-details.html">
-                                <figure>
-                                    <div class="portfolio-img"><img src="assets/front/images/portfolio-item188.jpg" alt="" /></div>
-                                    <figcaption>
-                                        <div class="portfolio-hover-main text-center last-paragraph-no-margin">
-                                            <div class="portfolio-hover-box align-middle">
-                                                <div class="portfolio-hover-content position-relative"><span class="font-weight-600 alt-font text-uppercase margin-one-bottom d-block text-extra-dark-gray">Designblast Inc</span>
-                                                    <p class="text-medium-gray text-uppercase text-extra-small">Web and Photography</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </a>
-                        </li>
-                        <!-- end portfolio item -->
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                        <?php }
+                        } ?>
                     </ul>
                 </div>
             </div>
@@ -528,7 +412,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-lg-7 col-md-10">
                                                 <div class="media d-block d-md-flex text-center text-md-start align-items-center padding-30px-lr lg-padding-15px-lr w-100">
-                                                    <img src="<?php echo $this->config->item('front_assets'); ?>images/avtar-07.jpg" alt="" class="rounded-circle w-130px margin-50px-right lg-w-100px md-w-120px sm-w-100px sm-no-margin-right sm-margin-15px-bottom" />
+                                                    <img src="<?php echo 'assets/uploads/testimonial/' . $value->Image ?>" alt="" class="rounded-circle w-130px margin-50px-right lg-w-100px md-w-120px sm-w-100px sm-no-margin-right sm-margin-15px-bottom" />
                                                     <div class="media-body last-paragraph-no-margin">
                                                         <p class="text-extra-light-gray"><?php echo $value->Content ?></p>
                                                         <span class="text-white-2 alt-font d-inline-block text-uppercase text-small margin-15px-top">- <?php echo $value->Author ?></span>
