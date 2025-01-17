@@ -165,6 +165,8 @@
                                 </li>
                                 <li class="bold"><a href="<?php echo $this->config->item('base_url'); ?>admin/artist" class="waves-effect waves-cyan"><i class="mdi-communication-business"></i> Artist</a>
                                 </li>
+                                <li class="bold"><a href="<?php echo $this->config->item('base_url'); ?>admin/appointment" class="waves-effect waves-cyan"><i class="mdi-communication-business"></i> Appointment</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
