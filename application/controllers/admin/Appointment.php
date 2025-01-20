@@ -47,7 +47,7 @@ class Appointment extends Admin_Controller
             $ajax_listing = $this->load->view('admin/appointment/ajax_listing', $res, TRUE);
             echo json_encode(array('listing' => $ajax_listing, 'pagination' => $pagination));
         } else
-            echo json_encode(array('listing' => '<tr><td colspan="3" style="text-align: center;">' . label('no_records_found') . '</td></tr>', 'pagination' => ''));
+            echo json_encode(array('listing' => '<tr><td colspan="5" style="text-align: center;">' . label('no_records_found') . '</td></tr>', 'pagination' => ''));
         unset($res);
     }
 
