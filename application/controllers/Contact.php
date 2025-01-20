@@ -168,6 +168,15 @@ class Contact extends CI_Controller
             $this->email->message($mailContent);
             $send = $this->email->send() ? true : false;
 
+            $data = [
+                'Name' => $formData['con_firstname'], // Input field name
+                'Contact' => $formData['con_contact'],
+                'EventDate' => $formData['eventdate'],
+                'Email' => $formData['con_email'],
+                'Message' => $formData['comment']
+            ];
+            $this->db->insert('sssm_appointment', $data);
+
             if ($send) {
                 $formData = array();
                 $data['status'] = array(

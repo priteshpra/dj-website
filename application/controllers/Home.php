@@ -61,11 +61,11 @@ class Home extends CI_Controller
             $to = HR_MAIL;
             $from = $mailData['con_email'];
             $fromName = $mailData['con_name'];
-            $mailSubject = 'Looking for an excellent DJ - ' . $mailData['con_person'];
+            $mailSubject = 'Looking for an excellent DJ - ' . $mailData['con_name'];
 
             // Mail content
             $mailContent = '
-            <h2>Become a Growth Partner Form Submitted</h2>
+            <h2>Looking for an excellent DJ Form Submitted</h2>
             <p><b>Customer Name: </b>' . $mailData['con_name'] . '</p>
             <p><b>Email: </b>' . $mailData['con_email'] . '</p>
             <p><b>Subject: </b>' . $mailData['con_subject'] . '</p>
