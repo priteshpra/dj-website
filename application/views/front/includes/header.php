@@ -69,15 +69,17 @@
                             ?>
                                         <li class="<?php echo $class ?>">
                                             <a href="<?php echo base_url($Url) ?>">
-                                                <?php echo $value->CategoryName ?>
-                                                <?php if (isset($menu['Submenus'][$value->CategoryName])) { ?>
-                                                    <ul class="dropdown-menu">
-                                                        <?php foreach ($menu['Submenus'][$value->CategoryName] as $key => $values) { ?>
-                                                            <li class="dropdown"><a href="<?php echo base_url('/' .  str_replace(' ', '-', strtolower($values['SubCategoryName']))) ?>"><?php echo $values['SubCategoryName'] ?></a></li>
-                                                        <?php } ?>
-                                                    </ul>
-                                                <?php } ?>
-                                            </a>
+                                                <?php echo $value->CategoryName ?></a>
+                                            <?php if (isset($menu['Submenus'][$value->CategoryName])) { ?>
+                                                <i class="fa-solid fa-angle-down dropdown-toggle" data-bs-toggle="dropdown"
+                                                    aria-hidden="true"></i>
+                                                <ul class="dropdown-menu">
+                                                    <?php foreach ($menu['Submenus'][$value->CategoryName] as $key => $values) { ?>
+                                                        <li class="dropdown"><a href="<?php echo base_url('/' .  str_replace(' ', '-', strtolower($values['SubCategoryName']))) ?>"><?php echo $values['SubCategoryName'] ?></a></li>
+                                                    <?php } ?>
+                                                </ul>
+                                            <?php } ?>
+
                                         </li>
                             <?php }
                                 }

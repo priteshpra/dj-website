@@ -112,8 +112,8 @@
                 </div>
 
                 <?php
-                if (isset($data->Image) && $data->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . BANNER_UPLOAD_PATH . $data->Image))) {
-                    $path = base_url() . BANNER_UPLOAD_PATH . $data->Image;
+                if (isset($data->Image) && $data->Image != "" && (file_exists(str_replace(array('\\', '/system'), array('/', ''), BASEPATH) . ARTIST_UPLOAD_PATH . $data->Image))) {
+                    $path = base_url() . ARTIST_UPLOAD_PATH . $data->Image;
                     $cross = "";
                 } else {
                     $cross = "hide";

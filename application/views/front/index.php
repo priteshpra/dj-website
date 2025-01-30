@@ -139,13 +139,16 @@
                         <?php }
                         } ?>
                     </ul>
+                    <div class="text-center">
+                        <button id="load-more" class="btn btn-primary mt-3">See More</button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- end portfolio section -->
 
-    <!-- Portfolio Start -->
+    <!-- blog Start -->
     <section class="wow animate__fadeIn">
         <div class="container">
             <div class="row justify-content-center">
@@ -229,7 +232,7 @@
         </div>
     </section>
     <!-- Portfolio End -->
-    <!-- Client Logo Start -->
+    <!-- brand Logo Start -->
     <section class="border-top border-color-extra-light-gray wow animate__fadeIn bg-light-gray">
         <div class="container text-center">
             <div class="row">
@@ -467,3 +470,13 @@
     <?php } ?>
 <?php } ?>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loadMoreButton = document.getElementById('load-more');
+        url = '<?php echo base_url(); ?>';
+        // Redirect to another page when the button is clicked
+        loadMoreButton.addEventListener('click', function() {
+            window.location.href = url + '/dj'; // Replace with your target URL
+        });
+    });
+</script>

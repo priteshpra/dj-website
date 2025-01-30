@@ -396,7 +396,7 @@ class Common_model extends CI_Model
             $query = $this->db->query("SELECT c.*,s.*
             FROM sssm_user c
             LEFT JOIN ss_subcategory s ON s.SubCategoryID = c.ArtistCategoryID
-            WHERE c.Status = 1");
+            WHERE c.Status = 1 limit 8");
             $cms = $query->result();
         } else {
 
